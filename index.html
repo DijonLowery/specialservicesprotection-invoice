@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SSP Invoice Tracker — Special Services Protection</title>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #000000; font-family: 'Inter', sans-serif; }
+    #root { min-height: 100vh; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState, useRef, useEffect } = React;
+    // React hooks available globally via CDN
+
+// ─── BRAND TOKENS ─────────────────────────────────────────────────────────────
+const C = {
+  black:    "#000000",
+  bg:       "#080808",
+  card:     "#0f0f0f",
+  cardHi:   "#141414",
+  border:   "#1e1e1e",
+  borderHi: "#888",
+  silver:   "#c0c0c0",
+  silverLt: "#e8e8e8",
+  silverDim:"#666",
+  chrome:   "linear-gradient(135deg, #999 0%, #fff 40%, #aaa 60%, #ddd 80%, #888 100%)",
+  white:    "#f5f5f5",
+  muted:    "#555",
+  danger:   "#c0392b",
+  success:  "#27ae60",
+  info:     "#2980b9",
+  font:     "'Barlow Condensed','Arial Narrow',Arial,sans-serif",
+  body:     "'Inter','Helvetica Neue',sans-serif",
+};
+
+const STATUSES = ["Draft","Sent","Viewed","Overdue","Paid","Cancelled"];
+const SC = {
+  Draft:     { bg:"#111", text:"#666", border:"#222" },
+  Sent:      { bg:"#0a0e14", text:"#5b9bd5", border:"#152030" },
+  Viewed:    { bg:"#141211", text:"#c0a060", border:"#2a2010" },
+  Overdue:   { bg:"#140a0a", text:"#d45050", border:"#300" },
+  Paid:      { bg:"#0a1410", text:"#4caf7a", border:"#102a1a" },
+  Cancelled: { bg:"#0e0e0e", text:"#444", border:"#1a1a1a" },
+};
+
+const SEED = [
+  { id:"INV-001", client:"Acme Corp",       email:"billing@acme.com",      amount:4500,  due:"2026-03-28", status:"Overdue", issued:"2026-03-01", reminders:2, notes:"Event Security Detail",  source:"email" },
+  { id:"INV-002", client:"Globex Inc",       email:"ap@globex.com",         amount:1200,  due:"2026-04-15", status:"Sent",    issued:"2026-03-15", reminders:0, notes:"Monthly Retainer",      source:"manual"},
+  { id:"INV-003", client:"Initech LLC",      email:"finance@initech.com",   amount:8750,  due:"2026-04-20", status:"Viewed",  issued:"2026-03-20", reminders:1, notes:"Executive Protection",  source:"email" },
+  { id:"INV-004", client:"Umbrella Co",      email:"accounts@umbrella.com", amount:325,   due:"2026-03-10", status:"Paid",    issued:"2026-02-10", reminders:0, notes:"Consulting Hours",      source:"manual"},
+  { id:"INV-005", client:"Stark Industries", email:"tony@stark.com",        amount:22000, due:"2026-04-30", status:"Draft",   issued:"2026-04-01", reminders:0, notes:"VIP Protective Detail", source:"email" },
+];
+
+const fmt = n => "$"+Number(n).toLocaleString("en-US",{minimumFractionDigits:0});
+const todayStr = () => new Date().toISOString().split("T")[0];
+const daysLeft = d => Math.ceil((new Date(d)-new Date())/86400000);
+const uid = () => "INV-"+String(Math.floor(Math.random()*9000)+1000);
+
+// ─── SSP BADGE LOGO ───────────────────────────────────────────────────────────
+function SSPBadge({ size = 44 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="ring" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="#fff" stopOpacity="0.05"/>
+          <stop offset="100%" stopColor="#000" stopOpacity="0"/>
+        </radialGradient>
+        <linearGradient id="chrome" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%"   stopColor="#888"/>
+          <stop offset="30%"  stopColor="#eee"/>
+          <stop offset="55%"  stopColor="#bbb"/>
+          <stop offset="80%"  stopColor="#ddd"/>
+          <stop offset="100%" stopColor="#777"/>
+        </linearGradient>
+        <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%"   stopColor="#ccc"/>
+          <stop offset="40%"  stopColor="#fff"/>
+          <stop offset="70%"  stopColor="#aaa"/>
+          <stop offset="100%" stopColor="#888"/>
+        </linearGradient>
+      </defs>
+      {/* Outer ring */}
+      <circle cx="50" cy="50" r="48" fill="#000" stroke="url(#chrome)" strokeWidth="2.5"/>
+      <circle cx="50" cy="50" r="42" fill="none" stroke="#333" strokeWidth="0.8"/>
+      {/* Stars */}
+      <text x="18" y="55" textAnchor="middle" fill="url(#chrome)" fontSize="8" fontFamily="Arial">★</text>
+      <text x="82" y="55" textAnchor="middle" fill="url(#chrome)" fontSize="8" fontFamily="Arial">★</text>
+      {/* Shield body */}
+      <path d="M50 20 L68 28 L68 52 Q68 66 50 76 Q32 66 32 52 L32 28 Z" fill="#0a0a0a" stroke="url(#chrome)" strokeWidth="2"/>
+      {/* S lettermark */}
+      <text x="50" y="58" textAnchor="middle" fill="url(#shieldGrad)" fontSize="28" fontFamily="Arial" fontWeight="900">S</text>
+      {/* Top arc text */}
+      <path id="topArc" d="M 15,50 A 35,35 0 0,1 85,50" fill="none"/>
+      <text fontSize="7.5" fontFamily="Arial" fontWeight="700" fill="url(#chrome)" letterSpacing="2">
+        <textPath href="#topArc" startOffset="8%">SPECIAL SERVICES</textPath>
+      </text>
+      {/* Bottom arc text */}
+      <path id="botArc" d="M 16,54 A 35,35 0 0,0 84,54" fill="none"/>
+      <text fontSize="7.5" fontFamily="Arial" fontWeight="700" fill="url(#chrome)" letterSpacing="3">
+        <textPath href="#botArc" startOffset="18%">PROTECTION</textPath>
+      </text>
+    </svg>
+  );
+}
+
+// ─── CHROME DIVIDER ───────────────────────────────────────────────────────────
+const Divider = () => (
+  <div style={{display:"flex",alignItems:"center",gap:8,margin:"0 0 14px"}}>
+    <div style={{flex:1,height:1,background:"linear-gradient(90deg,transparent,#444)"}}/>
+    <div style={{width:4,height:4,background:C.silver,transform:"rotate(45deg)"}}/>
+    <div style={{flex:1,height:1,background:"linear-gradient(90deg,#444,transparent)"}}/>
+  </div>
+);
+
+// ─── STATUS BADGE ─────────────────────────────────────────────────────────────
+function StatusBadge({ status }) {
+  const s = SC[status]||SC.Draft;
+  return (
+    <span style={{background:s.bg,color:s.text,border:`1px solid ${s.border}`,padding:"2px 10px",fontSize:10,fontWeight:700,fontFamily:C.font,letterSpacing:2,textTransform:"uppercase",borderRadius:2}}>
+      {status}
+    </span>
+  );
+}
+
+// ─── STAT CARD ────────────────────────────────────────────────────────────────
+function StatCard({ label, value, sub, accent }) {
+  return (
+    <div style={{background:C.card,border:`1px solid ${C.border}`,borderTop:`2px solid ${accent||C.silver}`,padding:"14px 16px",position:"relative",overflow:"hidden"}}>
+      <div style={{fontSize:10,color:C.muted,fontFamily:C.font,letterSpacing:3,textTransform:"uppercase",marginBottom:5}}>{label}</div>
+      <div style={{fontSize:21,fontWeight:800,color:accent||C.silverLt,fontFamily:C.font,letterSpacing:1}}>{value}</div>
+      {sub && <div style={{fontSize:10,color:C.muted,marginTop:2,fontFamily:C.body}}>{sub}</div>}
+    </div>
+  );
+}
+
+// ─── PDF EXPORT ───────────────────────────────────────────────────────────────
+function exportPDF(inv) {
+  const body = [
+    `BT /F2 20 Tf 50 800 Td (SPECIAL SERVICES PROTECTION) Tj ET`,
+    `BT /F1 9 Tf 50 784 Td (CONFIDENTIAL  |  INVOICE) Tj ET`,
+    `BT /F2 11 Tf 50 748 Td (BILL TO:) Tj ET`,
+    `BT /F1 11 Tf 50 732 Td (${inv.client}) Tj ET`,
+    `BT /F1 10 Tf 50 716 Td (${inv.email}) Tj ET`,
+    `BT /F2 11 Tf 390 748 Td (INVOICE #:) Tj ET`,
+    `BT /F1 11 Tf 390 732 Td (${inv.id}) Tj ET`,
+    `BT /F2 11 Tf 390 716 Td (ISSUED:) Tj ET`,
+    `BT /F1 10 Tf 390 700 Td (${inv.issued}) Tj ET`,
+    `BT /F2 11 Tf 390 682 Td (DUE DATE:) Tj ET`,
+    `BT /F1 10 Tf 390 666 Td (${inv.due}) Tj ET`,
+    `BT /F2 12 Tf 50 628 Td (SERVICE DESCRIPTION) Tj ET`,
+    `BT /F2 12 Tf 440 628 Td (AMOUNT) Tj ET`,
+    `BT /F1 11 Tf 50 608 Td (${inv.notes||"Security Services Rendered"}) Tj ET`,
+    `BT /F1 11 Tf 440 608 Td (${fmt(inv.amount)}) Tj ET`,
+    `BT /F2 13 Tf 390 555 Td (TOTAL DUE: ${fmt(inv.amount)}) Tj ET`,
+    `BT /F2 10 Tf 50 120 Td (STATUS: ${inv.status.toUpperCase()}) Tj ET`,
+    `BT /F1 8 Tf 50 70 Td (Special Services Protection  |  Authorized & Confidential) Tj ET`,
+  ].join("\n");
+  const pdf = [
+    `%PDF-1.4`,`1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj`,
+    `2 0 obj<</Type/Pages/Kids[3 0 R]/Count 1>>endobj`,
+    `3 0 obj<</Type/Page/Parent 2 0 R/MediaBox[0 0 595 842]/Contents 4 0 R/Resources<</Font<</F1<</Type/Font/Subtype/Type1/BaseFont/Helvetica>>/F2<</Type/Font/Subtype/Type1/BaseFont/Helvetica-Bold>>>>>>  >>endobj`,
+    `4 0 obj<</Length ${body.length}>>\nstream\n${body}\nendstream\nendobj`,
+    `xref\n0 5\n0000000000 65535 f\ntrailer<</Size 5/Root 1 0 R>>\nstartxref\n9\n%%EOF`
+  ].join("\n");
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([pdf],{type:"application/pdf"}));
+  a.download = `SSP-${inv.id}.pdf`; a.click();
+}
+
+// ─── GMAIL MODAL ──────────────────────────────────────────────────────────────
+function GmailModal({ onClose, onImport }) {
+  const [phase, setPhase] = useState("idle");
+  const [found, setFound] = useState([]);
+  const [sel, setSel] = useState({});
+  const [log, setLog] = useState([]);
+  const addLog = m => setLog(l => [...l, { t: new Date().toLocaleTimeString(), m }]);
+
+  const scan = async () => {
+    setPhase("scanning"); setLog([]);
+    addLog("Connecting to Gmail MCP...");
+    try {
+      const res = await fetch("https://api.anthropic.com/v1/messages", {
+        method:"POST", headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({
+          model:"claude-sonnet-4-20250514", max_tokens:1500,
+          system:`You are an invoice extraction agent for Special Services Protection, a security company. Search Gmail for invoice-related emails (billing, payment due, statements, security service invoices). Respond ONLY with a valid JSON array — no markdown, no explanation:
+[{"client":"Name","email":"from@email.com","amount":1234,"due":"YYYY-MM-DD","issued":"YYYY-MM-DD","notes":"brief description"}]
+If none found return []. Today is ${todayStr()}.`,
+          messages:[{role:"user",content:"Search my Gmail for any invoice or billing-related emails from the last 60 days. Extract invoice details."}],
+          mcp_servers:[{type:"url",url:"https://gmail.mcp.claude.com/mcp",name:"gmail-mcp"}]
+        })
+      });
+      const data = await res.json();
+      const raw = data.content?.map(b => b.type==="text"?b.text:"").join("") || "[]";
+      addLog("Parsing results...");
+      let parsed = [];
+      try { parsed = JSON.parse(raw.replace(/```json|```/g,"").trim()); } catch {}
+      if (!Array.isArray(parsed)) parsed = [];
+      addLog(`Found ${parsed.length} invoice email(s).`);
+      const enriched = parsed.map(p => ({ ...p, id:uid(), status:"Draft", reminders:0, source:"email", amount:parseFloat(p.amount)||0 }));
+      setFound(enriched);
+      const s = {}; enriched.forEach(e => s[e.id]=true); setSel(s);
+      setPhase("results");
+    } catch {
+      addLog("⚠️ Gmail connection failed. Ensure Gmail is connected in Claude.ai settings.");
+      setPhase("results");
+    }
+  };
+
+  const importSel = () => { onImport(found.filter(f => sel[f.id])); };
+
+  const overlay = { position:"fixed",inset:0,background:"rgba(0,0,0,.85)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:300 };
+  const modal = { background:"#0c0c0c",border:`1px solid #333`,borderTop:`2px solid ${C.silver}`,borderRadius:4,padding:28,width:500,maxHeight:"80vh",overflowY:"auto",boxShadow:"0 0 60px rgba(0,0,0,.9)" };
+
+  return (
+    <div style={overlay}>
+      <div style={modal}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:20}}>
+          <div style={{fontFamily:C.font,fontSize:18,fontWeight:800,color:C.silverLt,letterSpacing:3,textTransform:"uppercase"}}>📧 Gmail Scanner</div>
+          <button onClick={onClose} style={{background:"none",border:"none",color:C.muted,fontSize:22,cursor:"pointer"}}>×</button>
+        </div>
+        <Divider/>
+
+        {phase==="idle" && (
+          <>
+            <p style={{fontSize:12,color:C.muted,lineHeight:1.7,fontFamily:C.body,marginBottom:20}}>The AI agent will scan your Gmail for invoice-related emails and auto-extract client names, amounts, and due dates into your tracker.</p>
+            <button onClick={scan} style={{width:"100%",padding:"12px",background:C.card,border:`1px solid ${C.silver}`,color:C.silverLt,fontFamily:C.font,letterSpacing:3,fontSize:13,fontWeight:700,textTransform:"uppercase",cursor:"pointer"}}>
+              ⬡ INITIATE SCAN
+            </button>
+          </>
+        )}
+
+        {phase==="scanning" && (
+          <div style={{textAlign:"center",padding:"20px 0"}}>
+            <div style={{fontSize:12,color:C.silver,fontFamily:C.font,letterSpacing:2,marginBottom:16}}>SCANNING...</div>
+            <div style={{background:"#0a0a0a",border:`1px solid ${C.border}`,padding:12,textAlign:"left",borderRadius:2}}>
+              {log.map((l,i) => <div key={i} style={{fontSize:11,color:C.muted,fontFamily:C.body,marginBottom:3}}><span style={{color:"#333"}}>{l.t}</span> {l.m}</div>)}
+            </div>
+          </div>
+        )}
+
+        {phase==="results" && found.length===0 && (
+          <div style={{textAlign:"center",padding:24}}>
+            <div style={{fontSize:13,color:C.muted,marginBottom:16,fontFamily:C.body}}>No invoice emails detected. Ensure Gmail is connected in Claude.ai → Integrations.</div>
+            <button onClick={onClose} style={{padding:"8px 24px",background:C.card,border:`1px solid ${C.silver}`,color:C.silver,fontFamily:C.font,letterSpacing:2,fontSize:12,fontWeight:700,cursor:"pointer"}}>CLOSE</button>
+          </div>
+        )}
+
+        {phase==="results" && found.length>0 && (
+          <>
+            <div style={{fontSize:11,color:C.muted,fontFamily:C.font,letterSpacing:2,textTransform:"uppercase",marginBottom:12}}>
+              SELECT TO IMPORT — {found.filter(f=>sel[f.id]).length} SELECTED
+            </div>
+            {found.map(f => (
+              <div key={f.id} onClick={() => setSel(s=>({...s,[f.id]:!s[f.id]}))}
+                style={{border:`1px solid ${sel[f.id]?C.silver:C.border}`,padding:12,marginBottom:8,cursor:"pointer",background:sel[f.id]?"#141414":"#0a0a0a",transition:"all .15s"}}>
+                <div style={{display:"flex",justifyContent:"space-between"}}>
+                  <div>
+                    <div style={{fontFamily:C.font,fontSize:14,fontWeight:700,color:C.silverLt,letterSpacing:1}}>{f.client||f.email}</div>
+                    <div style={{fontSize:11,color:C.muted,fontFamily:C.body}}>{f.notes}</div>
+                    <div style={{fontSize:10,color:C.muted,marginTop:2}}>Due: {f.due||"TBD"}</div>
+                  </div>
+                  <div style={{textAlign:"right"}}>
+                    <div style={{fontFamily:C.font,fontSize:16,fontWeight:800,color:C.silver}}>{fmt(f.amount)}</div>
+                    <div style={{width:16,height:16,border:`1.5px solid ${sel[f.id]?C.silver:C.muted}`,background:sel[f.id]?"#fff":"transparent",marginLeft:"auto",marginTop:8,display:"flex",alignItems:"center",justifyContent:"center"}}>
+                      {sel[f.id] && <span style={{color:"#000",fontSize:10,fontWeight:900}}>✓</span>}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+            <button onClick={importSel} style={{width:"100%",padding:"12px",background:C.card,border:`1px solid ${C.silver}`,color:C.silverLt,fontFamily:C.font,letterSpacing:3,fontSize:13,fontWeight:700,textTransform:"uppercase",cursor:"pointer",marginTop:8}}>
+              IMPORT {found.filter(f=>sel[f.id]).length} INVOICE(S)
+            </button>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ─── NEW INVOICE MODAL ────────────────────────────────────────────────────────
+function NewInvModal({ onSave, onClose }) {
+  const [f, setF] = useState({ client:"",email:"",amount:"",due:"",notes:"" });
+  const set = (k,v) => setF(x=>({...x,[k]:v}));
+  const inputStyle = { width:"100%",background:"#090909",border:`1px solid ${C.border}`,borderRadius:2,padding:"9px 10px",fontSize:13,fontFamily:C.body,color:C.white,outline:"none",boxSizing:"border-box" };
+  const labelStyle = { fontSize:10,fontFamily:C.font,letterSpacing:2,color:C.muted,textTransform:"uppercase",display:"block",marginBottom:5 };
+
+  return (
+    <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.85)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:200}}>
+      <div style={{background:"#0c0c0c",border:`1px solid #333`,borderTop:`2px solid ${C.silver}`,padding:28,width:400,boxShadow:"0 0 60px rgba(0,0,0,.9)"}}>
+        <div style={{fontFamily:C.font,fontSize:18,fontWeight:800,color:C.silverLt,letterSpacing:3,textTransform:"uppercase",marginBottom:16}}>NEW INVOICE</div>
+        <Divider/>
+        {[["CLIENT NAME","client","text"],["CLIENT EMAIL","email","email"],["AMOUNT ($)","amount","number"],["DUE DATE","due","date"],["SERVICE NOTES","notes","text"]].map(([lbl,key,type]) => (
+          <div key={key} style={{marginBottom:13}}>
+            <label style={labelStyle}>{lbl}</label>
+            <input type={type} value={f[key]} onChange={e=>set(key,e.target.value)} style={inputStyle}/>
+          </div>
+        ))}
+        <div style={{display:"flex",gap:10,marginTop:18}}>
+          <button onClick={onClose} style={{flex:1,padding:"10px",background:"transparent",border:`1px solid ${C.border}`,color:C.muted,fontFamily:C.font,letterSpacing:2,fontSize:12,cursor:"pointer",textTransform:"uppercase"}}>CANCEL</button>
+          <button onClick={()=>{if(!f.client||!f.amount||!f.due)return; onSave({...f,amount:parseFloat(f.amount),status:"Draft",issued:todayStr(),reminders:0,id:uid(),source:"manual"});}}
+            style={{flex:1,padding:"10px",background:C.card,border:`1px solid ${C.silver}`,color:C.silverLt,fontFamily:C.font,letterSpacing:2,fontSize:12,cursor:"pointer",textTransform:"uppercase",fontWeight:700}}>
+            CREATE
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── ANALYTICS ────────────────────────────────────────────────────────────────
+function Analytics({ invoices }) {
+  const byStatus = STATUSES.map(s => ({ s, v:invoices.filter(i=>i.status===s).reduce((a,i)=>a+i.amount,0) }));
+  const maxV = Math.max(...byStatus.map(b=>b.v), 1);
+  const monthly = {};
+  invoices.forEach(inv => { const m=inv.issued?.slice(0,7)||""; monthly[m]=(monthly[m]||0)+inv.amount; });
+  const months = Object.entries(monthly).sort((a,b)=>a[0]>b[0]?1:-1).slice(-6);
+  const maxM = Math.max(...months.map(m=>m[1]),1);
+
+  const aging = [
+    { label:"CURRENT",    fn:i=>daysLeft(i.due)>0,       color:C.silver },
+    { label:"DUE SOON",   fn:i=>daysLeft(i.due)<=7&&daysLeft(i.due)>=0, color:"#c0a040" },
+    { label:"1-30 DAYS",  fn:i=>daysLeft(i.due)<0&&daysLeft(i.due)>=-30, color:"#c05050" },
+    { label:"30+ DAYS",   fn:i=>daysLeft(i.due)<-30,     color:"#801010" },
+  ];
+
+  return (
+    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14}}>
+      <div style={{background:C.card,border:`1px solid ${C.border}`,padding:16}}>
+        <div style={{fontFamily:C.font,fontSize:13,fontWeight:700,color:C.silver,letterSpacing:3,textTransform:"uppercase",marginBottom:14}}>VALUE BY STATUS</div>
+        <Divider/>
+        {byStatus.filter(b=>b.v>0).map(b=>(
+          <div key={b.s} style={{marginBottom:10}}>
+            <div style={{display:"flex",justifyContent:"space-between",fontSize:11,marginBottom:4}}>
+              <span style={{color:SC[b.s].text,fontFamily:C.font,letterSpacing:1,textTransform:"uppercase"}}>{b.s}</span>
+              <span style={{color:C.silver,fontFamily:C.font,fontWeight:700}}>{fmt(b.v)}</span>
+            </div>
+            <div style={{background:"#0a0a0a",height:6,border:`1px solid ${C.border}`}}>
+              <div style={{height:"100%",background:`linear-gradient(90deg,${SC[b.s].text},${SC[b.s].text}88)`,width:`${(b.v/maxV)*100}%`,transition:"width .4s"}}/>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div style={{background:C.card,border:`1px solid ${C.border}`,padding:16}}>
+        <div style={{fontFamily:C.font,fontSize:13,fontWeight:700,color:C.silver,letterSpacing:3,textTransform:"uppercase",marginBottom:14}}>MONTHLY VOLUME</div>
+        <Divider/>
+        <div style={{display:"flex",gap:8,alignItems:"flex-end",height:120}}>
+          {months.map(([m,v])=>(
+            <div key={m} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:3}}>
+              <div style={{fontSize:9,color:C.muted,fontFamily:C.font}}>{fmt(v)}</div>
+              <div style={{width:"100%",background:`linear-gradient(180deg,${C.silverLt},${C.silverDim})`,height:`${(v/maxM)*90}px`,transition:"height .4s"}}/>
+              <div style={{fontSize:9,color:C.muted,fontFamily:C.font}}>{m.slice(5)}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div style={{background:C.card,border:`1px solid ${C.border}`,padding:16,gridColumn:"span 2"}}>
+        <div style={{fontFamily:C.font,fontSize:13,fontWeight:700,color:C.silver,letterSpacing:3,textTransform:"uppercase",marginBottom:14}}>ACCOUNTS AGING</div>
+        <Divider/>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:12}}>
+          {aging.map(({ label,fn,color }) => {
+            const group = invoices.filter(i=>!["Paid","Cancelled"].includes(i.status)&&fn(i));
+            return (
+              <div key={label} style={{background:"#0a0a0a",border:`1px solid ${C.border}`,borderTop:`2px solid ${color}`,padding:12,textAlign:"center"}}>
+                <div style={{fontSize:24,fontWeight:900,color,fontFamily:C.font}}>{group.length}</div>
+                <div style={{fontSize:9,color:C.muted,letterSpacing:2,fontFamily:C.font,textTransform:"uppercase",marginTop:2}}>{label}</div>
+                <div style={{fontSize:12,fontWeight:700,color:C.silver,fontFamily:C.font,marginTop:4}}>{fmt(group.reduce((a,i)=>a+i.amount,0))}</div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── CALENDAR ─────────────────────────────────────────────────────────────────
+function Calendar({ invoices }) {
+  const [mo, setMo] = useState(new Date().getMonth());
+  const [yr, setYr] = useState(new Date().getFullYear());
+  const MONTHS = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+  const startDay = new Date(yr,mo,1).getDay();
+  const days = new Date(yr,mo+1,0).getDate();
+  const byDay = {};
+  invoices.forEach(inv => {
+    const p = inv.due?.split("-"); if(!p) return;
+    if(parseInt(p[0])===yr&&parseInt(p[1])-1===mo) { const k=String(parseInt(p[2])); (byDay[k]=byDay[k]||[]).push(inv); }
+  });
+  const cells = [...Array(startDay).fill(null), ...Array.from({length:days},(_,i)=>i+1)];
+  const isToday = d => d && new Date(yr,mo,d).toDateString()===new Date().toDateString();
+
+  return (
+    <div style={{background:C.card,border:`1px solid ${C.border}`,padding:16}}>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14}}>
+        <button onClick={()=>{if(mo===0){setMo(11);setYr(y=>y-1);}else setMo(m=>m-1);}}
+          style={{background:"none",border:"none",color:C.silver,fontSize:18,cursor:"pointer",fontFamily:C.font}}>‹</button>
+        <div style={{fontFamily:C.font,fontSize:15,fontWeight:800,color:C.silverLt,letterSpacing:4,textTransform:"uppercase"}}>{MONTHS[mo]} {yr}</div>
+        <button onClick={()=>{if(mo===11){setMo(0);setYr(y=>y+1);}else setMo(m=>m+1);}}
+          style={{background:"none",border:"none",color:C.silver,fontSize:18,cursor:"pointer",fontFamily:C.font}}>›</button>
+      </div>
+      <Divider/>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",gap:3,textAlign:"center"}}>
+        {["SU","MO","TU","WE","TH","FR","SA"].map(d=>(
+          <div key={d} style={{fontSize:9,color:C.muted,fontFamily:C.font,letterSpacing:1,padding:"4px 0",fontWeight:700}}>{d}</div>
+        ))}
+        {cells.map((d,i) => {
+          const invs = d ? byDay[String(d)]||[] : [];
+          return (
+            <div key={i} style={{minHeight:50,background:isToday(d)?"#1a1a1a":invs.length?"#111":"#0a0a0a",border:`1px solid ${isToday(d)?C.silver:invs.length?"#2a2a2a":C.border}`,padding:"4px 3px"}}>
+              {d && <div style={{fontSize:10,fontWeight:isToday(d)?900:400,color:isToday(d)?C.silverLt:C.muted,fontFamily:C.font}}>{d}</div>}
+              {invs.slice(0,2).map((inv,j)=>(
+                <div key={j} style={{fontSize:8,background:SC[inv.status].bg,color:SC[inv.status].text,padding:"1px 3px",marginTop:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",fontFamily:C.font,letterSpacing:0.5}}>
+                  {inv.client.split(" ")[0].toUpperCase()}
+                </div>
+              ))}
+              {invs.length>2 && <div style={{fontSize:8,color:C.muted}}>+{invs.length-2}</div>}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ─── AGENT CHAT ───────────────────────────────────────────────────────────────
+function AgentChat({ invoices, onAction }) {
+  const [msgs, setMsgs] = useState([
+    { role:"assistant", text:"SPECIAL SERVICES PROTECTION — INVOICE AGENT ONLINE.\n\nI have full visibility into your accounts. I can flag overdue clients, send Gmail reminders, update statuses, and provide financial intelligence. Standing by." }
+  ]);
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const endRef = useRef(null);
+  useEffect(() => { endRef.current?.scrollIntoView({behavior:"smooth"}); }, [msgs]);
+
+  const QUICK = ["Flag high-priority accounts","Send overdue reminders","Payment summary","Draft follow-up emails"];
+
+  const send = async () => {
+    if (!input.trim()||loading) return;
+    const txt = input.trim(); setInput(""); setLoading(true);
+    setMsgs(m=>[...m,{role:"user",text:txt}]);
+    const summary = invoices.map(i=>`ID:${i.id} Client:${i.client} Email:${i.email} Amt:$${i.amount} Due:${i.due} Status:${i.status} Reminders:${i.reminders}`).join("\n");
+    const hist = msgs.slice(-10).map(m=>({role:m.role,content:m.text}));
+    try {
+      const res = await fetch("https://api.anthropic.com/v1/messages",{
+        method:"POST",headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({
+          model:"claude-sonnet-4-20250514", max_tokens:1000,
+          system:`You are the invoice intelligence agent for Special Services Protection — a premier private security and executive protection firm. You have full visibility into all invoices and Gmail access.
+Today: ${todayStr()}
+
+INVOICES:\n${summary}
+
+Capabilities:
+- Analyze accounts, flag risks, give collection intelligence
+- Update statuses → emit on its own line: ACTION: {"type":"update","id":"INV-XXX","status":"NewStatus"}
+- Import from email → emit: ACTION: {"type":"add","client":"...","email":"...","amount":0,"due":"YYYY-MM-DD","notes":"...","status":"Draft"}
+- Send Gmail follow-ups via Gmail MCP
+- Bump reminder count → emit: ACTION: {"type":"reminder","id":"INV-XXX"}
+
+Tone: professional, precise, tactical. No fluff. Brevity is strength.`,
+          messages:[...hist,{role:"user",content:txt}],
+          mcp_servers:[{type:"url",url:"https://gmail.mcp.claude.com/mcp",name:"gmail-mcp"}]
+        })
+      });
+      const data = await res.json();
+      const raw = data.content?.map(b=>b.type==="text"?b.text:"").join("")||"Comms error. Retry.";
+      const re = /ACTION:\s*(\{[^\n]+\})/g; let m;
+      while((m=re.exec(raw))!==null){ try{ onAction(JSON.parse(m[1])); }catch{} }
+      setMsgs(ms=>[...ms,{role:"assistant",text:raw.replace(/ACTION:\s*\{[^\n]+\}/g,"").trim()}]);
+    } catch {
+      setMsgs(ms=>[...ms,{role:"assistant",text:"⚠ COMMS FAILURE. Check connection and retry."}]);
+    }
+    setLoading(false);
+  };
+
+  return (
+    <div style={{display:"flex",flexDirection:"column",height:"100%",background:C.bg,border:`1px solid ${C.border}`,borderTop:`2px solid ${C.silver}`,overflow:"hidden"}}>
+      <div style={{padding:"11px 14px",background:"#0a0a0a",borderBottom:`1px solid ${C.border}`,display:"flex",alignItems:"center",gap:10}}>
+        <SSPBadge size={28}/>
+        <div>
+          <div style={{fontFamily:C.font,fontSize:13,fontWeight:800,color:C.silverLt,letterSpacing:3,textTransform:"uppercase"}}>Invoice Agent</div>
+          <div style={{fontSize:9,color:C.muted,fontFamily:C.font,letterSpacing:2}}>GMAIL CONNECTED · AI ACTIVE</div>
+        </div>
+        <div style={{marginLeft:"auto",width:8,height:8,borderRadius:"50%",background:"#27ae60",boxShadow:"0 0 6px #27ae60"}}/>
+      </div>
+      <div style={{flex:1,overflowY:"auto",padding:12,display:"flex",flexDirection:"column",gap:8}}>
+        {msgs.map((m,i) => (
+          <div key={i} style={{display:"flex",justifyContent:m.role==="user"?"flex-end":"flex-start"}}>
+            <div style={{maxWidth:"90%",padding:"9px 13px",
+              background:m.role==="user"?"#141414":"#0d0d0d",
+              border:`1px solid ${m.role==="user"?C.silver:C.border}`,
+              color:m.role==="user"?C.silverLt:C.silver,
+              fontFamily:m.role==="user"?C.body:C.body,
+              fontSize:12,lineHeight:1.6,whiteSpace:"pre-wrap"}}>
+              {m.text}
+            </div>
+          </div>
+        ))}
+        {loading && (
+          <div style={{display:"flex"}}>
+            <div style={{background:"#0d0d0d",border:`1px solid ${C.border}`,padding:"9px 13px",fontSize:12,color:C.muted,fontFamily:C.font,letterSpacing:2}}>
+              PROCESSING...
+            </div>
+          </div>
+        )}
+        <div ref={endRef}/>
+      </div>
+      {msgs.length<=2 && (
+        <div style={{padding:"0 12px 8px",display:"flex",flexDirection:"column",gap:5}}>
+          {QUICK.map((q,i) => (
+            <button key={i} onClick={()=>setInput(q)}
+              style={{background:"#0a0a0a",border:`1px solid ${C.border}`,padding:"6px 10px",fontSize:10,color:C.muted,cursor:"pointer",textAlign:"left",fontFamily:C.font,letterSpacing:1,textTransform:"uppercase"}}>
+              › {q}
+            </button>
+          ))}
+        </div>
+      )}
+      <div style={{padding:"9px 10px",borderTop:`1px solid ${C.border}`,display:"flex",gap:7,background:"#0a0a0a"}}>
+        <input value={input} onChange={e=>setInput(e.target.value)} onKeyDown={e=>e.key==="Enter"&&send()}
+          placeholder="ENTER COMMAND..."
+          style={{flex:1,background:"#080808",border:`1px solid ${C.border}`,padding:"8px 10px",fontSize:11,fontFamily:C.font,letterSpacing:1,color:C.silver,outline:"none"}}/>
+        <button onClick={send} disabled={loading||!input.trim()}
+          style={{background:C.card,border:`1px solid ${C.silver}`,color:C.silverLt,padding:"8px 14px",cursor:"pointer",fontFamily:C.font,letterSpacing:2,fontSize:11,fontWeight:700,opacity:loading?.5:1}}>
+          SEND
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ─── MAIN APP ─────────────────────────────────────────────────────────────────
+function App() {
+  const [invoices, setInvoices] = useState(SEED);
+  const [tab, setTab] = useState("invoices");
+  const [filter, setFilter] = useState("All");
+  const [showNew, setShowNew] = useState(false);
+  const [showGmail, setShowGmail] = useState(false);
+  const [toasts, setToasts] = useState([]);
+  const [expanded, setExpanded] = useState(null);
+
+  const toast = (msg, type="info") => {
+    const id = Date.now();
+    setToasts(t=>[...t,{id,msg,type}]);
+    setTimeout(()=>setToasts(t=>t.filter(x=>x.id!==id)),4000);
+  };
+
+  const handleAction = act => {
+    if(act.type==="update"){ setInvoices(invs=>invs.map(i=>i.id===act.id?{...i,status:act.status}:i)); toast(`${act.id} → ${act.status}`,"success"); }
+    else if(act.type==="add"){ setInvoices(invs=>[{...act,id:uid(),reminders:0,issued:todayStr(),source:"email"},...invs]); toast(`New invoice imported: ${act.client}`,"info"); }
+    else if(act.type==="reminder"){ setInvoices(invs=>invs.map(i=>i.id===act.id?{...i,reminders:i.reminders+1}:i)); toast(`Reminder sent: ${act.id}`,"info"); }
+  };
+
+  const updateStatus = (id,s) => { setInvoices(invs=>invs.map(i=>i.id===id?{...i,status:s}:i)); toast(`${id} → ${s}`,"success"); };
+  const sendReminder = id => { setInvoices(invs=>invs.map(i=>i.id===id?{...i,reminders:i.reminders+1}:i)); toast(`Reminder sent: ${id}`,"info"); };
+  const addInvoice = inv => { setInvoices(i=>[inv,...i]); setShowNew(false); toast("Invoice created","success"); };
+  const importGmail = invs => { setInvoices(i=>[...invs,...i]); setShowGmail(false); toast(`Imported ${invs.length} invoice(s) from Gmail`,"success"); };
+
+  const filtered = filter==="All"?invoices:invoices.filter(i=>i.status===filter);
+  const outstanding = invoices.filter(i=>!["Paid","Cancelled"].includes(i.status)).reduce((s,i)=>s+i.amount,0);
+  const collected = invoices.filter(i=>i.status==="Paid").reduce((s,i)=>s+i.amount,0);
+  const overdue = invoices.filter(i=>i.status==="Overdue").length;
+  const rate = invoices.length ? Math.round(invoices.filter(i=>i.status==="Paid").length/invoices.length*100):0;
+
+  const btnStyle = (active) => ({
+    padding:"7px 16px",background:active?"#141414":"transparent",
+    border:`1px solid ${active?C.silver:C.border}`,
+    color:active?C.silverLt:C.muted,
+    fontFamily:C.font,letterSpacing:2,fontSize:11,fontWeight:700,
+    textTransform:"uppercase",cursor:"pointer",transition:"all .15s"
+  });
+
+  return (
+    <div style={{fontFamily:C.body,background:C.black,minHeight:"100vh",padding:16,color:C.white}}>
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&display=swap'); * { box-sizing: border-box; } ::-webkit-scrollbar{width:4px} ::-webkit-scrollbar-track{background:#0a0a0a} ::-webkit-scrollbar-thumb{background:#333}`}</style>
+
+      {/* Toasts */}
+      <div style={{position:"fixed",top:14,right:14,zIndex:400,display:"flex",flexDirection:"column",gap:6}}>
+        {toasts.map(t=>(
+          <div key={t.id} style={{background:"#0f0f0f",border:`1px solid ${t.type==="success"?C.silver:C.border}`,color:t.type==="success"?C.silverLt:C.muted,padding:"9px 16px",fontSize:11,fontFamily:C.font,letterSpacing:2,textTransform:"uppercase",boxShadow:"0 4px 20px rgba(0,0,0,.8)"}}>
+            {t.type==="success"?"✓":t.type==="info"?"◈":"⚠"} {t.msg}
+          </div>
+        ))}
+      </div>
+
+      {showNew && <NewInvModal onSave={addInvoice} onClose={()=>setShowNew(false)}/>}
+      {showGmail && <GmailModal onClose={()=>setShowGmail(false)} onImport={importGmail}/>}
+
+      <div style={{maxWidth:1280,margin:"0 auto"}}>
+
+        {/* Header */}
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:20,paddingBottom:16,borderBottom:`1px solid ${C.border}`}}>
+          <div style={{display:"flex",alignItems:"center",gap:14}}>
+            <SSPBadge size={52}/>
+            <div>
+              <div style={{fontFamily:C.font,fontSize:22,fontWeight:900,color:C.silverLt,letterSpacing:4,textTransform:"uppercase",lineHeight:1}}>Special Services Protection</div>
+              <div style={{fontSize:10,color:C.muted,letterSpacing:4,fontFamily:C.font,marginTop:3,textTransform:"uppercase"}}>Invoice Management System</div>
+            </div>
+          </div>
+          <div style={{display:"flex",gap:8}}>
+            <button onClick={()=>setShowGmail(true)} style={{...btnStyle(false),display:"flex",alignItems:"center",gap:6}}>
+              ◈ SCAN GMAIL
+            </button>
+            <button onClick={()=>setShowNew(true)} style={{...btnStyle(true)}}>
+              + NEW INVOICE
+            </button>
+          </div>
+        </div>
+
+        {/* Stats */}
+        <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:10,marginBottom:18}}>
+          <StatCard label="Outstanding" value={fmt(outstanding)} sub="Pending collection" accent={C.silver}/>
+          <StatCard label="Collected" value={fmt(collected)} sub="Paid invoices" accent="#4caf7a"/>
+          <StatCard label="Overdue" value={`${overdue} ACCTS`} sub="Require immediate action" accent="#c05050"/>
+          <StatCard label="Collection Rate" value={`${rate}%`} sub="Overall performance" accent="#c0a040"/>
+        </div>
+
+        {/* Tab nav */}
+        <div style={{display:"flex",gap:4,marginBottom:14,borderBottom:`1px solid ${C.border}`,paddingBottom:10}}>
+          {[["invoices","◧ INVOICES"],["analytics","◈ ANALYTICS"],["calendar","◫ CALENDAR"]].map(([k,l])=>(
+            <button key={k} onClick={()=>setTab(k)} style={btnStyle(tab===k)}>{l}</button>
+          ))}
+        </div>
+
+        <div style={{display:"grid",gridTemplateColumns:"1fr 320px",gap:14,alignItems:"start"}}>
+
+          {/* Main Panel */}
+          <div>
+            {tab==="invoices" && (
+              <>
+                <div style={{display:"flex",gap:5,marginBottom:12,flexWrap:"wrap"}}>
+                  {["All",...STATUSES].map(s=>(
+                    <button key={s} onClick={()=>setFilter(s)}
+                      style={{padding:"4px 12px",background:filter===s?"#141414":"transparent",border:`1px solid ${filter===s?C.silver:C.border}`,color:filter===s?C.silverLt:C.muted,fontFamily:C.font,letterSpacing:2,fontSize:10,fontWeight:700,textTransform:"uppercase",cursor:"pointer"}}>
+                      {s}
+                    </button>
+                  ))}
+                </div>
+
+                <div style={{display:"flex",flexDirection:"column",gap:6}}>
+                  {filtered.map(inv => (
+                    <div key={inv.id}
+                      style={{background:expanded===inv.id?C.cardHi:C.card,border:`1px solid ${expanded===inv.id?C.silver:C.border}`,padding:"13px 16px",cursor:"pointer",transition:"border .15s",borderLeft:`3px solid ${SC[inv.status].text}`}}
+                      onClick={()=>setExpanded(expanded===inv.id?null:inv.id)}>
+                      <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:10}}>
+                        <div style={{flex:1,minWidth:0}}>
+                          <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap",marginBottom:5}}>
+                            <span style={{fontFamily:C.font,fontSize:15,fontWeight:800,color:C.silverLt,letterSpacing:2,textTransform:"uppercase"}}>{inv.client}</span>
+                            <span style={{fontSize:9,color:C.muted,fontFamily:C.font,letterSpacing:1}}>{inv.id}</span>
+                            <StatusBadge status={inv.status}/>
+                            {inv.source==="email"&&<span style={{fontSize:9,color:"#5b9bd5",fontFamily:C.font,letterSpacing:1,border:"1px solid #152030",padding:"1px 6px",background:"#0a0e14"}}>◈ EMAIL</span>}
+                          </div>
+                          <div style={{fontSize:11,color:C.muted,fontFamily:C.body,marginBottom:4}}>{inv.notes}</div>
+                          <div style={{fontSize:10,color:C.muted,fontFamily:C.font,letterSpacing:1}}>
+                            DUE: <span style={{color:inv.status==="Overdue"?"#c05050":C.silver}}>{inv.due}</span>
+                            {!["Paid","Cancelled"].includes(inv.status) && (
+                              <span style={{marginLeft:10,color:daysLeft(inv.due)<0?"#c05050":daysLeft(inv.due)<=7?"#c0a040":"#4caf7a",fontWeight:700}}>
+                                {daysLeft(inv.due)<0?`${Math.abs(daysLeft(inv.due))}D OVERDUE`:`${daysLeft(inv.due)}D LEFT`}
+                              </span>
+                            )}
+                            {inv.reminders>0&&<span style={{marginLeft:12,color:"#c0a040"}}>◈ {inv.reminders} REMINDER{inv.reminders>1?"S":""}</span>}
+                          </div>
+                        </div>
+                        <div style={{textAlign:"right",flexShrink:0}}>
+                          <div style={{fontFamily:C.font,fontSize:20,fontWeight:900,color:C.silverLt,letterSpacing:1}}>{fmt(inv.amount)}</div>
+                          <div style={{fontSize:9,color:C.muted,fontFamily:C.font,letterSpacing:1,marginTop:2}}>ISSUED {inv.issued}</div>
+                        </div>
+                      </div>
+
+                      {expanded===inv.id && (
+                        <div style={{marginTop:12,paddingTop:12,borderTop:`1px solid ${C.border}`}}>
+                          <div style={{display:"flex",gap:6,flexWrap:"wrap",alignItems:"center"}}>
+                            <span style={{fontSize:9,color:C.muted,fontFamily:C.font,letterSpacing:2,textTransform:"uppercase",marginRight:4}}>STATUS:</span>
+                            {STATUSES.filter(s=>s!==inv.status).map(s=>(
+                              <button key={s} onClick={e=>{e.stopPropagation();updateStatus(inv.id,s);}}
+                                style={{padding:"3px 10px",background:SC[s].bg,border:`1px solid ${SC[s].border}`,color:SC[s].text,fontFamily:C.font,letterSpacing:1,fontSize:9,fontWeight:700,textTransform:"uppercase",cursor:"pointer"}}>
+                                {s}
+                              </button>
+                            ))}
+                            <button onClick={e=>{e.stopPropagation();sendReminder(inv.id);}}
+                              style={{marginLeft:"auto",padding:"4px 12px",background:"#0a0e14",border:`1px solid #152030`,color:"#5b9bd5",fontFamily:C.font,letterSpacing:1,fontSize:9,fontWeight:700,textTransform:"uppercase",cursor:"pointer"}}>
+                              ◈ SEND REMINDER
+                            </button>
+                            <button onClick={e=>{e.stopPropagation();exportPDF(inv);}}
+                              style={{padding:"4px 12px",background:C.card,border:`1px solid ${C.border}`,color:C.muted,fontFamily:C.font,letterSpacing:1,fontSize:9,fontWeight:700,textTransform:"uppercase",cursor:"pointer"}}>
+                              ↓ EXPORT PDF
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                  {filtered.length===0&&<div style={{textAlign:"center",padding:40,color:C.muted,fontFamily:C.font,letterSpacing:3,textTransform:"uppercase",fontSize:12}}>NO RECORDS FOUND</div>}
+                </div>
+              </>
+            )}
+            {tab==="analytics" && <Analytics invoices={invoices}/>}
+            {tab==="calendar" && <Calendar invoices={invoices}/>}
+          </div>
+
+          {/* Agent */}
+          <div style={{height:600,position:"sticky",top:16}}>
+            <AgentChat invoices={invoices} onAction={handleAction}/>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div style={{marginTop:24,paddingTop:14,borderTop:`1px solid ${C.border}`,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+          <div style={{display:"flex",alignItems:"center",gap:8}}>
+            <SSPBadge size={22}/>
+            <span style={{fontFamily:C.font,fontSize:10,color:C.muted,letterSpacing:3,textTransform:"uppercase"}}>Special Services Protection — Authorized Personnel Only</span>
+          </div>
+          <div style={{fontSize:9,color:"#333",fontFamily:C.font,letterSpacing:2}}>CONFIDENTIAL</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+ReactDOM.render(React.createElement(App), document.getElementById("root"));
+
+  </script>
+</body>
+</html>
