@@ -16,8 +16,9 @@
 .ncta{background:transparent;border:1px solid rgba(200,200,200,0.3);color:var(--sb);font-size:10px;letter-spacing:.2em;text-transform:uppercase;padding:10px 22px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .25s;}.ncta:hover{background:var(--sb);color:var(--b);}
 .hbtn{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px;}.hbtn span{width:22px;height:1px;background:var(--s);display:block;}
 .mmenu{position:fixed;inset:0;background:var(--b2);z-index:998;padding:100px 40px 40px;display:flex;flex-direction:column;gap:28px;transform:translateX(100%);transition:transform .3s;}.mmenu.open{transform:translateX(0);}.mmenu a{font-size:26px;font-family:'Playfair Display',serif;color:var(--sb);text-decoration:none;}
+
 #hero{min-height:100vh;display:flex;align-items:center;position:relative;background:var(--b);}
-.hov{position:absolute;inset:0;background:linear-gradient(105deg,rgba(5,5,5,.97) 45%,rgba(5,5,5,.55) 100%);}
+.hov{position:absolute;inset:0;background:linear-gradient(105deg,rgba(5,5,5,.97) 45%,rgba(5,5,5,.5) 100%);}
 .hin{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:0 60px;width:100%;padding-top:70px;display:grid;grid-template-columns:1fr 480px;gap:60px;align-items:center;min-height:100vh;}
 .heyebrow{display:flex;align-items:center;gap:12px;margin-bottom:24px;}.heline{width:36px;height:1px;background:var(--sd);}.hetext{font-size:10px;letter-spacing:.32em;text-transform:uppercase;color:var(--sd);}
 h1{font-family:'Playfair Display',serif;font-size:clamp(52px,5.5vw,82px);font-weight:600;line-height:1.03;letter-spacing:-.015em;color:var(--sb);margin-bottom:28px;}h1 em{font-style:italic;color:var(--sd);}
@@ -29,47 +30,70 @@ h1{font-family:'Playfair Display',serif;font-size:clamp(52px,5.5vw,82px);font-we
 .himgs{position:relative;height:560px;}.him{position:absolute;top:0;right:0;width:340px;height:420px;overflow:hidden;border:1px solid rgba(255,255,255,.07);}.him img{width:100%;height:100%;object-fit:cover;object-position:top center;filter:grayscale(15%);}
 .his{position:absolute;bottom:0;left:0;width:220px;height:280px;overflow:hidden;border:1px solid rgba(255,255,255,.07);}.his img{width:100%;height:100%;object-fit:cover;object-position:top center;filter:grayscale(15%);}
 .hibadge{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--b2);border:1px solid rgba(200,200,200,.12);padding:16px 20px;text-align:center;z-index:3;width:130px;}.hibn{font-family:'Playfair Display',serif;font-size:26px;color:var(--sb);font-weight:600;}.hibl{font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--sd);margin-top:4px;}
+
 .tbar{border-top:1px solid rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.04);background:var(--b2);padding:18px 60px;display:flex;align-items:center;justify-content:center;gap:52px;flex-wrap:wrap;}
 .ti{display:flex;align-items:center;gap:9px;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--sd);}.tid{width:4px;height:4px;border-radius:50%;background:var(--sd);flex-shrink:0;}
+
 .sec{padding:110px 60px;max-width:1400px;margin:0 auto;}
 .stag{display:flex;align-items:center;gap:12px;margin-bottom:18px;}.stagline{width:28px;height:1px;background:var(--sk);}.stag span{font-size:9px;letter-spacing:.32em;text-transform:uppercase;color:var(--sd);}
 h2{font-family:'Playfair Display',serif;font-size:clamp(34px,3.5vw,52px);font-weight:600;color:var(--sb);line-height:1.08;margin-bottom:18px;}h2 em{font-style:italic;color:var(--sd);}
 .ssub{font-size:14px;color:var(--tm);max-width:520px;line-height:1.9;font-weight:300;}
 .divl{height:1px;background:rgba(255,255,255,.05);margin:0 60px;}
+
 .sgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:1px;margin-top:60px;background:rgba(255,255,255,.04);}
-.svc{background:var(--b2);padding:40px 32px;position:relative;overflow:hidden;transition:background .25s;}.svc::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:var(--sb);opacity:0;transition:opacity .25s;}.svc:hover{background:var(--b3);}.svc:hover::after{opacity:.22;}
+.svc{background:var(--b2);padding:40px 32px;position:relative;overflow:hidden;transition:background .25s;}.svc::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:var(--sb);opacity:0;transition:opacity .25s;}.svc:hover{background:var(--b3);}.svc:hover::after{opacity:.2;}
 .svci{width:40px;height:40px;border:1px solid rgba(200,200,200,.1);display:flex;align-items:center;justify-content:center;margin-bottom:22px;font-size:16px;}.svcn{font-family:'Playfair Display',serif;font-size:19px;font-weight:500;color:var(--sb);margin-bottom:12px;}.svcd{font-size:12px;color:var(--tm);line-height:1.85;font-weight:300;}
 .svcl{display:inline-flex;align-items:center;gap:7px;margin-top:18px;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--sd);text-decoration:none;transition:color .2s;}.svc:hover .svcl{color:var(--sb);}.svca{transition:transform .2s;}.svc:hover .svca{transform:translateX(4px);}
+
 .wgrid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;margin-top:60px;}
-.pillar{padding:32px 0;border-bottom:1px solid rgba(255,255,255,.05);display:flex;gap:22px;}.pnum{font-family:'Playfair Display',serif;font-size:12px;color:var(--sk);min-width:24px;padding-top:2px;}.ptitle{font-size:14px;font-weight:500;color:var(--sb);margin-bottom:9px;letter-spacing:.02em;}.pdesc{font-size:12px;color:var(--tm);line-height:1.85;font-weight:300;}
-.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,.04);}.mbox{background:var(--b2);padding:36px 28px;}.mnum{font-family:'Playfair Display',serif;font-size:40px;font-weight:600;color:var(--sb);line-height:1;}.munit{font-size:16px;color:var(--sd);}.mlabel{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--tm);margin-top:10px;}
+.pillar{padding:32px 0;border-bottom:1px solid rgba(255,255,255,.05);display:flex;gap:22px;}.pnum{font-family:'Playfair Display',serif;font-size:12px;color:var(--sk);min-width:24px;padding-top:2px;}.ptitle{font-size:14px;font-weight:500;color:var(--sb);margin-bottom:9px;}.pdesc{font-size:12px;color:var(--tm);line-height:1.85;font-weight:300;}
+.wstats{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,.04);}.wstat{background:var(--b2);padding:36px 28px;}.wsn{font-family:'Playfair Display',serif;font-size:40px;font-weight:600;color:var(--sb);line-height:1;}.wsu{font-size:16px;color:var(--sd);}.wsl{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--tm);margin-top:10px;}
+
 .ggrid{display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:260px;gap:6px;margin-top:60px;}.ggrid .gi:first-child{grid-column:span 2;grid-row:span 2;}
-.gi{overflow:hidden;position:relative;background:var(--b3);cursor:pointer;}.gi img{width:100%;height:100%;object-fit:cover;display:block;filter:grayscale(20%);transition:transform .5s,filter .5s;}.gi:hover img{transform:scale(1.05);filter:grayscale(0%);}
-.gcap{position:absolute;bottom:0;left:0;right:0;padding:14px 16px;background:linear-gradient(transparent,rgba(5,5,5,.75));font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.5);opacity:0;transition:opacity .3s;}.gi:hover .gcap{opacity:1;}
+.gi{overflow:hidden;position:relative;background:var(--b3);cursor:pointer;}.gi img{width:100%;height:100%;object-fit:cover;display:block;filter:grayscale(15%);transition:transform .5s,filter .5s;}.gi:hover img{transform:scale(1.04);filter:grayscale(0%);}
+.gcap{position:absolute;bottom:0;left:0;right:0;padding:14px 16px;background:linear-gradient(transparent,rgba(5,5,5,.8));font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.5);opacity:0;transition:opacity .3s;}.gi:hover .gcap{opacity:1;}
+
 .agrid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;}
-.aiwrap{position:relative;}.aim{width:100%;aspect-ratio:4/5;overflow:hidden;border:1px solid rgba(255,255,255,.06);}.aim img{width:100%;height:100%;object-fit:cover;filter:grayscale(10%);}
-.aia{position:absolute;bottom:-20px;right:-20px;width:55%;aspect-ratio:1;overflow:hidden;border:1px solid rgba(255,255,255,.06);}.aia img{width:100%;height:100%;object-fit:cover;filter:grayscale(10%);}
+.aiwrap{position:relative;padding-bottom:20px;padding-right:20px;}.aim{width:100%;aspect-ratio:4/5;overflow:hidden;border:1px solid rgba(255,255,255,.06);}.aim img{width:100%;height:100%;object-fit:cover;object-position:top center;filter:grayscale(10%);}
+.aia{position:absolute;bottom:0;right:0;width:55%;aspect-ratio:1;overflow:hidden;border:1px solid rgba(255,255,255,.06);}.aia img{width:100%;height:100%;object-fit:cover;object-position:top center;filter:grayscale(10%);}
 .avline{width:1px;height:70px;background:linear-gradient(to bottom,rgba(200,200,200,.25),transparent);margin-bottom:28px;}
 .vgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:36px;}.val{padding:18px;border:1px solid rgba(255,255,255,.05);background:var(--b3);}.vall{font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:var(--sd);margin-bottom:7px;}.valt{font-size:12px;color:var(--tm);line-height:1.7;font-weight:300;}
-.ctaw{background:var(--b2);border-top:1px solid rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.04);padding:100px 60px;text-align:center;position:relative;overflow:hidden;}.ctaw::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(200,200,200,.02) 0%,transparent 70%);}
+
+.fgrid{display:grid;grid-template-columns:340px 1fr;gap:80px;align-items:start;margin-top:60px;}
+.fimg{width:100%;aspect-ratio:3/4;overflow:hidden;border:1px solid rgba(255,255,255,.06);}.fimg img{width:100%;height:100%;object-fit:cover;object-position:top center;filter:grayscale(10%);}
+.fname{font-family:'Playfair Display',serif;font-size:28px;color:var(--sb);font-weight:600;margin-bottom:6px;}
+.ftitle{font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--sd);margin-bottom:28px;}
+.fpara{font-size:13px;color:var(--tm);line-height:1.9;font-weight:300;margin-bottom:16px;}
+.fcreds{display:flex;flex-direction:column;gap:10px;margin-top:28px;}
+.fcred{display:flex;align-items:center;gap:12px;font-size:12px;color:var(--sd);font-weight:300;}.fcred-dot{width:4px;height:4px;border-radius:50%;background:var(--sk);flex-shrink:0;}
+
+.ctaw{background:var(--b2);border-top:1px solid rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.04);padding:100px 60px;text-align:center;position:relative;overflow:hidden;}
+.ctaw::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(200,200,200,.018) 0%,transparent 70%);}
 .ctat{font-family:'Playfair Display',serif;font-size:clamp(32px,3.8vw,52px);color:var(--sb);margin-bottom:14px;position:relative;}.ctas{font-size:13px;color:var(--tm);margin-bottom:44px;position:relative;font-weight:300;}.ctab{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;position:relative;}
+
 .cgrid{display:grid;grid-template-columns:1fr 1.4fr;gap:80px;margin-top:60px;}
 .cii{padding:24px 0;border-bottom:1px solid rgba(255,255,255,.05);display:flex;gap:18px;align-items:flex-start;}.ciico{width:34px;height:34px;border:1px solid rgba(200,200,200,.09);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}.cila{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--sd);margin-bottom:5px;}.civa{font-size:13px;color:var(--s);font-weight:300;}
 .fr{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}.ff{display:flex;flex-direction:column;gap:7px;margin-bottom:14px;}.fl{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--sd);}
 .fi{background:var(--b3);border:1px solid rgba(255,255,255,.07);color:var(--t);padding:13px 14px;font-size:12px;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s;width:100%;}.fi:focus{border-color:rgba(200,200,200,.22);}.fi::placeholder{color:var(--tm);}select.fi option{background:var(--b3);}textarea.fi{resize:vertical;min-height:110px;}
+
 footer{background:var(--b);border-top:1px solid rgba(255,255,255,.04);padding:72px 60px 36px;}
-.ftop{max-width:1400px;margin:0 auto 56px;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:56px;}.fbn{font-family:'Playfair Display',serif;font-size:17px;color:var(--sb);margin-bottom:5px;}.fbs{font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:var(--sd);margin-bottom:14px;}.fbd{font-size:11px;color:var(--tm);line-height:1.85;max-width:240px;font-weight:300;}
+.ftop{max-width:1400px;margin:0 auto 56px;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:56px;}
+.fbn{font-family:'Playfair Display',serif;font-size:17px;color:var(--sb);margin-bottom:5px;}.fbs{font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:var(--sd);margin-bottom:14px;}.fbd{font-size:11px;color:var(--tm);line-height:1.85;max-width:240px;font-weight:300;}
 .fct{font-size:9px;letter-spacing:.26em;text-transform:uppercase;color:var(--sd);margin-bottom:20px;}.fcl{display:flex;flex-direction:column;gap:10px;}.fcl a{font-size:12px;color:var(--tm);text-decoration:none;transition:color .2s;font-weight:300;}.fcl a:hover{color:var(--sb);}
-.fbot{max-width:1400px;margin:0 auto;padding-top:28px;border-top:1px solid rgba(255,255,255,.04);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}.fbot p{font-size:11px;color:var(--tm);font-weight:300;}.fbadges{display:flex;gap:10px;}.fbadge{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--sk);border:1px solid rgba(200,200,200,.09);padding:4px 10px;}
+.fbot{max-width:1400px;margin:0 auto;padding-top:28px;border-top:1px solid rgba(255,255,255,.04);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}.fbot p{font-size:11px;color:var(--tm);font-weight:300;}
+.fbadges{display:flex;gap:10px;}.fbadge{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--sk);border:1px solid rgba(200,200,200,.09);padding:4px 10px;}
+
 .mov{position:fixed;inset:0;background:rgba(5,5,5,.94);z-index:9999;display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px);}.mov.open{display:flex;}
 .modal{background:var(--b2);border:1px solid rgba(255,255,255,.07);padding:52px;max-width:620px;width:90%;max-height:90vh;overflow-y:auto;position:relative;}.mx{position:absolute;top:18px;right:18px;background:none;border:none;color:var(--tm);font-size:18px;cursor:pointer;}.mx:hover{color:var(--sb);}
 .mt{font-family:'Playfair Display',serif;font-size:26px;color:var(--sb);margin-bottom:7px;}.ms{font-size:12px;color:var(--tm);margin-bottom:32px;font-weight:300;}
 .smsg{display:none;margin-top:14px;padding:14px;border:1px solid rgba(200,200,200,.12);font-size:12px;color:var(--s);letter-spacing:.04em;}
-@media(max-width:1100px){.hin,.wgrid,.agrid,.cgrid{grid-template-columns:1fr;}.himgs{display:none;}.ftop{grid-template-columns:1fr 1fr;}.ggrid .gi:first-child{grid-column:span 1;grid-row:span 1;}}
-@media(max-width:768px){#nav{padding:0 24px;}.nlinks,.ncta{display:none;}.hbtn{display:flex;}.sec,.ctaw,footer,.tbar,.divl{padding-left:24px;padding-right:24px;}.hin{padding:0 24px;padding-top:70px;}.wgrid,.agrid,.cgrid,.vgrid,.fr,.ftop{grid-template-columns:1fr;}.ggrid{grid-template-columns:1fr 1fr;grid-auto-rows:200px;}.ggrid .gi:first-child{grid-column:span 2;grid-row:span 1;}.hstats{gap:20px;}}
+
+@media(max-width:1100px){.hin,.wgrid,.agrid,.cgrid,.fgrid{grid-template-columns:1fr;}.himgs{display:none;}.ftop{grid-template-columns:1fr 1fr;}.ggrid .gi:first-child{grid-column:span 1;grid-row:span 1;}}
+@media(max-width:768px){#nav{padding:0 24px;}.nlinks,.ncta{display:none;}.hbtn{display:flex;}.sec,.ctaw,footer,.tbar,.divl{padding-left:24px;padding-right:24px;}.hin{padding:0 24px;padding-top:70px;}.wgrid,.agrid,.cgrid,.fgrid,.vgrid,.fr,.ftop{grid-template-columns:1fr;}.ggrid{grid-template-columns:1fr 1fr;grid-auto-rows:200px;}.ggrid .gi:first-child{grid-column:span 2;grid-row:span 1;}.hstats{gap:20px;}}
 </style>
 </head>
 <body>
+
 <nav id="nav">
   <a class="nlogo" href="#"><div class="nbadge">S</div><div class="ntext"><b>Special Services Protection</b><span>Atlanta, Georgia</span></div></a>
   <div class="nlinks"><a href="#services">Services</a><a href="#why">Why SSP</a><a href="#gallery">Gallery</a><a href="#about">About</a><a href="#contact">Contact</a></div>
@@ -80,6 +104,7 @@ footer{background:var(--b);border-top:1px solid rgba(255,255,255,.04);padding:72
   <a href="#services" onclick="closeMenu()">Services</a><a href="#why" onclick="closeMenu()">Why SSP</a><a href="#gallery" onclick="closeMenu()">Gallery</a><a href="#about" onclick="closeMenu()">About</a><a href="#contact" onclick="closeMenu()">Contact</a>
 </div>
 
+<!-- HERO: IMG_1137 (gala escort) + IMG_1141 (Super Bowl) -->
 <section id="hero">
   <div class="hov"></div>
   <div class="hin">
@@ -88,20 +113,30 @@ footer{background:var(--b);border-top:1px solid rgba(255,255,255,.04);padding:72
       <h1>The Standard<br>in <em>Protection.</em></h1>
       <p class="hbody">Special Services Protection delivers professional, licensed security services across Atlanta and the greater Georgia area. From corporate campuses to executive protection — we guard what matters most.</p>
       <div class="hbtns"><button class="bs" onclick="openQuote()">Request a Quote &rarr;</button><button class="bo" onclick="document.getElementById('services').scrollIntoView({behavior:'smooth'})">View Services</button></div>
-      <div class="hstats"><div class="hstat"><div class="hsn">500+</div><div class="hsl">Events Secured</div></div><div class="hstat"><div class="hsn">10+</div><div class="hsl">Years Experience</div></div><div class="hstat"><div class="hsn">100%</div><div class="hsl">Licensed &amp; Insured</div></div></div>
+      <div class="hstats">
+        <div class="hstat"><div class="hsn">500+</div><div class="hsl">Events Secured</div></div>
+        <div class="hstat"><div class="hsn">10+</div><div class="hsl">Years Experience</div></div>
+        <div class="hstat"><div class="hsn">100%</div><div class="hsl">Licensed &amp; Insured</div></div>
+      </div>
     </div>
     <div class="himgs">
       <div class="him"><img src="IMG_1137.jpg" alt="SSP Executive Protection"></div>
-      <div class="his"><img src="IMG_1141.jpg" alt="SSP Super Bowl"></div>
+      <div class="his"><img src="IMG_1141.jpg" alt="SSP Super Bowl Music Fest"></div>
       <div class="hibadge"><div class="hibn">10+</div><div class="hibl">Years Securing Atlanta</div></div>
     </div>
   </div>
 </section>
 
-<div class="tbar"><div class="ti"><div class="tid"></div>Licensed &amp; Bonded in Georgia</div><div class="ti"><div class="tid"></div>Armed &amp; Unarmed Officers</div><div class="ti"><div class="tid"></div>24/7 Availability</div><div class="ti"><div class="tid"></div>Background-Checked Personnel</div><div class="ti"><div class="tid"></div>Rapid Deployment</div></div>
+<div class="tbar">
+  <div class="ti"><div class="tid"></div>Licensed &amp; Bonded in Georgia</div>
+  <div class="ti"><div class="tid"></div>Armed &amp; Unarmed Officers</div>
+  <div class="ti"><div class="tid"></div>24/7 Availability</div>
+  <div class="ti"><div class="tid"></div>Background-Checked Personnel</div>
+  <div class="ti"><div class="tid"></div>Rapid Deployment</div>
+</div>
 
-<div style="background:var(--b2);">
-<div class="sec" id="services">
+<!-- SERVICES -->
+<div style="background:var(--b2);"><div class="sec" id="services">
   <div class="stag"><div class="stagline"></div><span>What We Do</span></div>
   <h2>Professional Security <em>Services</em></h2>
   <p class="ssub">Comprehensive protection solutions tailored to your specific needs, delivered by trained professionals.</p>
@@ -118,8 +153,8 @@ footer{background:var(--b);border-top:1px solid rgba(255,255,255,.04);padding:72
 
 <div class="divl"></div>
 
-<div style="background:var(--b3);">
-<div class="sec" id="why">
+<!-- WHY SSP — no fabricated %s -->
+<div style="background:var(--b3);"><div class="sec" id="why">
   <div class="stag"><div class="stagline"></div><span>Why Choose SSP</span></div>
   <h2>The Standard of <em>Excellence</em></h2>
   <p class="ssub">We don't just provide guards — we provide peace of mind backed by professionalism, training, and accountability.</p>
@@ -130,37 +165,43 @@ footer{background:var(--b);border-top:1px solid rgba(255,255,255,.04);padding:72
       <div class="pillar"><div class="pnum">03</div><div><div class="ptitle">Customized Security Plans</div><p class="pdesc">Every client receives a tailored security assessment and plan designed around their specific environment and risk profile.</p></div></div>
       <div class="pillar"><div class="pnum">04</div><div><div class="ptitle">Direct Communication</div><p class="pdesc">Work directly with ownership and supervisors — no layers of bureaucracy. Your satisfaction is our personal commitment.</p></div></div>
     </div>
-    <div class="mgrid"><div class="mbox"><div class="mnum">97<span class="munit">%</span></div><div class="mlabel">Client Retention</div></div><div class="mbox"><div class="mnum">&lt;2<span class="munit">h</span></div><div class="mlabel">Response Time</div></div><div class="mbox"><div class="mnum">100<span class="munit">%</span></div><div class="mlabel">Licensed Officers</div></div><div class="mbox"><div class="mnum">10<span class="munit">+</span></div><div class="mlabel">Years Operating</div></div></div>
+    <div class="wstats">
+      <div class="wstat"><div class="wsn">500<span class="wsu">+</span></div><div class="wsl">Events Secured</div></div>
+      <div class="wstat"><div class="wsn">10<span class="wsu">+</span></div><div class="wsl">Years in Business</div></div>
+      <div class="wstat"><div class="wsn">100<span class="wsu">%</span></div><div class="wsl">Licensed Officers</div></div>
+      <div class="wstat"><div class="wsn">24<span class="wsu">/7</span></div><div class="wsl">Always Available</div></div>
+    </div>
   </div>
 </div></div>
 
 <div class="divl"></div>
 
+<!-- GALLERY — all 9 unique images, no repeats -->
 <div class="sec" id="gallery">
   <div class="stag"><div class="stagline"></div><span>In the Field</span></div>
   <h2>Trusted by the <em>Best</em></h2>
   <p class="ssub">A decade of elite security at high-profile events, concerts, galas, and VIP engagements across the country.</p>
   <div class="ggrid">
-    <div class="gi"><img src="IMG_1137.jpg" alt="SSP Executive Protection"><div class="gcap">Executive Protection</div></div>
-    <div class="gi"><img src="IMG_1141.jpg" alt="SSP Super Bowl Music Fest"><div class="gcap">Super Bowl Music Fest</div></div>
-    <div class="gi"><img src="IMG_1138.jpg" alt="SSP VIP Gala"><div class="gcap">VIP Gala Security</div></div>
-    <div class="gi"><img src="IMG_1133.jpg" alt="SSP Artist Escort"><div class="gcap">Artist Escort</div></div>
-    <div class="gi"><img src="IMG_1136.jpg" alt="SSP Show Security"><div class="gcap">Show Security</div></div>
-    <div class="gi"><img src="IMG_1139.jpg" alt="SSP Nightlife"><div class="gcap">Nightlife &amp; Venue</div></div>
-    <div class="gi"><img src="IMG_1134.jpg" alt="SSP Outdoor Event"><div class="gcap">Outdoor Events</div></div>
-    <div class="gi"><img src="IMG_1143.jpg" alt="SSP Music Fest"><div class="gcap">Music Fest</div></div>
-    <div class="gi"><img src="IMG_1144.jpg" alt="SSP Artist Protection"><div class="gcap">Artist Protection</div></div>
+    <div class="gi"><img src="IMG_1133.jpg" alt="Artist escort backstage"><div class="gcap">Artist Escort</div></div>
+    <div class="gi"><img src="IMG_1141.jpg" alt="Super Bowl Music Fest"><div class="gcap">Super Bowl Music Fest</div></div>
+    <div class="gi"><img src="IMG_1138.jpg" alt="Show security"><div class="gcap">Show Security</div></div>
+    <div class="gi"><img src="IMG_1136.jpg" alt="Outdoor event escort"><div class="gcap">Outdoor Events</div></div>
+    <div class="gi"><img src="IMG_1134.jpg" alt="VIP Gala security"><div class="gcap">VIP Gala</div></div>
+    <div class="gi"><img src="IMG_1144.jpg" alt="Night escort"><div class="gcap">Night Security</div></div>
+    <div class="gi"><img src="IMG_1143.jpg" alt="Music Fest security"><div class="gcap">Music Fest</div></div>
+    <div class="gi"><img src="IMG_1142.jpg" alt="Nightlife venue security"><div class="gcap">Venue Security</div></div>
+    <div class="gi"><img src="IMG_1145.jpg" alt="Early career event"><div class="gcap">Since Day One</div></div>
   </div>
 </div>
 
 <div class="divl"></div>
 
-<div style="background:var(--b2);">
-<div class="sec" id="about">
+<!-- ABOUT — unique images: IMG_1140 (NBA) + IMG_1135 (backstage) -->
+<div style="background:var(--b2);"><div class="sec" id="about">
   <div class="agrid">
     <div class="aiwrap">
-      <div class="aim"><img src="IMG_1141.jpg" alt="SSP Team at Super Bowl"></div>
-      <div class="aia"><img src="IMG_1137.jpg" alt="SSP Executive escort"></div>
+      <div class="aim"><img src="IMG_1140.jpg" alt="SSP backstage at NBA event"></div>
+      <div class="aia"><img src="IMG_1135.jpg" alt="SSP with artists"></div>
     </div>
     <div>
       <div class="avline"></div>
@@ -181,6 +222,33 @@ footer{background:var(--b);border-top:1px solid rgba(255,255,255,.04);padding:72
 
 <div class="divl"></div>
 
+<!-- FOUNDER SECTION — IMG_1139 (vintage, early career) -->
+<div style="background:var(--b3);"><div class="sec" id="founder">
+  <div class="stag"><div class="stagline"></div><span>The Founder</span></div>
+  <h2>The Man Behind <em>The Standard</em></h2>
+  <div class="fgrid">
+    <div>
+      <div class="fimg"><img src="IMG_1139.jpg" alt="SSP Founder — early career"></div>
+    </div>
+    <div>
+      <div class="fname">Dijon Lowery</div>
+      <div class="ftitle">Founder &amp; CEO — Special Services Protection</div>
+      <p class="fpara">Dijon Lowery founded Special Services Protection in Atlanta, Georgia with a clear vision: to build a security firm that operated at the highest level — one where professionalism, discretion, and elite execution were non-negotiable.</p>
+      <p class="fpara">With a career spanning over a decade in the security industry, Dijon has personally overseen protection details at some of the most high-profile events in the country — from Super Bowl weekend to major concert tours and exclusive private functions across the Southeast.</p>
+      <p class="fpara">His hands-on leadership style and direct involvement with clients sets SSP apart. When you work with Special Services Protection, you work with ownership — not a call center.</p>
+      <div class="fcreds">
+        <div class="fcred"><div class="fcred-dot"></div>10+ Years in Security Operations</div>
+        <div class="fcred"><div class="fcred-dot"></div>Licensed &amp; Bonded in the State of Georgia</div>
+        <div class="fcred"><div class="fcred-dot"></div>Executive Protection &amp; Event Security Specialist</div>
+        <div class="fcred"><div class="fcred-dot"></div>Based in Atlanta — Serving Greater Georgia</div>
+      </div>
+    </div>
+  </div>
+</div></div>
+
+<div class="divl"></div>
+
+<!-- CTA -->
 <div class="ctaw">
   <div class="stag" style="justify-content:center;"><div class="stagline"></div><span>Ready to Elevate Your Security</span><div class="stagline"></div></div>
   <div class="ctat">Secure Your People &amp; Property Today</div>
@@ -188,6 +256,7 @@ footer{background:var(--b);border-top:1px solid rgba(255,255,255,.04);padding:72
   <div class="ctab"><button class="bs" onclick="openQuote()">Request a Free Quote &rarr;</button><button class="bo" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Contact Us</button></div>
 </div>
 
+<!-- CONTACT -->
 <div class="sec" id="contact">
   <div class="stag"><div class="stagline"></div><span>Get In Touch</span></div>
   <h2>Contact <em>SSP</em></h2>
@@ -215,7 +284,7 @@ footer{background:var(--b);border-top:1px solid rgba(255,255,255,.04);padding:72
   <div class="ftop">
     <div><div class="fbn">Special Services Protection</div><div class="fbs">Atlanta, Georgia</div><p class="fbd">Atlanta's trusted security partner for businesses, events, and individuals. Licensed, bonded, and committed to excellence.</p></div>
     <div><div class="fct">Services</div><div class="fcl"><a href="#services">Event Security</a><a href="#services">Executive Protection</a><a href="#services">Armed Guards</a><a href="#services">Unarmed Guards</a><a href="#services">Corporate Security</a><a href="#services">Mobile Patrol</a></div></div>
-    <div><div class="fct">Company</div><div class="fcl"><a href="#about">About Us</a><a href="#contact">Contact</a><a href="#" onclick="openQuote();return false;">Request Quote</a></div></div>
+    <div><div class="fct">Company</div><div class="fcl"><a href="#about">About Us</a><a href="#founder">The Founder</a><a href="#contact">Contact</a><a href="#" onclick="openQuote();return false;">Request Quote</a></div></div>
     <div><div class="fct">Service Area</div><div class="fcl"><a href="#">Atlanta, GA</a><a href="#">Fulton County</a><a href="#">DeKalb County</a><a href="#">Gwinnett County</a><a href="#">Greater Georgia</a></div></div>
   </div>
   <div class="fbot"><p>&copy; 2025 Special Services Protection. All rights reserved. Atlanta, Georgia.</p><div class="fbadges"><span class="fbadge">Licensed</span><span class="fbadge">Bonded</span><span class="fbadge">Insured</span></div></div>
