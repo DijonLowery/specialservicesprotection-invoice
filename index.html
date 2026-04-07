@@ -1,736 +1,410 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SSP Invoice Tracker — Special Services Protection</title>
-  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: #000000; font-family: 'Inter', sans-serif; }
-    #root { min-height: 100vh; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Special Services Protection — Atlanta's premier security firm. Armed guards, executive protection, event security, corporate & residential security.">
+<title>Special Services Protection | Atlanta Security Firm</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--black:#000;--bg:#080808;--surface:#111;--card:#161616;--border:#222;--silver:#c8c8d8;--silver2:#9898b0;--silver3:#f0f0fa;--gold:#d4a843;--text:#f0f0fa;--muted:#888;--green:#10d98a;--radius:12px;--max:1200px}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;line-height:1.6;overflow-x:hidden}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:#333;border-radius:4px}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(8,8,8,.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);transition:all .3s}
+.nav-inner{max-width:var(--max);margin:0 auto;padding:0 32px;height:72px;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{display:flex;align-items:center;gap:14px;text-decoration:none}
+.nav-logo-badge{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#555,#c8c8d8,#888);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:18px;color:#080808;flex-shrink:0;box-shadow:0 2px 16px rgba(200,200,220,.2)}
+.nav-logo-text{display:flex;flex-direction:column}
+.nav-logo-text span:first-child{font-size:14px;font-weight:800;letter-spacing:-.3px;background:linear-gradient(135deg,#c8c8d8,#f0f0fa,#9898b0);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-logo-text span:last-child{font-size:10px;color:var(--silver2);letter-spacing:1px;text-transform:uppercase}
+.nav-links{display:flex;align-items:center;gap:8px;list-style:none}
+.nav-links a{color:var(--silver2);text-decoration:none;font-size:13px;font-weight:500;padding:8px 14px;border-radius:8px;transition:all .2s}
+.nav-links a:hover{color:var(--silver3);background:rgba(255,255,255,.06)}
+.nav-cta{background:linear-gradient(135deg,#888,#c8c8d8,#e8e8f8)!important;color:#080808!important;font-weight:700!important;padding:9px 20px!important}
+.nav-cta:hover{opacity:.85!important}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:8px}
+.hamburger span{width:24px;height:2px;background:var(--silver);border-radius:2px;transition:all .3s}
+.mobile-menu{display:none;position:fixed;top:72px;left:0;right:0;background:rgba(8,8,8,.98);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:16px 32px 24px;z-index:99}
+.mobile-menu.open{display:block}
+.mobile-menu a{display:block;color:var(--silver2);text-decoration:none;font-size:15px;font-weight:500;padding:12px 0;border-bottom:1px solid var(--border)}
+.mobile-menu a:last-child{border-bottom:none;margin-top:8px;color:var(--text);font-weight:700}
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:120px 32px 80px}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 40%,rgba(200,200,220,.06) 0%,transparent 70%)}
+.hero-grid{position:absolute;inset:0;opacity:.03;background-image:linear-gradient(rgba(255,255,255,.5) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.5) 1px,transparent 1px);background-size:60px 60px}
+.hero-content{max-width:var(--max);width:100%;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;position:relative;z-index:1}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(200,200,220,.08);border:1px solid rgba(200,200,220,.15);border-radius:20px;padding:6px 16px;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--silver);margin-bottom:24px}
+.hero-eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);flex-shrink:0}
+.hero h1{font-size:clamp(36px,5vw,60px);font-weight:900;line-height:1.08;letter-spacing:-2px;margin-bottom:24px;color:var(--silver3)}
+.hero h1 span{background:linear-gradient(135deg,#c8c8d8,#f0f0fa,#9898b0);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{font-size:17px;color:var(--silver2);line-height:1.7;margin-bottom:40px;max-width:480px}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#888,#c8c8d8,#e8e8f8);color:#080808;font-size:14px;font-weight:700;padding:14px 28px;border-radius:10px;text-decoration:none;border:none;cursor:pointer;transition:all .2s;letter-spacing:.2px}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(200,200,220,.25);opacity:.9}
+.btn-ghost{display:inline-flex;align-items:center;gap:8px;background:transparent;color:var(--silver);font-size:14px;font-weight:600;padding:14px 28px;border-radius:10px;text-decoration:none;border:1px solid var(--border);cursor:pointer;transition:all .2s}
+.btn-ghost:hover{border-color:var(--silver2);color:var(--silver3);background:rgba(255,255,255,.04)}
+.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-top:48px}
+.stat{background:var(--card);padding:24px 20px;text-align:center}
+.stat-num{font-size:32px;font-weight:800;background:linear-gradient(135deg,#c8c8d8,#f0f0fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-1px;line-height:1}
+.stat-label{font-size:11px;color:var(--muted);margin-top:6px;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
+.hero-badge-wrap{display:flex;justify-content:center;align-items:center}
+.hero-badge{width:min(340px,100%);aspect-ratio:1;background:radial-gradient(circle at 40% 35%,rgba(200,200,220,.08),transparent 60%);border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative}
+.hero-badge svg{width:100%;height:100%;filter:drop-shadow(0 0 40px rgba(200,200,220,.15))}
+section{padding:100px 32px}
+.section-inner{max-width:var(--max);margin:0 auto}
+.section-label{font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--silver);margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.section-label::before{content:"";width:24px;height:1px;background:linear-gradient(90deg,var(--silver),transparent)}
+.section-title{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1.5px;color:var(--silver3);line-height:1.1;margin-bottom:20px}
+.section-title span{background:linear-gradient(135deg,#c8c8d8,#f0f0fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.section-sub{font-size:16px;color:var(--silver2);line-height:1.7;max-width:580px;margin-bottom:56px}
+.trust-bar{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:28px 32px}
+.trust-inner{max-width:var(--max);margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap}
+.trust-item{display:flex;align-items:center;gap:10px;color:var(--silver2);font-size:13px;font-weight:600;white-space:nowrap}
+.trust-icon{font-size:18px;opacity:.8}
+#services{background:var(--bg)}
+.services-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px}
+.service-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:32px;transition:all .25s;position:relative;overflow:hidden;text-decoration:none;display:block;color:inherit}
+.service-card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--silver),transparent);opacity:0;transition:opacity .3s}
+.service-card:hover{border-color:#333;transform:translateY(-2px);box-shadow:0 12px 40px rgba(0,0,0,.4)}
+.service-card:hover::before{opacity:1}
+.service-icon{width:52px;height:52px;border-radius:12px;background:rgba(200,200,220,.08);border:1px solid rgba(200,200,220,.12);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:20px}
+.service-title{font-size:17px;font-weight:700;color:var(--silver3);margin-bottom:10px;letter-spacing:-.3px}
+.service-desc{font-size:13px;color:var(--silver2);line-height:1.7}
+.service-arrow{display:inline-flex;align-items:center;gap:6px;margin-top:16px;font-size:12px;font-weight:700;color:var(--silver);letter-spacing:.5px;text-transform:uppercase;opacity:0;transition:opacity .2s}
+.service-card:hover .service-arrow{opacity:1}
+#why{background:var(--surface)}
+.why-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.why-features{display:flex;flex-direction:column;gap:28px}
+.why-feature{display:flex;gap:16px;align-items:flex-start}
+.why-num{width:36px;height:36px;border-radius:8px;background:rgba(200,200,220,.08);border:1px solid rgba(200,200,220,.12);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--silver);flex-shrink:0;font-family:monospace}
+.why-feat-title{font-size:15px;font-weight:700;color:var(--silver3);margin-bottom:6px}
+.why-feat-desc{font-size:13px;color:var(--silver2);line-height:1.6}
+.why-visual{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:40px;display:flex;flex-direction:column;gap:0}
+.why-metric{padding:20px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.why-metric:last-child{border-bottom:none}
+.why-metric-label{font-size:13px;color:var(--silver2);font-weight:500}
+.why-metric-value{font-size:22px;font-weight:800;background:linear-gradient(135deg,#c8c8d8,#f0f0fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-.5px}
+#about{background:var(--bg)}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
+.about-text p{font-size:15px;color:var(--silver2);line-height:1.8;margin-bottom:20px}
+.about-pillars{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:40px}
+.pillar{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px}
+.pillar-title{font-size:13px;font-weight:700;color:var(--silver3);margin-bottom:6px}
+.pillar-desc{font-size:12px;color:var(--silver2);line-height:1.6}
+.about-visual{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:40px;display:flex;flex-direction:column;gap:20px}
+.about-badge-large{display:flex;align-items:center;justify-content:center;padding:40px 0}
+.cta-section{background:linear-gradient(135deg,#0a0a12,var(--bg));border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.cta-inner{max-width:800px;margin:0 auto;text-align:center}
+.cta-title{font-size:clamp(28px,4vw,48px);font-weight:900;letter-spacing:-1.5px;color:var(--silver3);margin-bottom:20px;line-height:1.1}
+.cta-sub{font-size:16px;color:var(--silver2);margin-bottom:40px;line-height:1.7}
+.cta-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+#contact{background:var(--surface)}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
+.contact-info{display:flex;flex-direction:column;gap:24px}
+.contact-item{display:flex;gap:16px;align-items:flex-start}
+.contact-icon{width:44px;height:44px;border-radius:10px;background:rgba(200,200,220,.08);border:1px solid rgba(200,200,220,.12);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.contact-label{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.contact-value{font-size:15px;color:var(--silver3);font-weight:500}
+.contact-form{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:36px;display:flex;flex-direction:column;gap:16px}
+.form-title{font-size:18px;font-weight:700;color:var(--silver3);margin-bottom:4px}
+.form-sub{font-size:13px;color:var(--silver2);margin-bottom:8px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-group label{font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--silver2)}
+.form-group input,.form-group select,.form-group textarea{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:8px;padding:11px 14px;color:var(--text);font-size:14px;font-family:inherit;outline:none;transition:border .2s;width:100%}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--silver2)}
+.form-group select option{background:var(--card)}
+.form-group textarea{resize:vertical;min-height:100px}
+::placeholder{color:var(--muted);opacity:.7}
+.footer{background:var(--black);border-top:1px solid var(--border);padding:60px 32px 32px}
+.footer-inner{max-width:var(--max);margin:0 auto}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;margin-bottom:48px}
+.footer-brand p{font-size:13px;color:var(--muted);line-height:1.7;margin-top:12px;max-width:280px}
+.footer-col h4{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--silver);margin-bottom:16px}
+.footer-col a{display:block;font-size:13px;color:var(--muted);text-decoration:none;margin-bottom:10px;transition:color .2s}
+.footer-col a:hover{color:var(--silver)}
+.footer-bottom{padding-top:24px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.footer-bottom p{font-size:12px;color:var(--muted)}
+.footer-badges{display:flex;gap:12px;align-items:center}
+.badge{background:rgba(200,200,220,.06);border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:10px;font-weight:700;color:var(--silver2);letter-spacing:1px;text-transform:uppercase}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(8px);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.open{display:flex}
+.modal{background:#111;border:1px solid var(--border);border-radius:20px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 80px rgba(0,0,0,.6)}
+.modal-header{padding:28px 32px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.modal-header h3{font-size:18px;font-weight:700;color:var(--silver3)}
+.modal-close{background:none;border:1px solid var(--border);color:var(--silver2);width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.modal-close:hover{background:rgba(255,255,255,.06);color:var(--silver3)}
+.modal-body{padding:24px 32px 32px;display:flex;flex-direction:column;gap:16px}
+@media(max-width:900px){
+.hero-content{grid-template-columns:1fr;gap:48px}.hero-badge-wrap{display:none}
+.why-grid,.about-grid,.contact-grid{grid-template-columns:1fr;gap:40px}
+.footer-top{grid-template-columns:1fr 1fr;gap:32px}
+.about-visual{display:none}
+}
+@media(max-width:640px){
+.nav-links{display:none}.hamburger{display:flex}
+section{padding:72px 20px}.hero{padding:100px 20px 60px}
+.footer-top{grid-template-columns:1fr;gap:28px}
+.form-row{grid-template-columns:1fr}.about-pillars{grid-template-columns:1fr}
+}
+</style>
 </head>
 <body>
-  <div id="root"></div>
-  <script type="text/babel">
-    const { useState, useRef, useEffect } = React;
-    // React hooks available globally via CDN
-
-// ─── BRAND TOKENS ─────────────────────────────────────────────────────────────
-const C = {
-  black:    "#000000",
-  bg:       "#080808",
-  card:     "#0f0f0f",
-  cardHi:   "#141414",
-  border:   "#1e1e1e",
-  borderHi: "#888",
-  silver:   "#c0c0c0",
-  silverLt: "#e8e8e8",
-  silverDim:"#666",
-  chrome:   "linear-gradient(135deg, #999 0%, #fff 40%, #aaa 60%, #ddd 80%, #888 100%)",
-  white:    "#f5f5f5",
-  muted:    "#555",
-  danger:   "#c0392b",
-  success:  "#27ae60",
-  info:     "#2980b9",
-  font:     "'Barlow Condensed','Arial Narrow',Arial,sans-serif",
-  body:     "'Inter','Helvetica Neue',sans-serif",
-};
-
-const STATUSES = ["Draft","Sent","Viewed","Overdue","Paid","Cancelled"];
-const SC = {
-  Draft:     { bg:"#111", text:"#666", border:"#222" },
-  Sent:      { bg:"#0a0e14", text:"#5b9bd5", border:"#152030" },
-  Viewed:    { bg:"#141211", text:"#c0a060", border:"#2a2010" },
-  Overdue:   { bg:"#140a0a", text:"#d45050", border:"#300" },
-  Paid:      { bg:"#0a1410", text:"#4caf7a", border:"#102a1a" },
-  Cancelled: { bg:"#0e0e0e", text:"#444", border:"#1a1a1a" },
-};
-
-const SEED = [
-  { id:"INV-001", client:"Acme Corp",       email:"billing@acme.com",      amount:4500,  due:"2026-03-28", status:"Overdue", issued:"2026-03-01", reminders:2, notes:"Event Security Detail",  source:"email" },
-  { id:"INV-002", client:"Globex Inc",       email:"ap@globex.com",         amount:1200,  due:"2026-04-15", status:"Sent",    issued:"2026-03-15", reminders:0, notes:"Monthly Retainer",      source:"manual"},
-  { id:"INV-003", client:"Initech LLC",      email:"finance@initech.com",   amount:8750,  due:"2026-04-20", status:"Viewed",  issued:"2026-03-20", reminders:1, notes:"Executive Protection",  source:"email" },
-  { id:"INV-004", client:"Umbrella Co",      email:"accounts@umbrella.com", amount:325,   due:"2026-03-10", status:"Paid",    issued:"2026-02-10", reminders:0, notes:"Consulting Hours",      source:"manual"},
-  { id:"INV-005", client:"Stark Industries", email:"tony@stark.com",        amount:22000, due:"2026-04-30", status:"Draft",   issued:"2026-04-01", reminders:0, notes:"VIP Protective Detail", source:"email" },
-];
-
-const fmt = n => "$"+Number(n).toLocaleString("en-US",{minimumFractionDigits:0});
-const todayStr = () => new Date().toISOString().split("T")[0];
-const daysLeft = d => Math.ceil((new Date(d)-new Date())/86400000);
-const uid = () => "INV-"+String(Math.floor(Math.random()*9000)+1000);
-
-// ─── SSP BADGE LOGO ───────────────────────────────────────────────────────────
-function SSPBadge({ size = 44 }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <radialGradient id="ring" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="#fff" stopOpacity="0.05"/>
-          <stop offset="100%" stopColor="#000" stopOpacity="0"/>
-        </radialGradient>
-        <linearGradient id="chrome" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%"   stopColor="#888"/>
-          <stop offset="30%"  stopColor="#eee"/>
-          <stop offset="55%"  stopColor="#bbb"/>
-          <stop offset="80%"  stopColor="#ddd"/>
-          <stop offset="100%" stopColor="#777"/>
-        </linearGradient>
-        <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%"   stopColor="#ccc"/>
-          <stop offset="40%"  stopColor="#fff"/>
-          <stop offset="70%"  stopColor="#aaa"/>
-          <stop offset="100%" stopColor="#888"/>
-        </linearGradient>
-      </defs>
-      {/* Outer ring */}
-      <circle cx="50" cy="50" r="48" fill="#000" stroke="url(#chrome)" strokeWidth="2.5"/>
-      <circle cx="50" cy="50" r="42" fill="none" stroke="#333" strokeWidth="0.8"/>
-      {/* Stars */}
-      <text x="18" y="55" textAnchor="middle" fill="url(#chrome)" fontSize="8" fontFamily="Arial">★</text>
-      <text x="82" y="55" textAnchor="middle" fill="url(#chrome)" fontSize="8" fontFamily="Arial">★</text>
-      {/* Shield body */}
-      <path d="M50 20 L68 28 L68 52 Q68 66 50 76 Q32 66 32 52 L32 28 Z" fill="#0a0a0a" stroke="url(#chrome)" strokeWidth="2"/>
-      {/* S lettermark */}
-      <text x="50" y="58" textAnchor="middle" fill="url(#shieldGrad)" fontSize="28" fontFamily="Arial" fontWeight="900">S</text>
-      {/* Top arc text */}
-      <path id="topArc" d="M 15,50 A 35,35 0 0,1 85,50" fill="none"/>
-      <text fontSize="7.5" fontFamily="Arial" fontWeight="700" fill="url(#chrome)" letterSpacing="2">
-        <textPath href="#topArc" startOffset="8%">SPECIAL SERVICES</textPath>
-      </text>
-      {/* Bottom arc text */}
-      <path id="botArc" d="M 16,54 A 35,35 0 0,0 84,54" fill="none"/>
-      <text fontSize="7.5" fontFamily="Arial" fontWeight="700" fill="url(#chrome)" letterSpacing="3">
-        <textPath href="#botArc" startOffset="18%">PROTECTION</textPath>
-      </text>
-    </svg>
-  );
-}
-
-// ─── CHROME DIVIDER ───────────────────────────────────────────────────────────
-const Divider = () => (
-  <div style={{display:"flex",alignItems:"center",gap:8,margin:"0 0 14px"}}>
-    <div style={{flex:1,height:1,background:"linear-gradient(90deg,transparent,#444)"}}/>
-    <div style={{width:4,height:4,background:C.silver,transform:"rotate(45deg)"}}/>
-    <div style={{flex:1,height:1,background:"linear-gradient(90deg,#444,transparent)"}}/>
-  </div>
-);
-
-// ─── STATUS BADGE ─────────────────────────────────────────────────────────────
-function StatusBadge({ status }) {
-  const s = SC[status]||SC.Draft;
-  return (
-    <span style={{background:s.bg,color:s.text,border:`1px solid ${s.border}`,padding:"2px 10px",fontSize:10,fontWeight:700,fontFamily:C.font,letterSpacing:2,textTransform:"uppercase",borderRadius:2}}>
-      {status}
-    </span>
-  );
-}
-
-// ─── STAT CARD ────────────────────────────────────────────────────────────────
-function StatCard({ label, value, sub, accent }) {
-  return (
-    <div style={{background:C.card,border:`1px solid ${C.border}`,borderTop:`2px solid ${accent||C.silver}`,padding:"14px 16px",position:"relative",overflow:"hidden"}}>
-      <div style={{fontSize:10,color:C.muted,fontFamily:C.font,letterSpacing:3,textTransform:"uppercase",marginBottom:5}}>{label}</div>
-      <div style={{fontSize:21,fontWeight:800,color:accent||C.silverLt,fontFamily:C.font,letterSpacing:1}}>{value}</div>
-      {sub && <div style={{fontSize:10,color:C.muted,marginTop:2,fontFamily:C.body}}>{sub}</div>}
-    </div>
-  );
-}
-
-// ─── PDF EXPORT ───────────────────────────────────────────────────────────────
-function exportPDF(inv) {
-  const body = [
-    `BT /F2 20 Tf 50 800 Td (SPECIAL SERVICES PROTECTION) Tj ET`,
-    `BT /F1 9 Tf 50 784 Td (CONFIDENTIAL  |  INVOICE) Tj ET`,
-    `BT /F2 11 Tf 50 748 Td (BILL TO:) Tj ET`,
-    `BT /F1 11 Tf 50 732 Td (${inv.client}) Tj ET`,
-    `BT /F1 10 Tf 50 716 Td (${inv.email}) Tj ET`,
-    `BT /F2 11 Tf 390 748 Td (INVOICE #:) Tj ET`,
-    `BT /F1 11 Tf 390 732 Td (${inv.id}) Tj ET`,
-    `BT /F2 11 Tf 390 716 Td (ISSUED:) Tj ET`,
-    `BT /F1 10 Tf 390 700 Td (${inv.issued}) Tj ET`,
-    `BT /F2 11 Tf 390 682 Td (DUE DATE:) Tj ET`,
-    `BT /F1 10 Tf 390 666 Td (${inv.due}) Tj ET`,
-    `BT /F2 12 Tf 50 628 Td (SERVICE DESCRIPTION) Tj ET`,
-    `BT /F2 12 Tf 440 628 Td (AMOUNT) Tj ET`,
-    `BT /F1 11 Tf 50 608 Td (${inv.notes||"Security Services Rendered"}) Tj ET`,
-    `BT /F1 11 Tf 440 608 Td (${fmt(inv.amount)}) Tj ET`,
-    `BT /F2 13 Tf 390 555 Td (TOTAL DUE: ${fmt(inv.amount)}) Tj ET`,
-    `BT /F2 10 Tf 50 120 Td (STATUS: ${inv.status.toUpperCase()}) Tj ET`,
-    `BT /F1 8 Tf 50 70 Td (Special Services Protection  |  Authorized & Confidential) Tj ET`,
-  ].join("\n");
-  const pdf = [
-    `%PDF-1.4`,`1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj`,
-    `2 0 obj<</Type/Pages/Kids[3 0 R]/Count 1>>endobj`,
-    `3 0 obj<</Type/Page/Parent 2 0 R/MediaBox[0 0 595 842]/Contents 4 0 R/Resources<</Font<</F1<</Type/Font/Subtype/Type1/BaseFont/Helvetica>>/F2<</Type/Font/Subtype/Type1/BaseFont/Helvetica-Bold>>>>>>  >>endobj`,
-    `4 0 obj<</Length ${body.length}>>\nstream\n${body}\nendstream\nendobj`,
-    `xref\n0 5\n0000000000 65535 f\ntrailer<</Size 5/Root 1 0 R>>\nstartxref\n9\n%%EOF`
-  ].join("\n");
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(new Blob([pdf],{type:"application/pdf"}));
-  a.download = `SSP-${inv.id}.pdf`; a.click();
-}
-
-// ─── GMAIL MODAL ──────────────────────────────────────────────────────────────
-function GmailModal({ onClose, onImport }) {
-  const [phase, setPhase] = useState("idle");
-  const [found, setFound] = useState([]);
-  const [sel, setSel] = useState({});
-  const [log, setLog] = useState([]);
-  const addLog = m => setLog(l => [...l, { t: new Date().toLocaleTimeString(), m }]);
-
-  const scan = async () => {
-    setPhase("scanning"); setLog([]);
-    addLog("Connecting to Gmail MCP...");
-    try {
-      const res = await fetch("https://api.anthropic.com/v1/messages", {
-        method:"POST", headers:{"Content-Type":"application/json"},
-        body: JSON.stringify({
-          model:"claude-sonnet-4-20250514", max_tokens:1500,
-          system:`You are an invoice extraction agent for Special Services Protection, a security company. Search Gmail for invoice-related emails (billing, payment due, statements, security service invoices). Respond ONLY with a valid JSON array — no markdown, no explanation:
-[{"client":"Name","email":"from@email.com","amount":1234,"due":"YYYY-MM-DD","issued":"YYYY-MM-DD","notes":"brief description"}]
-If none found return []. Today is ${todayStr()}.`,
-          messages:[{role:"user",content:"Search my Gmail for any invoice or billing-related emails from the last 60 days. Extract invoice details."}],
-          mcp_servers:[{type:"url",url:"https://gmail.mcp.claude.com/mcp",name:"gmail-mcp"}]
-        })
-      });
-      const data = await res.json();
-      const raw = data.content?.map(b => b.type==="text"?b.text:"").join("") || "[]";
-      addLog("Parsing results...");
-      let parsed = [];
-      try { parsed = JSON.parse(raw.replace(/```json|```/g,"").trim()); } catch {}
-      if (!Array.isArray(parsed)) parsed = [];
-      addLog(`Found ${parsed.length} invoice email(s).`);
-      const enriched = parsed.map(p => ({ ...p, id:uid(), status:"Draft", reminders:0, source:"email", amount:parseFloat(p.amount)||0 }));
-      setFound(enriched);
-      const s = {}; enriched.forEach(e => s[e.id]=true); setSel(s);
-      setPhase("results");
-    } catch {
-      addLog("⚠️ Gmail connection failed. Ensure Gmail is connected in Claude.ai settings.");
-      setPhase("results");
-    }
-  };
-
-  const importSel = () => { onImport(found.filter(f => sel[f.id])); };
-
-  const overlay = { position:"fixed",inset:0,background:"rgba(0,0,0,.85)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:300 };
-  const modal = { background:"#0c0c0c",border:`1px solid #333`,borderTop:`2px solid ${C.silver}`,borderRadius:4,padding:28,width:500,maxHeight:"80vh",overflowY:"auto",boxShadow:"0 0 60px rgba(0,0,0,.9)" };
-
-  return (
-    <div style={overlay}>
-      <div style={modal}>
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:20}}>
-          <div style={{fontFamily:C.font,fontSize:18,fontWeight:800,color:C.silverLt,letterSpacing:3,textTransform:"uppercase"}}>📧 Gmail Scanner</div>
-          <button onClick={onClose} style={{background:"none",border:"none",color:C.muted,fontSize:22,cursor:"pointer"}}>×</button>
-        </div>
-        <Divider/>
-
-        {phase==="idle" && (
-          <>
-            <p style={{fontSize:12,color:C.muted,lineHeight:1.7,fontFamily:C.body,marginBottom:20}}>The AI agent will scan your Gmail for invoice-related emails and auto-extract client names, amounts, and due dates into your tracker.</p>
-            <button onClick={scan} style={{width:"100%",padding:"12px",background:C.card,border:`1px solid ${C.silver}`,color:C.silverLt,fontFamily:C.font,letterSpacing:3,fontSize:13,fontWeight:700,textTransform:"uppercase",cursor:"pointer"}}>
-              ⬡ INITIATE SCAN
-            </button>
-          </>
-        )}
-
-        {phase==="scanning" && (
-          <div style={{textAlign:"center",padding:"20px 0"}}>
-            <div style={{fontSize:12,color:C.silver,fontFamily:C.font,letterSpacing:2,marginBottom:16}}>SCANNING...</div>
-            <div style={{background:"#0a0a0a",border:`1px solid ${C.border}`,padding:12,textAlign:"left",borderRadius:2}}>
-              {log.map((l,i) => <div key={i} style={{fontSize:11,color:C.muted,fontFamily:C.body,marginBottom:3}}><span style={{color:"#333"}}>{l.t}</span> {l.m}</div>)}
-            </div>
-          </div>
-        )}
-
-        {phase==="results" && found.length===0 && (
-          <div style={{textAlign:"center",padding:24}}>
-            <div style={{fontSize:13,color:C.muted,marginBottom:16,fontFamily:C.body}}>No invoice emails detected. Ensure Gmail is connected in Claude.ai → Integrations.</div>
-            <button onClick={onClose} style={{padding:"8px 24px",background:C.card,border:`1px solid ${C.silver}`,color:C.silver,fontFamily:C.font,letterSpacing:2,fontSize:12,fontWeight:700,cursor:"pointer"}}>CLOSE</button>
-          </div>
-        )}
-
-        {phase==="results" && found.length>0 && (
-          <>
-            <div style={{fontSize:11,color:C.muted,fontFamily:C.font,letterSpacing:2,textTransform:"uppercase",marginBottom:12}}>
-              SELECT TO IMPORT — {found.filter(f=>sel[f.id]).length} SELECTED
-            </div>
-            {found.map(f => (
-              <div key={f.id} onClick={() => setSel(s=>({...s,[f.id]:!s[f.id]}))}
-                style={{border:`1px solid ${sel[f.id]?C.silver:C.border}`,padding:12,marginBottom:8,cursor:"pointer",background:sel[f.id]?"#141414":"#0a0a0a",transition:"all .15s"}}>
-                <div style={{display:"flex",justifyContent:"space-between"}}>
-                  <div>
-                    <div style={{fontFamily:C.font,fontSize:14,fontWeight:700,color:C.silverLt,letterSpacing:1}}>{f.client||f.email}</div>
-                    <div style={{fontSize:11,color:C.muted,fontFamily:C.body}}>{f.notes}</div>
-                    <div style={{fontSize:10,color:C.muted,marginTop:2}}>Due: {f.due||"TBD"}</div>
-                  </div>
-                  <div style={{textAlign:"right"}}>
-                    <div style={{fontFamily:C.font,fontSize:16,fontWeight:800,color:C.silver}}>{fmt(f.amount)}</div>
-                    <div style={{width:16,height:16,border:`1.5px solid ${sel[f.id]?C.silver:C.muted}`,background:sel[f.id]?"#fff":"transparent",marginLeft:"auto",marginTop:8,display:"flex",alignItems:"center",justifyContent:"center"}}>
-                      {sel[f.id] && <span style={{color:"#000",fontSize:10,fontWeight:900}}>✓</span>}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-            <button onClick={importSel} style={{width:"100%",padding:"12px",background:C.card,border:`1px solid ${C.silver}`,color:C.silverLt,fontFamily:C.font,letterSpacing:3,fontSize:13,fontWeight:700,textTransform:"uppercase",cursor:"pointer",marginTop:8}}>
-              IMPORT {found.filter(f=>sel[f.id]).length} INVOICE(S)
-            </button>
-          </>
-        )}
-      </div>
-    </div>
-  );
-}
-
-// ─── NEW INVOICE MODAL ────────────────────────────────────────────────────────
-function NewInvModal({ onSave, onClose }) {
-  const [f, setF] = useState({ client:"",email:"",amount:"",due:"",notes:"" });
-  const set = (k,v) => setF(x=>({...x,[k]:v}));
-  const inputStyle = { width:"100%",background:"#090909",border:`1px solid ${C.border}`,borderRadius:2,padding:"9px 10px",fontSize:13,fontFamily:C.body,color:C.white,outline:"none",boxSizing:"border-box" };
-  const labelStyle = { fontSize:10,fontFamily:C.font,letterSpacing:2,color:C.muted,textTransform:"uppercase",display:"block",marginBottom:5 };
-
-  return (
-    <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.85)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:200}}>
-      <div style={{background:"#0c0c0c",border:`1px solid #333`,borderTop:`2px solid ${C.silver}`,padding:28,width:400,boxShadow:"0 0 60px rgba(0,0,0,.9)"}}>
-        <div style={{fontFamily:C.font,fontSize:18,fontWeight:800,color:C.silverLt,letterSpacing:3,textTransform:"uppercase",marginBottom:16}}>NEW INVOICE</div>
-        <Divider/>
-        {[["CLIENT NAME","client","text"],["CLIENT EMAIL","email","email"],["AMOUNT ($)","amount","number"],["DUE DATE","due","date"],["SERVICE NOTES","notes","text"]].map(([lbl,key,type]) => (
-          <div key={key} style={{marginBottom:13}}>
-            <label style={labelStyle}>{lbl}</label>
-            <input type={type} value={f[key]} onChange={e=>set(key,e.target.value)} style={inputStyle}/>
-          </div>
-        ))}
-        <div style={{display:"flex",gap:10,marginTop:18}}>
-          <button onClick={onClose} style={{flex:1,padding:"10px",background:"transparent",border:`1px solid ${C.border}`,color:C.muted,fontFamily:C.font,letterSpacing:2,fontSize:12,cursor:"pointer",textTransform:"uppercase"}}>CANCEL</button>
-          <button onClick={()=>{if(!f.client||!f.amount||!f.due)return; onSave({...f,amount:parseFloat(f.amount),status:"Draft",issued:todayStr(),reminders:0,id:uid(),source:"manual"});}}
-            style={{flex:1,padding:"10px",background:C.card,border:`1px solid ${C.silver}`,color:C.silverLt,fontFamily:C.font,letterSpacing:2,fontSize:12,cursor:"pointer",textTransform:"uppercase",fontWeight:700}}>
-            CREATE
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ─── ANALYTICS ────────────────────────────────────────────────────────────────
-function Analytics({ invoices }) {
-  const byStatus = STATUSES.map(s => ({ s, v:invoices.filter(i=>i.status===s).reduce((a,i)=>a+i.amount,0) }));
-  const maxV = Math.max(...byStatus.map(b=>b.v), 1);
-  const monthly = {};
-  invoices.forEach(inv => { const m=inv.issued?.slice(0,7)||""; monthly[m]=(monthly[m]||0)+inv.amount; });
-  const months = Object.entries(monthly).sort((a,b)=>a[0]>b[0]?1:-1).slice(-6);
-  const maxM = Math.max(...months.map(m=>m[1]),1);
-
-  const aging = [
-    { label:"CURRENT",    fn:i=>daysLeft(i.due)>0,       color:C.silver },
-    { label:"DUE SOON",   fn:i=>daysLeft(i.due)<=7&&daysLeft(i.due)>=0, color:"#c0a040" },
-    { label:"1-30 DAYS",  fn:i=>daysLeft(i.due)<0&&daysLeft(i.due)>=-30, color:"#c05050" },
-    { label:"30+ DAYS",   fn:i=>daysLeft(i.due)<-30,     color:"#801010" },
-  ];
-
-  return (
-    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14}}>
-      <div style={{background:C.card,border:`1px solid ${C.border}`,padding:16}}>
-        <div style={{fontFamily:C.font,fontSize:13,fontWeight:700,color:C.silver,letterSpacing:3,textTransform:"uppercase",marginBottom:14}}>VALUE BY STATUS</div>
-        <Divider/>
-        {byStatus.filter(b=>b.v>0).map(b=>(
-          <div key={b.s} style={{marginBottom:10}}>
-            <div style={{display:"flex",justifyContent:"space-between",fontSize:11,marginBottom:4}}>
-              <span style={{color:SC[b.s].text,fontFamily:C.font,letterSpacing:1,textTransform:"uppercase"}}>{b.s}</span>
-              <span style={{color:C.silver,fontFamily:C.font,fontWeight:700}}>{fmt(b.v)}</span>
-            </div>
-            <div style={{background:"#0a0a0a",height:6,border:`1px solid ${C.border}`}}>
-              <div style={{height:"100%",background:`linear-gradient(90deg,${SC[b.s].text},${SC[b.s].text}88)`,width:`${(b.v/maxV)*100}%`,transition:"width .4s"}}/>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div style={{background:C.card,border:`1px solid ${C.border}`,padding:16}}>
-        <div style={{fontFamily:C.font,fontSize:13,fontWeight:700,color:C.silver,letterSpacing:3,textTransform:"uppercase",marginBottom:14}}>MONTHLY VOLUME</div>
-        <Divider/>
-        <div style={{display:"flex",gap:8,alignItems:"flex-end",height:120}}>
-          {months.map(([m,v])=>(
-            <div key={m} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:3}}>
-              <div style={{fontSize:9,color:C.muted,fontFamily:C.font}}>{fmt(v)}</div>
-              <div style={{width:"100%",background:`linear-gradient(180deg,${C.silverLt},${C.silverDim})`,height:`${(v/maxM)*90}px`,transition:"height .4s"}}/>
-              <div style={{fontSize:9,color:C.muted,fontFamily:C.font}}>{m.slice(5)}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div style={{background:C.card,border:`1px solid ${C.border}`,padding:16,gridColumn:"span 2"}}>
-        <div style={{fontFamily:C.font,fontSize:13,fontWeight:700,color:C.silver,letterSpacing:3,textTransform:"uppercase",marginBottom:14}}>ACCOUNTS AGING</div>
-        <Divider/>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:12}}>
-          {aging.map(({ label,fn,color }) => {
-            const group = invoices.filter(i=>!["Paid","Cancelled"].includes(i.status)&&fn(i));
-            return (
-              <div key={label} style={{background:"#0a0a0a",border:`1px solid ${C.border}`,borderTop:`2px solid ${color}`,padding:12,textAlign:"center"}}>
-                <div style={{fontSize:24,fontWeight:900,color,fontFamily:C.font}}>{group.length}</div>
-                <div style={{fontSize:9,color:C.muted,letterSpacing:2,fontFamily:C.font,textTransform:"uppercase",marginTop:2}}>{label}</div>
-                <div style={{fontSize:12,fontWeight:700,color:C.silver,fontFamily:C.font,marginTop:4}}>{fmt(group.reduce((a,i)=>a+i.amount,0))}</div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ─── CALENDAR ─────────────────────────────────────────────────────────────────
-function Calendar({ invoices }) {
-  const [mo, setMo] = useState(new Date().getMonth());
-  const [yr, setYr] = useState(new Date().getFullYear());
-  const MONTHS = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
-  const startDay = new Date(yr,mo,1).getDay();
-  const days = new Date(yr,mo+1,0).getDate();
-  const byDay = {};
-  invoices.forEach(inv => {
-    const p = inv.due?.split("-"); if(!p) return;
-    if(parseInt(p[0])===yr&&parseInt(p[1])-1===mo) { const k=String(parseInt(p[2])); (byDay[k]=byDay[k]||[]).push(inv); }
-  });
-  const cells = [...Array(startDay).fill(null), ...Array.from({length:days},(_,i)=>i+1)];
-  const isToday = d => d && new Date(yr,mo,d).toDateString()===new Date().toDateString();
-
-  return (
-    <div style={{background:C.card,border:`1px solid ${C.border}`,padding:16}}>
-      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14}}>
-        <button onClick={()=>{if(mo===0){setMo(11);setYr(y=>y-1);}else setMo(m=>m-1);}}
-          style={{background:"none",border:"none",color:C.silver,fontSize:18,cursor:"pointer",fontFamily:C.font}}>‹</button>
-        <div style={{fontFamily:C.font,fontSize:15,fontWeight:800,color:C.silverLt,letterSpacing:4,textTransform:"uppercase"}}>{MONTHS[mo]} {yr}</div>
-        <button onClick={()=>{if(mo===11){setMo(0);setYr(y=>y+1);}else setMo(m=>m+1);}}
-          style={{background:"none",border:"none",color:C.silver,fontSize:18,cursor:"pointer",fontFamily:C.font}}>›</button>
-      </div>
-      <Divider/>
-      <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",gap:3,textAlign:"center"}}>
-        {["SU","MO","TU","WE","TH","FR","SA"].map(d=>(
-          <div key={d} style={{fontSize:9,color:C.muted,fontFamily:C.font,letterSpacing:1,padding:"4px 0",fontWeight:700}}>{d}</div>
-        ))}
-        {cells.map((d,i) => {
-          const invs = d ? byDay[String(d)]||[] : [];
-          return (
-            <div key={i} style={{minHeight:50,background:isToday(d)?"#1a1a1a":invs.length?"#111":"#0a0a0a",border:`1px solid ${isToday(d)?C.silver:invs.length?"#2a2a2a":C.border}`,padding:"4px 3px"}}>
-              {d && <div style={{fontSize:10,fontWeight:isToday(d)?900:400,color:isToday(d)?C.silverLt:C.muted,fontFamily:C.font}}>{d}</div>}
-              {invs.slice(0,2).map((inv,j)=>(
-                <div key={j} style={{fontSize:8,background:SC[inv.status].bg,color:SC[inv.status].text,padding:"1px 3px",marginTop:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",fontFamily:C.font,letterSpacing:0.5}}>
-                  {inv.client.split(" ")[0].toUpperCase()}
-                </div>
-              ))}
-              {invs.length>2 && <div style={{fontSize:8,color:C.muted}}>+{invs.length-2}</div>}
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-// ─── AGENT CHAT ───────────────────────────────────────────────────────────────
-function AgentChat({ invoices, onAction }) {
-  const [msgs, setMsgs] = useState([
-    { role:"assistant", text:"SPECIAL SERVICES PROTECTION — INVOICE AGENT ONLINE.\n\nI have full visibility into your accounts. I can flag overdue clients, send Gmail reminders, update statuses, and provide financial intelligence. Standing by." }
-  ]);
-  const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false);
-  const endRef = useRef(null);
-  useEffect(() => { endRef.current?.scrollIntoView({behavior:"smooth"}); }, [msgs]);
-
-  const QUICK = ["Flag high-priority accounts","Send overdue reminders","Payment summary","Draft follow-up emails"];
-
-  const send = async () => {
-    if (!input.trim()||loading) return;
-    const txt = input.trim(); setInput(""); setLoading(true);
-    setMsgs(m=>[...m,{role:"user",text:txt}]);
-    const summary = invoices.map(i=>`ID:${i.id} Client:${i.client} Email:${i.email} Amt:$${i.amount} Due:${i.due} Status:${i.status} Reminders:${i.reminders}`).join("\n");
-    const hist = msgs.slice(-10).map(m=>({role:m.role,content:m.text}));
-    try {
-      const res = await fetch("https://api.anthropic.com/v1/messages",{
-        method:"POST",headers:{"Content-Type":"application/json"},
-        body: JSON.stringify({
-          model:"claude-sonnet-4-20250514", max_tokens:1000,
-          system:`You are the invoice intelligence agent for Special Services Protection — a premier private security and executive protection firm. You have full visibility into all invoices and Gmail access.
-Today: ${todayStr()}
-
-INVOICES:\n${summary}
-
-Capabilities:
-- Analyze accounts, flag risks, give collection intelligence
-- Update statuses → emit on its own line: ACTION: {"type":"update","id":"INV-XXX","status":"NewStatus"}
-- Import from email → emit: ACTION: {"type":"add","client":"...","email":"...","amount":0,"due":"YYYY-MM-DD","notes":"...","status":"Draft"}
-- Send Gmail follow-ups via Gmail MCP
-- Bump reminder count → emit: ACTION: {"type":"reminder","id":"INV-XXX"}
-
-Tone: professional, precise, tactical. No fluff. Brevity is strength.`,
-          messages:[...hist,{role:"user",content:txt}],
-          mcp_servers:[{type:"url",url:"https://gmail.mcp.claude.com/mcp",name:"gmail-mcp"}]
-        })
-      });
-      const data = await res.json();
-      const raw = data.content?.map(b=>b.type==="text"?b.text:"").join("")||"Comms error. Retry.";
-      const re = /ACTION:\s*(\{[^\n]+\})/g; let m;
-      while((m=re.exec(raw))!==null){ try{ onAction(JSON.parse(m[1])); }catch{} }
-      setMsgs(ms=>[...ms,{role:"assistant",text:raw.replace(/ACTION:\s*\{[^\n]+\}/g,"").trim()}]);
-    } catch {
-      setMsgs(ms=>[...ms,{role:"assistant",text:"⚠ COMMS FAILURE. Check connection and retry."}]);
-    }
-    setLoading(false);
-  };
-
-  return (
-    <div style={{display:"flex",flexDirection:"column",height:"100%",background:C.bg,border:`1px solid ${C.border}`,borderTop:`2px solid ${C.silver}`,overflow:"hidden"}}>
-      <div style={{padding:"11px 14px",background:"#0a0a0a",borderBottom:`1px solid ${C.border}`,display:"flex",alignItems:"center",gap:10}}>
-        <SSPBadge size={28}/>
-        <div>
-          <div style={{fontFamily:C.font,fontSize:13,fontWeight:800,color:C.silverLt,letterSpacing:3,textTransform:"uppercase"}}>Invoice Agent</div>
-          <div style={{fontSize:9,color:C.muted,fontFamily:C.font,letterSpacing:2}}>GMAIL CONNECTED · AI ACTIVE</div>
-        </div>
-        <div style={{marginLeft:"auto",width:8,height:8,borderRadius:"50%",background:"#27ae60",boxShadow:"0 0 6px #27ae60"}}/>
-      </div>
-      <div style={{flex:1,overflowY:"auto",padding:12,display:"flex",flexDirection:"column",gap:8}}>
-        {msgs.map((m,i) => (
-          <div key={i} style={{display:"flex",justifyContent:m.role==="user"?"flex-end":"flex-start"}}>
-            <div style={{maxWidth:"90%",padding:"9px 13px",
-              background:m.role==="user"?"#141414":"#0d0d0d",
-              border:`1px solid ${m.role==="user"?C.silver:C.border}`,
-              color:m.role==="user"?C.silverLt:C.silver,
-              fontFamily:m.role==="user"?C.body:C.body,
-              fontSize:12,lineHeight:1.6,whiteSpace:"pre-wrap"}}>
-              {m.text}
-            </div>
-          </div>
-        ))}
-        {loading && (
-          <div style={{display:"flex"}}>
-            <div style={{background:"#0d0d0d",border:`1px solid ${C.border}`,padding:"9px 13px",fontSize:12,color:C.muted,fontFamily:C.font,letterSpacing:2}}>
-              PROCESSING...
-            </div>
-          </div>
-        )}
-        <div ref={endRef}/>
-      </div>
-      {msgs.length<=2 && (
-        <div style={{padding:"0 12px 8px",display:"flex",flexDirection:"column",gap:5}}>
-          {QUICK.map((q,i) => (
-            <button key={i} onClick={()=>setInput(q)}
-              style={{background:"#0a0a0a",border:`1px solid ${C.border}`,padding:"6px 10px",fontSize:10,color:C.muted,cursor:"pointer",textAlign:"left",fontFamily:C.font,letterSpacing:1,textTransform:"uppercase"}}>
-              › {q}
-            </button>
-          ))}
-        </div>
-      )}
-      <div style={{padding:"9px 10px",borderTop:`1px solid ${C.border}`,display:"flex",gap:7,background:"#0a0a0a"}}>
-        <input value={input} onChange={e=>setInput(e.target.value)} onKeyDown={e=>e.key==="Enter"&&send()}
-          placeholder="ENTER COMMAND..."
-          style={{flex:1,background:"#080808",border:`1px solid ${C.border}`,padding:"8px 10px",fontSize:11,fontFamily:C.font,letterSpacing:1,color:C.silver,outline:"none"}}/>
-        <button onClick={send} disabled={loading||!input.trim()}
-          style={{background:C.card,border:`1px solid ${C.silver}`,color:C.silverLt,padding:"8px 14px",cursor:"pointer",fontFamily:C.font,letterSpacing:2,fontSize:11,fontWeight:700,opacity:loading?.5:1}}>
-          SEND
-        </button>
-      </div>
-    </div>
-  );
-}
-
-// ─── MAIN APP ─────────────────────────────────────────────────────────────────
-function App() {
-  const [invoices, setInvoices] = useState(SEED);
-  const [tab, setTab] = useState("invoices");
-  const [filter, setFilter] = useState("All");
-  const [showNew, setShowNew] = useState(false);
-  const [showGmail, setShowGmail] = useState(false);
-  const [toasts, setToasts] = useState([]);
-  const [expanded, setExpanded] = useState(null);
-
-  const toast = (msg, type="info") => {
-    const id = Date.now();
-    setToasts(t=>[...t,{id,msg,type}]);
-    setTimeout(()=>setToasts(t=>t.filter(x=>x.id!==id)),4000);
-  };
-
-  const handleAction = act => {
-    if(act.type==="update"){ setInvoices(invs=>invs.map(i=>i.id===act.id?{...i,status:act.status}:i)); toast(`${act.id} → ${act.status}`,"success"); }
-    else if(act.type==="add"){ setInvoices(invs=>[{...act,id:uid(),reminders:0,issued:todayStr(),source:"email"},...invs]); toast(`New invoice imported: ${act.client}`,"info"); }
-    else if(act.type==="reminder"){ setInvoices(invs=>invs.map(i=>i.id===act.id?{...i,reminders:i.reminders+1}:i)); toast(`Reminder sent: ${act.id}`,"info"); }
-  };
-
-  const updateStatus = (id,s) => { setInvoices(invs=>invs.map(i=>i.id===id?{...i,status:s}:i)); toast(`${id} → ${s}`,"success"); };
-  const sendReminder = id => { setInvoices(invs=>invs.map(i=>i.id===id?{...i,reminders:i.reminders+1}:i)); toast(`Reminder sent: ${id}`,"info"); };
-  const addInvoice = inv => { setInvoices(i=>[inv,...i]); setShowNew(false); toast("Invoice created","success"); };
-  const importGmail = invs => { setInvoices(i=>[...invs,...i]); setShowGmail(false); toast(`Imported ${invs.length} invoice(s) from Gmail`,"success"); };
-
-  const filtered = filter==="All"?invoices:invoices.filter(i=>i.status===filter);
-  const outstanding = invoices.filter(i=>!["Paid","Cancelled"].includes(i.status)).reduce((s,i)=>s+i.amount,0);
-  const collected = invoices.filter(i=>i.status==="Paid").reduce((s,i)=>s+i.amount,0);
-  const overdue = invoices.filter(i=>i.status==="Overdue").length;
-  const rate = invoices.length ? Math.round(invoices.filter(i=>i.status==="Paid").length/invoices.length*100):0;
-
-  const btnStyle = (active) => ({
-    padding:"7px 16px",background:active?"#141414":"transparent",
-    border:`1px solid ${active?C.silver:C.border}`,
-    color:active?C.silverLt:C.muted,
-    fontFamily:C.font,letterSpacing:2,fontSize:11,fontWeight:700,
-    textTransform:"uppercase",cursor:"pointer",transition:"all .15s"
-  });
-
-  return (
-    <div style={{fontFamily:C.body,background:C.black,minHeight:"100vh",padding:16,color:C.white}}>
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&display=swap'); * { box-sizing: border-box; } ::-webkit-scrollbar{width:4px} ::-webkit-scrollbar-track{background:#0a0a0a} ::-webkit-scrollbar-thumb{background:#333}`}</style>
-
-      {/* Toasts */}
-      <div style={{position:"fixed",top:14,right:14,zIndex:400,display:"flex",flexDirection:"column",gap:6}}>
-        {toasts.map(t=>(
-          <div key={t.id} style={{background:"#0f0f0f",border:`1px solid ${t.type==="success"?C.silver:C.border}`,color:t.type==="success"?C.silverLt:C.muted,padding:"9px 16px",fontSize:11,fontFamily:C.font,letterSpacing:2,textTransform:"uppercase",boxShadow:"0 4px 20px rgba(0,0,0,.8)"}}>
-            {t.type==="success"?"✓":t.type==="info"?"◈":"⚠"} {t.msg}
-          </div>
-        ))}
-      </div>
-
-      {showNew && <NewInvModal onSave={addInvoice} onClose={()=>setShowNew(false)}/>}
-      {showGmail && <GmailModal onClose={()=>setShowGmail(false)} onImport={importGmail}/>}
-
-      <div style={{maxWidth:1280,margin:"0 auto"}}>
-
-        {/* Header */}
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:20,paddingBottom:16,borderBottom:`1px solid ${C.border}`}}>
-          <div style={{display:"flex",alignItems:"center",gap:14}}>
-            <SSPBadge size={52}/>
-            <div>
-              <div style={{fontFamily:C.font,fontSize:22,fontWeight:900,color:C.silverLt,letterSpacing:4,textTransform:"uppercase",lineHeight:1}}>Special Services Protection</div>
-              <div style={{fontSize:10,color:C.muted,letterSpacing:4,fontFamily:C.font,marginTop:3,textTransform:"uppercase"}}>Invoice Management System</div>
-            </div>
-          </div>
-          <div style={{display:"flex",gap:8}}>
-            <button onClick={()=>setShowGmail(true)} style={{...btnStyle(false),display:"flex",alignItems:"center",gap:6}}>
-              ◈ SCAN GMAIL
-            </button>
-            <button onClick={()=>setShowNew(true)} style={{...btnStyle(true)}}>
-              + NEW INVOICE
-            </button>
-          </div>
-        </div>
-
-        {/* Stats */}
-        <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:10,marginBottom:18}}>
-          <StatCard label="Outstanding" value={fmt(outstanding)} sub="Pending collection" accent={C.silver}/>
-          <StatCard label="Collected" value={fmt(collected)} sub="Paid invoices" accent="#4caf7a"/>
-          <StatCard label="Overdue" value={`${overdue} ACCTS`} sub="Require immediate action" accent="#c05050"/>
-          <StatCard label="Collection Rate" value={`${rate}%`} sub="Overall performance" accent="#c0a040"/>
-        </div>
-
-        {/* Tab nav */}
-        <div style={{display:"flex",gap:4,marginBottom:14,borderBottom:`1px solid ${C.border}`,paddingBottom:10}}>
-          {[["invoices","◧ INVOICES"],["analytics","◈ ANALYTICS"],["calendar","◫ CALENDAR"]].map(([k,l])=>(
-            <button key={k} onClick={()=>setTab(k)} style={btnStyle(tab===k)}>{l}</button>
-          ))}
-        </div>
-
-        <div style={{display:"grid",gridTemplateColumns:"1fr 320px",gap:14,alignItems:"start"}}>
-
-          {/* Main Panel */}
-          <div>
-            {tab==="invoices" && (
-              <>
-                <div style={{display:"flex",gap:5,marginBottom:12,flexWrap:"wrap"}}>
-                  {["All",...STATUSES].map(s=>(
-                    <button key={s} onClick={()=>setFilter(s)}
-                      style={{padding:"4px 12px",background:filter===s?"#141414":"transparent",border:`1px solid ${filter===s?C.silver:C.border}`,color:filter===s?C.silverLt:C.muted,fontFamily:C.font,letterSpacing:2,fontSize:10,fontWeight:700,textTransform:"uppercase",cursor:"pointer"}}>
-                      {s}
-                    </button>
-                  ))}
-                </div>
-
-                <div style={{display:"flex",flexDirection:"column",gap:6}}>
-                  {filtered.map(inv => (
-                    <div key={inv.id}
-                      style={{background:expanded===inv.id?C.cardHi:C.card,border:`1px solid ${expanded===inv.id?C.silver:C.border}`,padding:"13px 16px",cursor:"pointer",transition:"border .15s",borderLeft:`3px solid ${SC[inv.status].text}`}}
-                      onClick={()=>setExpanded(expanded===inv.id?null:inv.id)}>
-                      <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:10}}>
-                        <div style={{flex:1,minWidth:0}}>
-                          <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap",marginBottom:5}}>
-                            <span style={{fontFamily:C.font,fontSize:15,fontWeight:800,color:C.silverLt,letterSpacing:2,textTransform:"uppercase"}}>{inv.client}</span>
-                            <span style={{fontSize:9,color:C.muted,fontFamily:C.font,letterSpacing:1}}>{inv.id}</span>
-                            <StatusBadge status={inv.status}/>
-                            {inv.source==="email"&&<span style={{fontSize:9,color:"#5b9bd5",fontFamily:C.font,letterSpacing:1,border:"1px solid #152030",padding:"1px 6px",background:"#0a0e14"}}>◈ EMAIL</span>}
-                          </div>
-                          <div style={{fontSize:11,color:C.muted,fontFamily:C.body,marginBottom:4}}>{inv.notes}</div>
-                          <div style={{fontSize:10,color:C.muted,fontFamily:C.font,letterSpacing:1}}>
-                            DUE: <span style={{color:inv.status==="Overdue"?"#c05050":C.silver}}>{inv.due}</span>
-                            {!["Paid","Cancelled"].includes(inv.status) && (
-                              <span style={{marginLeft:10,color:daysLeft(inv.due)<0?"#c05050":daysLeft(inv.due)<=7?"#c0a040":"#4caf7a",fontWeight:700}}>
-                                {daysLeft(inv.due)<0?`${Math.abs(daysLeft(inv.due))}D OVERDUE`:`${daysLeft(inv.due)}D LEFT`}
-                              </span>
-                            )}
-                            {inv.reminders>0&&<span style={{marginLeft:12,color:"#c0a040"}}>◈ {inv.reminders} REMINDER{inv.reminders>1?"S":""}</span>}
-                          </div>
-                        </div>
-                        <div style={{textAlign:"right",flexShrink:0}}>
-                          <div style={{fontFamily:C.font,fontSize:20,fontWeight:900,color:C.silverLt,letterSpacing:1}}>{fmt(inv.amount)}</div>
-                          <div style={{fontSize:9,color:C.muted,fontFamily:C.font,letterSpacing:1,marginTop:2}}>ISSUED {inv.issued}</div>
-                        </div>
-                      </div>
-
-                      {expanded===inv.id && (
-                        <div style={{marginTop:12,paddingTop:12,borderTop:`1px solid ${C.border}`}}>
-                          <div style={{display:"flex",gap:6,flexWrap:"wrap",alignItems:"center"}}>
-                            <span style={{fontSize:9,color:C.muted,fontFamily:C.font,letterSpacing:2,textTransform:"uppercase",marginRight:4}}>STATUS:</span>
-                            {STATUSES.filter(s=>s!==inv.status).map(s=>(
-                              <button key={s} onClick={e=>{e.stopPropagation();updateStatus(inv.id,s);}}
-                                style={{padding:"3px 10px",background:SC[s].bg,border:`1px solid ${SC[s].border}`,color:SC[s].text,fontFamily:C.font,letterSpacing:1,fontSize:9,fontWeight:700,textTransform:"uppercase",cursor:"pointer"}}>
-                                {s}
-                              </button>
-                            ))}
-                            <button onClick={e=>{e.stopPropagation();sendReminder(inv.id);}}
-                              style={{marginLeft:"auto",padding:"4px 12px",background:"#0a0e14",border:`1px solid #152030`,color:"#5b9bd5",fontFamily:C.font,letterSpacing:1,fontSize:9,fontWeight:700,textTransform:"uppercase",cursor:"pointer"}}>
-                              ◈ SEND REMINDER
-                            </button>
-                            <button onClick={e=>{e.stopPropagation();exportPDF(inv);}}
-                              style={{padding:"4px 12px",background:C.card,border:`1px solid ${C.border}`,color:C.muted,fontFamily:C.font,letterSpacing:1,fontSize:9,fontWeight:700,textTransform:"uppercase",cursor:"pointer"}}>
-                              ↓ EXPORT PDF
-                            </button>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                  {filtered.length===0&&<div style={{textAlign:"center",padding:40,color:C.muted,fontFamily:C.font,letterSpacing:3,textTransform:"uppercase",fontSize:12}}>NO RECORDS FOUND</div>}
-                </div>
-              </>
-            )}
-            {tab==="analytics" && <Analytics invoices={invoices}/>}
-            {tab==="calendar" && <Calendar invoices={invoices}/>}
-          </div>
-
-          {/* Agent */}
-          <div style={{height:600,position:"sticky",top:16}}>
-            <AgentChat invoices={invoices} onAction={handleAction}/>
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div style={{marginTop:24,paddingTop:14,borderTop:`1px solid ${C.border}`,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-          <div style={{display:"flex",alignItems:"center",gap:8}}>
-            <SSPBadge size={22}/>
-            <span style={{fontFamily:C.font,fontSize:10,color:C.muted,letterSpacing:3,textTransform:"uppercase"}}>Special Services Protection — Authorized Personnel Only</span>
-          </div>
-          <div style={{fontSize:9,color:"#333",fontFamily:C.font,letterSpacing:2}}>CONFIDENTIAL</div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-
-ReactDOM.render(React.createElement(App), document.getElementById("root"));
-
-  </script>
+<nav id="navbar">
+<div class="nav-inner">
+<a href="#home" class="nav-logo">
+<div class="nav-logo-badge">S</div>
+<div class="nav-logo-text"><span>Special Services Protection</span><span>Atlanta, GA</span></div>
+</a>
+<ul class="nav-links">
+<li><a href="#home">Home</a></li>
+<li><a href="#services">Services</a></li>
+<li><a href="#about">About Us</a></li>
+<li><a href="#contact">Contact</a></li>
+<li><a href="#" class="nav-cta" onclick="openQuote();return false;">Request a Quote</a></li>
+</ul>
+<button class="hamburger" onclick="toggleMenu()" aria-label="Menu"><span></span><span></span><span></span></button>
+</div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+<a href="#home" onclick="closeMenu()">Home</a>
+<a href="#services" onclick="closeMenu()">Services</a>
+<a href="#about" onclick="closeMenu()">About Us</a>
+<a href="#contact" onclick="closeMenu()">Contact</a>
+<a href="#" onclick="openQuote();closeMenu();return false;">Request a Quote &rarr;</a>
+</div>
+<section id="home" class="hero">
+<div class="hero-bg"></div><div class="hero-grid"></div>
+<div class="hero-content">
+<div>
+<div class="hero-eyebrow">Atlanta's Premier Security Firm</div>
+<h1>Protection You Can <span>Trust</span></h1>
+<p class="hero-sub">Special Services Protection delivers professional, licensed security services across Atlanta and the greater Georgia area. From corporate campuses to executive protection — we guard what matters most.</p>
+<div class="hero-actions">
+<a href="#" class="btn-primary" onclick="openQuote();return false;">Request a Quote &rarr;</a>
+<a href="#services" class="btn-ghost">View Services</a>
+</div>
+<div class="hero-stats">
+<div class="stat"><div class="stat-num">500+</div><div class="stat-label">Events Secured</div></div>
+<div class="stat"><div class="stat-num">10+</div><div class="stat-label">Years Experience</div></div>
+<div class="stat"><div class="stat-num">100%</div><div class="stat-label">Licensed & Insured</div></div>
+</div>
+</div>
+<div class="hero-badge-wrap">
+<div class="hero-badge">
+<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+<defs><radialGradient id="bg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#1a1a2a"/><stop offset="100%" stop-color="#050508"/></radialGradient><linearGradient id="chrome" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#666"/><stop offset="25%" stop-color="#e8e8f8"/><stop offset="55%" stop-color="#aaa"/><stop offset="80%" stop-color="#ddd"/><stop offset="100%" stop-color="#666"/></linearGradient></defs>
+<circle cx="150" cy="150" r="148" fill="url(#bg)" stroke="url(#chrome)" stroke-width="3"/>
+<circle cx="150" cy="150" r="130" fill="none" stroke="rgba(200,200,220,.15)" stroke-width="1"/>
+<text x="22" y="155" fill="url(#chrome)" font-size="22" font-family="Arial" font-weight="900">&#9733;</text>
+<text x="260" y="155" fill="url(#chrome)" font-size="22" font-family="Arial" font-weight="900" text-anchor="middle">&#9733;</text>
+<path d="M150 55 L190 75 L190 155 Q190 195 150 220 Q110 195 110 155 L110 75 Z" fill="#0a0a12" stroke="url(#chrome)" stroke-width="2.5"/>
+<text x="150" y="168" text-anchor="middle" fill="url(#chrome)" font-size="72" font-family="Arial" font-weight="900">S</text>
+<path id="topArc" d="M 35,150 A 115,115 0 0,1 265,150" fill="none"/>
+<text font-size="19" font-family="Arial" font-weight="800" fill="url(#chrome)" letter-spacing="4"><textPath href="#topArc" startOffset="8%">SPECIAL SERVICES</textPath></text>
+<path id="botArc" d="M 42,162 A 110,110 0 0,0 258,162" fill="none"/>
+<text font-size="18" font-family="Arial" font-weight="800" fill="url(#chrome)" letter-spacing="6"><textPath href="#botArc" startOffset="18%">PROTECTION</textPath></text>
+</svg>
+</div>
+</div>
+</div>
+</section>
+<div class="trust-bar">
+<div class="trust-inner">
+<div class="trust-item"><span class="trust-icon">✓</span> Licensed & Bonded in Georgia</div>
+<div class="trust-item"><span class="trust-icon">✓</span> Armed & Unarmed Officers</div>
+<div class="trust-item"><span class="trust-icon">✓</span> 24/7 Availability</div>
+<div class="trust-item"><span class="trust-icon">✓</span> Background-Checked Personnel</div>
+<div class="trust-item"><span class="trust-icon">✓</span> Rapid Deployment</div>
+</div>
+</div>
+<section id="services">
+<div class="section-inner">
+<div class="section-label">What We Do</div>
+<div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:20px;margin-bottom:56px">
+<div><h2 class="section-title" style="margin-bottom:0">Professional Security <span>Services</span></h2></div>
+<p style="font-size:14px;color:var(--silver2);max-width:360px;line-height:1.7">Comprehensive protection solutions tailored to your specific needs, delivered by trained professionals.</p>
+</div>
+<div class="services-grid">
+<a href="#contact" class="service-card">
+<div class="service-icon">🛡</div>
+<div class="service-title">Event Security</div>
+<div class="service-desc">Professional security personnel for corporate events, concerts, galas, sporting events and private functions. We ensure guests and assets remain protected throughout.</div>
+<div class="service-arrow">Learn More &rarr;</div>
+</a>
+<a href="#contact" class="service-card">
+<div class="service-icon">👤</div>
+<div class="service-title">Executive Protection</div>
+<div class="service-desc">Discreet, highly trained close protection officers for executives, VIPs, and high-profile individuals requiring personal security.</div>
+<div class="service-arrow">Learn More &rarr;</div>
+</a>
+<a href="#contact" class="service-card">
+<div class="service-icon">⚡</div>
+<div class="service-title">Armed Guards</div>
+<div class="service-desc">Licensed armed security officers providing the highest level of deterrence for locations requiring elevated threat response.</div>
+<div class="service-arrow">Learn More &rarr;</div>
+</a>
+<a href="#contact" class="service-card">
+<div class="service-icon">🔵</div>
+<div class="service-title">Unarmed Guards</div>
+<div class="service-desc">Professional unarmed officers for access control, customer service environments, and locations requiring a visible security presence.</div>
+<div class="service-arrow">Learn More &rarr;</div>
+</a>
+<a href="#contact" class="service-card">
+<div class="service-icon">🏢</div>
+<div class="service-title">Corporate Security</div>
+<div class="service-desc">Comprehensive security programs for office buildings, campuses, and commercial properties — protecting people, assets, and information.</div>
+<div class="service-arrow">Learn More &rarr;</div>
+</a>
+<a href="#contact" class="service-card">
+<div class="service-icon">🏠</div>
+<div class="service-title">Residential Security</div>
+<div class="service-desc">Protecting homes, gated communities, and private estates with dedicated officers and patrol services.</div>
+<div class="service-arrow">Learn More &rarr;</div>
+</a>
+<a href="#contact" class="service-card">
+<div class="service-icon">🚔</div>
+<div class="service-title">Mobile Patrol</div>
+<div class="service-desc">Regular patrol routes covering multiple locations, providing cost-effective security visibility and rapid incident response.</div>
+<div class="service-arrow">Learn More &rarr;</div>
+</a>
+</div>
+</div>
+</section>
+<section id="why">
+<div class="section-inner">
+<div class="why-grid">
+<div>
+<div class="section-label">Why Choose SSP</div>
+<h2 class="section-title">The Standard of <span>Excellence</span></h2>
+<p class="section-sub" style="margin-bottom:40px">We don't just provide guards — we provide peace of mind backed by professionalism, training, and accountability.</p>
+<div class="why-features">
+<div class="why-feature"><div class="why-num">01</div><div><div class="why-feat-title">Certified & Trained Officers</div><div class="why-feat-desc">All personnel hold valid Georgia security licenses and undergo rigorous background checks, drug screening, and ongoing professional training.</div></div></div>
+<div class="why-feature"><div class="why-num">02</div><div><div class="why-feat-title">Rapid Response Deployment</div><div class="why-feat-desc">We can staff assignments quickly with qualified officers, ensuring your security needs are met without delay.</div></div></div>
+<div class="why-feature"><div class="why-num">03</div><div><div class="why-feat-title">Customized Security Plans</div><div class="why-feat-desc">Every client receives a tailored security assessment and plan designed around their specific environment and risk profile.</div></div></div>
+<div class="why-feature"><div class="why-num">04</div><div><div class="why-feat-title">Direct Communication</div><div class="why-feat-desc">Work directly with ownership and supervisors — no layers of bureaucracy. Your satisfaction is our personal commitment.</div></div></div>
+</div>
+</div>
+<div class="why-visual">
+<div style="font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Performance Overview</div>
+<div class="why-metric"><span class="why-metric-label">Client Retention Rate</span><span class="why-metric-value">97%</span></div>
+<div class="why-metric"><span class="why-metric-label">Response Time</span><span class="why-metric-value">&lt; 2 hrs</span></div>
+<div class="why-metric"><span class="why-metric-label">Licensed Officers</span><span class="why-metric-value">100%</span></div>
+<div class="why-metric"><span class="why-metric-label">Years in Operation</span><span class="why-metric-value">10+</span></div>
+<div class="why-metric"><span class="why-metric-label">States Served</span><span class="why-metric-value">Georgia</span></div>
+</div>
+</div>
+</div>
+</section>
+<section id="about">
+<div class="section-inner">
+<div class="about-grid">
+<div>
+<div class="section-label">About Us</div>
+<h2 class="section-title">Our <span>Story</span></h2>
+<div class="about-text">
+<p>Special Services Protection was founded in Atlanta, Georgia with a single mission: to provide professional, reliable security services that clients can genuinely trust. Built on a foundation of military precision and corporate professionalism, we bring an elite standard to every assignment.</p>
+<p>Our team consists of experienced security professionals — many with backgrounds in law enforcement and military service. This foundation instills the discipline, situational awareness, and decision-making skills that separate SSP from the competition.</p>
+<p>Based in Atlanta and serving the greater Georgia area, we have built a reputation for integrity, reliability, and results. Whether protecting a Fortune 500 corporate campus or a private residence, our commitment to excellence never wavers.</p>
+</div>
+<div class="about-pillars">
+<div class="pillar"><div class="pillar-title">Mission</div><div class="pillar-desc">To deliver unparalleled security services with professionalism and integrity.</div></div>
+<div class="pillar"><div class="pillar-title">Vision</div><div class="pillar-desc">To be Atlanta's most trusted security partner for businesses and individuals.</div></div>
+<div class="pillar"><div class="pillar-title">Values</div><div class="pillar-desc">Integrity, accountability, professionalism, and dedication to client safety.</div></div>
+<div class="pillar"><div class="pillar-title">Promise</div><div class="pillar-desc">Every officer. Every shift. Every time — held to the highest standard.</div></div>
+</div>
+<div style="margin-top:36px"><a href="#" class="btn-primary" onclick="openQuote();return false;">Work With Us &rarr;</a></div>
+</div>
+<div class="about-visual">
+<div class="about-badge-large"><svg viewBox="0 0 240 240" width="220" height="220" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="c2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#555"/><stop offset="30%" stop-color="#e8e8f8"/><stop offset="60%" stop-color="#aaa"/><stop offset="100%" stop-color="#666"/></linearGradient></defs><circle cx="120" cy="120" r="118" fill="#0a0a10" stroke="url(#c2)" stroke-width="2.5"/><circle cx="120" cy="120" r="100" fill="none" stroke="rgba(200,200,220,.1)" stroke-width="1"/><path d="M120 35 L158 53 L158 130 Q158 164 120 184 Q82 164 82 130 L82 53 Z" fill="#050510" stroke="url(#c2)" stroke-width="2"/><text x="120" y="142" text-anchor="middle" fill="url(#c2)" font-size="60" font-family="Arial" font-weight="900">S</text></svg></div>
+<div style="display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:rgba(255,255,255,.03);border-radius:8px;border:1px solid var(--border)"><span style="font-size:13px;color:var(--silver2)">📍 Headquarters</span><span style="font-size:13px;font-weight:700;color:var(--silver3)">Atlanta, Georgia</span></div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:rgba(255,255,255,.03);border-radius:8px;border:1px solid var(--border)"><span style="font-size:13px;color:var(--silver2)">📞 Available</span><span style="font-size:13px;font-weight:700;color:var(--silver3)">24 Hours / 7 Days</span></div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:rgba(255,255,255,.03);border-radius:8px;border:1px solid var(--border)"><span style="font-size:13px;color:var(--silver2)">✅ Licensed</span><span style="font-size:13px;font-weight:700;color:var(--silver3)">State of Georgia</span></div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:rgba(255,255,255,.03);border-radius:8px;border:1px solid var(--border)"><span style="font-size:13px;color:var(--silver2)">⭐ TrustedSite</span><span style="font-size:13px;font-weight:700;color:var(--silver3)">Verified Business</span></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="cta-section">
+<div class="section-inner cta-inner">
+<h2 class="cta-title">Ready to Secure Your<br>People & Property?</h2>
+<p class="cta-sub">Contact us today for a free consultation and customized security proposal. Our team is standing by 24/7.</p>
+<div class="cta-actions">
+<a href="#" class="btn-primary" onclick="openQuote();return false;">Request a Free Quote &rarr;</a>
+<a href="#contact" class="btn-ghost">Contact Us</a>
+</div>
+</div>
+</section>
+<section id="contact">
+<div class="section-inner">
+<div class="section-label">Get In Touch</div>
+<h2 class="section-title" style="margin-bottom:48px">Contact <span>SSP</span></h2>
+<div class="contact-grid">
+<div>
+<p style="font-size:15px;color:var(--silver2);line-height:1.8;margin-bottom:36px">Whether you need security for a one-time event or ongoing protection services, our team is ready to discuss your needs. Reach out through any of the channels below.</p>
+<div class="contact-info">
+<div class="contact-item"><div class="contact-icon">📍</div><div><div class="contact-label">Location</div><div class="contact-value">Atlanta, Georgia & Greater GA Area</div></div></div>
+<div class="contact-item"><div class="contact-icon">📞</div><div><div class="contact-label">Phone</div><div class="contact-value">Available 24/7 upon request</div></div></div>
+<div class="contact-item"><div class="contact-icon">✉</div><div><div class="contact-label">Email</div><div class="contact-value">Contact via form for fastest response</div></div></div>
+<div class="contact-item"><div class="contact-icon">🕐</div><div><div class="contact-label">Hours</div><div class="contact-value">24 Hours / 7 Days a Week</div></div></div>
+</div>
+</div>
+<div class="contact-form" id="contactForm">
+<div class="form-title">Send Us a Message</div>
+<div class="form-sub">We respond within 2 business hours</div>
+<div class="form-row"><div class="form-group"><label>First Name</label><input type="text" placeholder="John"></div><div class="form-group"><label>Last Name</label><input type="text" placeholder="Smith"></div></div>
+<div class="form-group"><label>Email Address</label><input type="email" placeholder="john@company.com"></div>
+<div class="form-group"><label>Phone Number</label><input type="tel" placeholder="(404) 000-0000"></div>
+<div class="form-group"><label>Service Needed</label><select><option value="">Select a service...</option><option>Event Security</option><option>Executive Protection</option><option>Armed Guards</option><option>Unarmed Guards</option><option>Corporate Security</option><option>Residential Security</option><option>Mobile Patrol</option><option>Other</option></select></div>
+<div class="form-group"><label>Message</label><textarea placeholder="Tell us about your security needs..."></textarea></div>
+<button type="button" class="btn-primary" style="width:100%;justify-content:center" onclick="submitForm()">Send Message &rarr;</button>
+<p id="formSuccess" style="display:none;text-align:center;color:var(--green);font-weight:600;font-size:14px">✓ Message sent! We'll be in touch within 2 hours.</p>
+</div>
+</div>
+</div>
+</section>
+<footer class="footer">
+<div class="footer-inner">
+<div class="footer-top">
+<div class="footer-brand"><div style="display:flex;align-items:center;gap:12px;margin-bottom:4px"><div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#555,#c8c8d8);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;color:#080808">S</div><span style="font-size:15px;font-weight:800;background:linear-gradient(135deg,#c8c8d8,#f0f0fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Special Services Protection</span></div><p>Atlanta's trusted security partner for businesses, events, and individuals. Licensed, bonded, and committed to excellence.</p></div>
+<div class="footer-col"><h4>Services</h4><a href="#services">Event Security</a><a href="#services">Executive Protection</a><a href="#services">Armed Guards</a><a href="#services">Unarmed Guards</a><a href="#services">Corporate Security</a><a href="#services">Mobile Patrol</a></div>
+<div class="footer-col"><h4>Company</h4><a href="#about">About Us</a><a href="#contact">Contact</a><a href="#" onclick="openQuote();return false;">Request Quote</a></div>
+<div class="footer-col"><h4>Service Area</h4><a href="#contact">Atlanta, GA</a><a href="#contact">Fulton County</a><a href="#contact">DeKalb County</a><a href="#contact">Gwinnett County</a><a href="#contact">Greater Georgia</a></div>
+</div>
+<div class="footer-bottom"><p>&copy; 2025 Special Services Protection. All rights reserved. Atlanta, Georgia.</p><div class="footer-badges"><span class="badge">Licensed</span><span class="badge">Bonded</span><span class="badge">Insured</span></div></div>
+</div>
+</footer>
+<div class="modal-overlay" id="quoteModal">
+<div class="modal">
+<div class="modal-header"><h3>Request a Free Quote</h3><button class="modal-close" onclick="closeQuote()">×</button></div>
+<div class="modal-body">
+<p style="font-size:13px;color:var(--silver2);margin-bottom:4px">Tell us about your security needs and we'll respond with a customized proposal within 24 hours.</p>
+<div class="form-row"><div class="form-group"><label>First Name</label><input type="text" placeholder="John"></div><div class="form-group"><label>Last Name</label><input type="text" placeholder="Smith"></div></div>
+<div class="form-group"><label>Company / Organization</label><input type="text" placeholder="Company name (optional)"></div>
+<div class="form-group"><label>Email Address</label><input type="email" placeholder="john@company.com"></div>
+<div class="form-group"><label>Phone Number</label><input type="tel" placeholder="(404) 000-0000"></div>
+<div class="form-group"><label>Service Required</label><select><option value="">Select a service...</option><option>Event Security</option><option>Executive Protection</option><option>Armed Guards</option><option>Unarmed Guards</option><option>Corporate Security</option><option>Residential Security</option><option>Mobile Patrol</option><option>Multiple Services</option></select></div>
+<div class="form-group"><label>Event / Start Date</label><input type="date"></div>
+<div class="form-group"><label>Additional Details</label><textarea placeholder="Location, number of officers needed, specific requirements..."></textarea></div>
+<button type="button" class="btn-primary" style="width:100%;justify-content:center" onclick="submitQuote()">Submit Quote Request &rarr;</button>
+<p id="quoteSuccess" style="display:none;text-align:center;color:var(--green);font-weight:600;font-size:14px">✓ Quote request received! We'll contact you within 24 hours.</p>
+</div>
+</div>
+</div>
+<script>
+function toggleMenu(){document.getElementById("mobileMenu").classList.toggle("open")}
+function closeMenu(){document.getElementById("mobileMenu").classList.remove("open")}
+function openQuote(){document.getElementById("quoteModal").classList.add("open");document.body.style.overflow="hidden"}
+function closeQuote(){document.getElementById("quoteModal").classList.remove("open");document.body.style.overflow=""}
+document.getElementById("quoteModal").addEventListener("click",function(e){if(e.target===this)closeQuote()})
+document.addEventListener("keydown",function(e){if(e.key==="Escape")closeQuote()})
+function submitForm(){var s=document.getElementById("formSuccess");s.style.display="block";document.getElementById("contactForm").querySelectorAll("input,textarea,select").forEach(function(el){el.value=""});setTimeout(function(){s.style.display="none"},5000)}
+function submitQuote(){var s=document.getElementById("quoteSuccess");s.style.display="block";setTimeout(function(){closeQuote();s.style.display="none"},3000)}
+window.addEventListener("scroll",function(){var nav=document.getElementById("navbar");nav.style.background=window.scrollY>50?"rgba(5,5,5,.98)":"rgba(8,8,8,.95)"})
+document.querySelectorAll('a[href^="#"]').forEach(function(a){a.addEventListener("click",function(e){var href=this.getAttribute("href");if(href.length>1&&href!="#"){e.preventDefault();var el=document.querySelector(href);if(el)el.scrollIntoView({behavior:"smooth"})}})})
+</script>
 </body>
 </html>
