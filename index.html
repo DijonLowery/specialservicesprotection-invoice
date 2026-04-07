@@ -19,7 +19,7 @@
 .hbtn{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px;}.hbtn span{width:22px;height:1px;background:var(--s);display:block;}
 .mmenu{position:fixed;inset:0;background:var(--b2);z-index:998;padding:100px 40px 40px;display:flex;flex-direction:column;gap:28px;transform:translateX(100%);transition:transform .3s;}.mmenu.open{transform:translateX(0);}.mmenu a{font-size:26px;font-family:'Playfair Display',serif;color:var(--sb);text-decoration:none;}
 
-/* HERO Ã¢ÂÂ full bleed background image, no stacked photos */
+/* HERO ÃÂ¢ÃÂÃÂ full bleed background image, no stacked photos */
 #hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;}
 .hero-bg{position:absolute;inset:0;background-image:url('IMG_1137.jpg');background-size:cover;background-position:center top;filter:grayscale(20%);}
 .hero-overlay{position:absolute;inset:0;background:linear-gradient(90deg,rgba(5,5,5,0.96) 50%,rgba(5,5,5,0.6) 100%);}
@@ -44,7 +44,7 @@ h2{font-family:'Playfair Display',serif;font-size:clamp(34px,3.5vw,52px);font-we
 .ssub{font-size:14px;color:var(--tm);max-width:520px;line-height:1.9;font-weight:300;}
 .divl{height:1px;background:rgba(255,255,255,.05);margin:0 60px;}
 
-/* ABOUT Ã¢ÂÂ clean side-by-side, single image no overlap */
+/* ABOUT ÃÂ¢ÃÂÃÂ clean side-by-side, single image no overlap */
 .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;min-height:600px;}
 .about-img{overflow:hidden;position:relative;}
 .about-img img{width:100%;height:100%;object-fit:cover;object-position:center;filter:grayscale(10%);display:block;}
@@ -76,7 +76,7 @@ h2{font-family:'Playfair Display',serif;font-size:clamp(34px,3.5vw,52px);font-we
 .wstats{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,.04);}
 .wstat{background:var(--b2);padding:36px 28px;}.wsn{font-family:'Playfair Display',serif;font-size:40px;font-weight:600;color:var(--sb);line-height:1;}.wsu{font-size:16px;color:var(--sd);}.wsl{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--tm);margin-top:10px;}
 
-/* GALLERY Ã¢ÂÂ masonry-style, proper aspect ratios, no hard crops */
+/* GALLERY ÃÂ¢ÃÂÃÂ masonry-style, proper aspect ratios, no hard crops */
 .gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:60px;}
 .gi{overflow:hidden;position:relative;background:var(--b3);}
 .gi img{width:100%;height:100%;object-fit:cover;display:block;filter:grayscale(15%);transition:transform .6s ease,filter .6s ease;}
@@ -90,7 +90,7 @@ h2{font-family:'Playfair Display',serif;font-size:clamp(34px,3.5vw,52px);font-we
 /* Row 3: 3 equal square */
 .gi-sq{aspect-ratio:1;}
 
-/* FOUNDER Ã¢ÂÂ clean side by side, single image */
+/* FOUNDER ÃÂ¢ÃÂÃÂ clean side by side, single image */
 .founder-grid{display:grid;grid-template-columns:420px 1fr;gap:0;min-height:580px;}
 .founder-img{overflow:hidden;position:relative;}
 .founder-img img{width:100%;height:100%;object-fit:contain;object-position:center center;display:block;background:#050505;}
@@ -156,7 +156,7 @@ footer{background:var(--b);border-top:1px solid rgba(255,255,255,.04);padding:72
     <div class="hero-content">
       <div class="heyebrow"><div class="heline"></div><span class="hetext">Atlanta's Premier Security Firm</span></div>
       <h1>The Standard<br>in <em>Protection.</em></h1>
-      <p class="hbody">Special Services Protection is a premier provider of professional security solutions, specializing in personal security details and crowd management services Ã¢ÂÂ ensuring the safety and peace of mind of our clients in any environment.</p>
+      <p class="hbody">Special Services Protection is a premier provider of professional security solutions, specializing in personal security details and crowd management services ÃÂ¢ÃÂÃÂ ensuring the safety and peace of mind of our clients in any environment.</p>
       <div class="hbtns">
         <button class="bs" onclick="openQuote()">Request a Quote &rarr;</button>
         <button class="bo" onclick="document.getElementById('services').scrollIntoView({behavior:'smooth'})">View Services</button>
@@ -178,7 +178,7 @@ footer{background:var(--b);border-top:1px solid rgba(255,255,255,.04);padding:72
   <div class="ti"><div class="tid"></div>Rapid Deployment</div>
 </div>
 
-<!-- ABOUT Ã¢ÂÂ clean full-height image left, text right, no overlapping -->
+<!-- ABOUT ÃÂ¢ÃÂÃÂ clean full-height image left, text right, no overlapping -->
 <div id="about">
   <div class="about-grid">
     <div class="about-img">
@@ -215,7 +215,7 @@ footer{background:var(--b);border-top:1px solid rgba(255,255,255,.04);padding:72
     <div class="svc"><div class="svci">&#128737;</div><div class="svcn">Event Security</div><p class="svcd">Professional security for corporate events, concerts, galas, sporting events, and private functions throughout Atlanta and greater Georgia.</p><a class="svcl" href="#contact">Inquire &rarr;</a></div>
     <div class="svc"><div class="svci">&#9889;</div><div class="svcn">Armed Guards</div><p class="svcd">Licensed armed security officers providing the highest level of deterrence for locations requiring elevated threat response.</p><a class="svcl" href="#contact">Inquire &rarr;</a></div>
     <div class="svc"><div class="svci">&#128309;</div><div class="svcn">Unarmed Guards</div><p class="svcd">Professional unarmed officers for access control, customer service environments, and locations requiring a visible security presence.</p><a class="svcl" href="#contact">Inquire &rarr;</a></div>
-    <div class="svc"><div class="svci">&#127970;</div><div class="svcn">Corporate Security</div><p class="svcd">Comprehensive security programs for office buildings, campuses, and commercial properties Ã¢ÂÂ protecting people, assets, and information.</p><a class="svcl" href="#contact">Inquire &rarr;</a></div>
+    <div class="svc"><div class="svci">&#127970;</div><div class="svcn">Corporate Security</div><p class="svcd">Comprehensive security programs for office buildings, campuses, and commercial properties ÃÂ¢ÃÂÃÂ protecting people, assets, and information.</p><a class="svcl" href="#contact">Inquire &rarr;</a></div>
     <div class="svc"><div class="svci">&#127968;</div><div class="svcn">Residential Security</div><p class="svcd">Protecting homes, gated communities, and private estates with dedicated officers and patrol services.</p><a class="svcl" href="#contact">Inquire &rarr;</a></div>
     <div class="svc"><div class="svci">&#128660;</div><div class="svcn">Mobile Patrol</div><p class="svcd">Regular patrol routes covering multiple locations, providing cost-effective security visibility and rapid incident response.</p><a class="svcl" href="#contact">Inquire &rarr;</a></div>
   </div>
@@ -227,13 +227,13 @@ footer{background:var(--b);border-top:1px solid rgba(255,255,255,.04);padding:72
 <div><div class="sec" id="why">
   <div class="stag"><div class="stagline"></div><span>Why Choose SSP</span></div>
   <h2>The Standard of <em>Excellence</em></h2>
-  <p class="ssub">We don't just provide guards Ã¢ÂÂ we provide peace of mind backed by professionalism, training, and accountability.</p>
+  <p class="ssub">We don't just provide guards ÃÂ¢ÃÂÃÂ we provide peace of mind backed by professionalism, training, and accountability.</p>
   <div class="why-grid">
     <div>
       <div class="pillar"><div class="pnum">01</div><div><div class="ptitle">Certified &amp; Trained Officers</div><p class="pdesc">All personnel hold valid Georgia security licenses and undergo rigorous background checks, drug screening, and ongoing professional training.</p></div></div>
       <div class="pillar"><div class="pnum">02</div><div><div class="ptitle">Rapid Response Deployment</div><p class="pdesc">We can staff assignments quickly with qualified officers, ensuring your security needs are met without delay.</p></div></div>
       <div class="pillar"><div class="pnum">03</div><div><div class="ptitle">Customized Security Plans</div><p class="pdesc">Every client receives a tailored security assessment and plan designed around their specific environment and risk profile.</p></div></div>
-      <div class="pillar"><div class="pnum">04</div><div><div class="ptitle">Direct Communication</div><p class="pdesc">Work directly with ownership and supervisors Ã¢ÂÂ no layers of bureaucracy. Your satisfaction is our personal commitment.</p></div></div>
+      <div class="pillar"><div class="pnum">04</div><div><div class="ptitle">Direct Communication</div><p class="pdesc">Work directly with ownership and supervisors ÃÂ¢ÃÂÃÂ no layers of bureaucracy. Your satisfaction is our personal commitment.</p></div></div>
     </div>
     <div class="wstats">
       <div class="wstat"><div class="wsn">38<span class="wsu">+</span></div><div class="wsl">Years of Experience</div></div>
@@ -246,7 +246,7 @@ footer{background:var(--b);border-top:1px solid rgba(255,255,255,.04);padding:72
 
 <div class="divl"></div>
 
-<!-- GALLERY Ã¢ÂÂ 3 rows, each image has a defined aspect ratio so nothing gets brutally cropped -->
+<!-- GALLERY ÃÂ¢ÃÂÃÂ 3 rows, each image has a defined aspect ratio so nothing gets brutally cropped -->
 <div style="background:var(--b2);"><div class="sec" id="gallery">
   <div class="stag"><div class="stagline"></div><span>In the Field</span></div>
   <h2>Trusted by the <em>Best</em></h2>
@@ -268,11 +268,11 @@ footer{background:var(--b);border-top:1px solid rgba(255,255,255,.04);padding:72
 
 <div class="divl"></div>
 
-<!-- FOUNDER Ã¢ÂÂ clean full-height image, text panel, single image no overlap -->
+<!-- FOUNDER ÃÂ¢ÃÂÃÂ clean full-height image, text panel, single image no overlap -->
 <div style="background:var(--b3);">
   <div class="founder-grid" id="founder">
     <div class="founder-img">
-      <img src="image.png" alt="Bob Lowery Ã¢ÂÂ Founder, Special Services Protection">
+      <img src="image.png" alt="Bob Lowery ÃÂ¢ÃÂÃÂ Founder, Special Services Protection">
     </div>
     <div class="founder-text">
       <div class="stag"><div class="stagline"></div><span>The Founder</span></div>
@@ -280,12 +280,12 @@ footer{background:var(--b);border-top:1px solid rgba(255,255,255,.04);padding:72
       <div class="ftitle">Founder &amp; CEO &mdash; Special Services Protection</div>
       <p class="fpara">Bob Lowery founded Special Services Protection in 2018 after building over 38 years of hands-on experience across all aspects of the security industry. His career spans executive protection, crowd management, event security, and risk assessment at every level.</p>
       <p class="fpara">Under Bob's leadership, Special Services Protection has become a trusted name for high-profile individuals, corporate executives, event organizers, and public venues throughout Atlanta and the greater Georgia area.</p>
-      <p class="fpara">When you work with SSP, you work with a team built by someone who has been in the field Ã¢ÂÂ not behind a desk. That lived experience is the foundation of everything we do.</p>
+      <p class="fpara">When you work with SSP, you work with a team built by someone who has been in the field ÃÂ¢ÃÂÃÂ not behind a desk. That lived experience is the foundation of everything we do.</p>
       <div class="fcreds">
         <div class="fcred"><div class="fcdot"></div>38+ Years in the Security Industry</div>
-        <div class="fcred"><div class="fcdot"></div>Founded Special Services Protection Ã¢ÂÂ Atlanta, GA Ã¢ÂÂ 2018</div>
+        <div class="fcred"><div class="fcdot"></div>Founded Special Services Protection ÃÂ¢ÃÂÃÂ Atlanta, GA ÃÂ¢ÃÂÃÂ 2018</div>
         <div class="fcred"><div class="fcdot"></div>Personal Security Details &amp; Crowd Management Specialist</div>
-        <div class="fcred"><div class="fcdot"></div>Licensed &amp; Bonded Ã¢ÂÂ State of Georgia</div>
+        <div class="fcred"><div class="fcdot"></div>Licensed &amp; Bonded ÃÂ¢ÃÂÃÂ State of Georgia</div>
       </div>
     </div>
   </div>
