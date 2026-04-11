@@ -712,6 +712,42 @@ h3,
     linear-gradient(180deg, #faf9f6 0%, #f3f1ec 100%);
 }
 
+.app input,
+.app select,
+.app textarea {
+  border-color: rgba(29, 29, 29, 0.12);
+  background: #fffdf9;
+  color: var(--text);
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.app input::placeholder,
+.app textarea::placeholder {
+  color: #7c756d;
+}
+
+.app input:focus,
+.app select:focus,
+.app textarea:focus {
+  border-color: rgba(139, 109, 60, 0.42);
+  box-shadow:
+    0 0 0 3px rgba(139, 109, 60, 0.1),
+    inset 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.app button {
+  border-color: #1d1d1d;
+  background: #1d1d1d;
+  color: #fcfbf8;
+}
+
+.app button.secondary,
+.app button.ghost {
+  background: #fffdf9;
+  color: var(--chrome);
+  border-color: rgba(29, 29, 29, 0.14);
+}
+
 .auth-shell {
   min-height: 100vh;
   display: grid;
