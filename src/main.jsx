@@ -225,6 +225,22 @@ function dateInputToTimestamp(date, time = "09:00") {
   return `${date}T${time || "09:00"}:00-05:00`;
 }
 
+function daysUntilDate(date) {
+  if (!date) return 0;
+  const target = new Date(`${date}T12:00:00`);
+  if (Number.isNaN(target.getTime())) return 0;
+  return Math.ceil((target.getTime() - Date.now()) / 86400000);
+}
+
+function planningStageForDate(date, minimumLeadDays = 120) {
+  const days = daysUntilDate(date);
+  if (!days) return "Date needed";
+  if (days < minimumLeadDays) return "Too close";
+  if (days < minimumLeadDays + 60) return "Active planning";
+  if (days <= 540) return "Planning window";
+  return "Early watch";
+}
+
 function commaList(value) {
   return String(value || "")
     .split(",")
@@ -544,6 +560,7 @@ function App() {
   const [timecards, setTimecards] = useStoredState("ssp.timecards.v3", TIMECARDS_SEED);
   const [intakeLinks, setIntakeLinks] = useStoredState("ssp.intakeLinks.v3", INTAKE_LINKS_SEED);
   const [audit, setAudit] = useStoredState("ssp.audit.v3", AUDIT_SEED);
+  const [sourcingRuns, setSourcingRuns] = useStoredState("ssp.crmSourcing.v1", []);
   const [paychexConnection, setPaychexConnection] = useState({
     configured: false,
     readyForSync: false,
@@ -554,6 +571,8 @@ function App() {
   });
   const [paychexSyncBusy, setPaychexSyncBusy] = useState(false);
   const [paychexNotice, setPaychexNotice] = useState(null);
+  const [crmSourcingBusy, setCrmSourcingBusy] = useState(false);
+  const [crmSourcingNotice, setCrmSourcingNotice] = useState(null);
 
   useEffect(() => {
     const nextUsers = users.map((user) => {
@@ -1433,6 +1452,8 @@ function App() {
     const expectedCapacity = Number(payload.expectedCapacity || 0);
     const staffingNeeds = Number(payload.staffingNeeds || 0);
     const priority = Math.max(0, Math.min(100, Number(payload.priority || 75)));
+    const minimumLeadDays = Number(payload.minimumLeadDays || 120);
+    const leadTimeDays = Number(payload.leadTimeDays || daysUntilDate(eventDate));
 
     const prospect = {
       id,
@@ -1457,11 +1478,66 @@ function App() {
       priority,
       scheduledFor: dateInputToTimestamp(eventDate, startTime) || new Date().toISOString(),
       next: payload.next || "Prepare outreach and confirm decision maker.",
+      sourceName: payload.sourceName || "Manual CRM entry",
+      sourceUrl: payload.sourceUrl || "",
+      planningStage: payload.planningStage || planningStageForDate(eventDate, minimumLeadDays),
+      leadTimeDays,
+      fitReason: payload.fitReason || "",
+      citations: Array.isArray(payload.citations) ? payload.citations : [],
       createdAt: new Date().toISOString(),
     };
 
     setLeads((items) => [prospect, ...items]);
     logAction("CRM", `${prospect.eventName} added to the event prospect pipeline.`);
+  };
+
+  const sourceCrmEvents = async (criteria) => {
+    setCrmSourcingBusy(true);
+    setCrmSourcingNotice(null);
+
+    try {
+      const payload = await requestJson("/api/crm/source-events", {
+        method: "POST",
+        body: JSON.stringify({ criteria }),
+      });
+      const run = {
+        id: createId("SRC"),
+        ...payload,
+        criteria: payload.criteria || criteria,
+        candidates: Array.isArray(payload.candidates) ? payload.candidates : [],
+        queries: Array.isArray(payload.queries) ? payload.queries : [],
+        searchedAt: payload.searchedAt || new Date().toISOString(),
+      };
+
+      setSourcingRuns((items) => [run, ...items].slice(0, 8));
+      setCrmSourcingNotice({
+        tone: payload.configured ? "good" : "warn",
+        title: payload.configured ? "CRM Mastermind completed sourcing." : "CRM Mastermind needs live search setup.",
+        text: payload.summary || "Sourcing run completed.",
+      });
+      logAction("CRM Mastermind", payload.configured
+        ? `${run.candidates.length} planning-stage candidate(s) sourced.`
+        : "Sourcing criteria prepared; live web search needs OPENAI_API_KEY.");
+      return run;
+    } catch (error) {
+      setCrmSourcingNotice({
+        tone: "bad",
+        title: "CRM sourcing failed.",
+        text: error.message,
+      });
+      logAction("CRM Mastermind", `Sourcing failed: ${error.message}`);
+      return null;
+    } finally {
+      setCrmSourcingBusy(false);
+    }
+  };
+
+  const addSourcedCandidate = (candidate) => {
+    createEventProspect({
+      ...candidate,
+      stage: candidate.stage || "Sourced",
+      next: candidate.next || "Verify decision maker and prepare first-touch outreach.",
+    });
   };
 
   const runLeadOutreach = (leadId) => {
@@ -1546,6 +1622,7 @@ function App() {
     associates,
     invoices,
     leads,
+    sourcingRuns,
     users,
     content,
     payroll: payrollState,
@@ -1570,6 +1647,10 @@ function App() {
     runLeadOutreach,
     convertLeadToEvent,
     createEventProspect,
+    sourceCrmEvents,
+    addSourcedCandidate,
+    crmSourcingBusy,
+    crmSourcingNotice,
     queueContent,
     generateRecapFromEvent,
     logAction,
@@ -2692,7 +2773,26 @@ function InvoicesPage({ invoices, sendInvoiceReminder }) {
   );
 }
 
-function CrmPage({ leads, runLeadOutreach, convertLeadToEvent, createEventProspect }) {
+function CrmPage({
+  leads,
+  sourcingRuns,
+  runLeadOutreach,
+  convertLeadToEvent,
+  createEventProspect,
+  sourceCrmEvents,
+  addSourcedCandidate,
+  crmSourcingBusy,
+  crmSourcingNotice,
+}) {
+  const [sourceForm, setSourceForm] = useState({
+    region: "United States",
+    eventTypes: "Festival, Sports Event, Concert, Convention, Large Scale Event",
+    minCapacity: 2500,
+    minimumLeadDays: 120,
+    horizonMonths: 18,
+    decisionSignals: "RFP, vendor application, sponsorship packet, event permit, planning committee",
+    notes: "Prioritize events where SSP can provide crowd control, armed posts, VIP escort, access control, overnight asset protection, or full venue security.",
+  });
   const [form, setForm] = useState({
     company: "",
     eventName: "",
@@ -2717,6 +2817,17 @@ function CrmPage({ leads, runLeadOutreach, convertLeadToEvent, createEventProspe
   });
 
   const updateForm = (key, value) => setForm((current) => ({ ...current, [key]: value }));
+  const updateSourceForm = (key, value) => setSourceForm((current) => ({ ...current, [key]: value }));
+
+  const latestRun = sourcingRuns[0] || null;
+
+  const submitSourcing = (event) => {
+    event.preventDefault();
+    sourceCrmEvents({
+      ...sourceForm,
+      region: sourceForm.region === "Custom" ? sourceForm.customRegion || "United States" : sourceForm.region,
+    });
+  };
 
   const submitProspect = (event) => {
     event.preventDefault();
@@ -2754,9 +2865,108 @@ function CrmPage({ leads, runLeadOutreach, convertLeadToEvent, createEventProspe
   return (
     <section className="page-grid">
       <PageIntro
-        title="SSP CRM Engine"
-        text="Build complete profiles for potential events, then turn qualified opportunities into outreach and staffing plans."
+        title="CRM Mastermind"
+        text="Source planning-stage events nationwide, score fit, build full opportunity profiles, and move the right targets into outreach."
       />
+
+      <Panel title="Source Planning-Stage Events" action="Agentic sourcing">
+        <form className="crm-form" onSubmit={submitSourcing}>
+          <label className="field">
+            <span>Search Scope</span>
+            <select value={sourceForm.region} onChange={(event) => updateSourceForm("region", event.target.value)}>
+              <option>United States</option>
+              <option>Atlanta, Georgia</option>
+              <option>Southeast United States</option>
+              <option>East Coast United States</option>
+              <option>Custom</option>
+            </select>
+          </label>
+          {sourceForm.region === "Custom" && (
+            <label className="field">
+              <span>Custom Region</span>
+              <input value={sourceForm.customRegion || ""} onChange={(event) => updateSourceForm("customRegion", event.target.value)} placeholder="City, state, region, or nationwide niche" />
+            </label>
+          )}
+          <label className="field">
+            <span>Min Capacity</span>
+            <input type="number" min="0" value={sourceForm.minCapacity} onChange={(event) => updateSourceForm("minCapacity", event.target.value)} />
+          </label>
+          <label className="field">
+            <span>Lead Time</span>
+            <input type="number" min="45" value={sourceForm.minimumLeadDays} onChange={(event) => updateSourceForm("minimumLeadDays", event.target.value)} />
+          </label>
+          <label className="field">
+            <span>Horizon Months</span>
+            <input type="number" min="3" max="36" value={sourceForm.horizonMonths} onChange={(event) => updateSourceForm("horizonMonths", event.target.value)} />
+          </label>
+          <label className="field full">
+            <span>Event Types</span>
+            <input value={sourceForm.eventTypes} onChange={(event) => updateSourceForm("eventTypes", event.target.value)} />
+          </label>
+          <label className="field full">
+            <span>Planning Signals</span>
+            <input value={sourceForm.decisionSignals} onChange={(event) => updateSourceForm("decisionSignals", event.target.value)} />
+          </label>
+          <label className="field full">
+            <span>Mastermind Notes</span>
+            <textarea rows={3} value={sourceForm.notes} onChange={(event) => updateSourceForm("notes", event.target.value)} />
+          </label>
+          <div className="button-row full">
+            <button type="submit" disabled={crmSourcingBusy}>{crmSourcingBusy ? "Sourcing..." : "Find Planning Events"}</button>
+          </div>
+        </form>
+
+        {crmSourcingNotice && (
+          <div className={`callout ${crmSourcingNotice.tone} top-gap`}>
+            <strong>{crmSourcingNotice.title}</strong>
+            <p>{crmSourcingNotice.text}</p>
+          </div>
+        )}
+
+        {latestRun && (
+          <div className="sourcing-run">
+            <div className="sourcing-run-head">
+              <div>
+                <p className="eyebrow">Latest Sourcing Run</p>
+                <h3>{latestRun.configured ? `${latestRun.candidates.length} candidate${latestRun.candidates.length === 1 ? "" : "s"} found` : "Live sourcing setup required"}</h3>
+              </div>
+              <span className={`pill ${latestRun.configured ? "good" : "warn"}`}>{latestRun.configured ? "Agent complete" : "Needs API key"}</span>
+            </div>
+            <p className="meta-copy">{latestRun.summary}</p>
+            {latestRun.queries?.length > 0 && (
+              <div className="query-grid">
+                {latestRun.queries.map((query) => (
+                  <a key={query} href={`https://www.google.com/search?q=${encodeURIComponent(query)}`} target="_blank" rel="noreferrer">
+                    {query}
+                  </a>
+                ))}
+              </div>
+            )}
+            <div className="sourced-candidate-grid">
+              {latestRun.candidates?.map((candidate) => (
+                <article className="sourced-candidate" key={`${candidate.eventName}-${candidate.sourceUrl}`}>
+                  <p className="eyebrow">{candidate.planningStage || "Planning candidate"}</p>
+                  <h3>{candidate.eventName}</h3>
+                  <p>{candidate.city} - {candidate.venue}</p>
+                  <div className="lead-meta">
+                    <span>{formatCrmDate(candidate.eventDate)}</span>
+                    <span>{candidate.expectedCapacity ? Number(candidate.expectedCapacity).toLocaleString() : "Capacity TBD"} expected</span>
+                    <span>{candidate.staffingNeeds || 0} posts</span>
+                    <span>{candidate.leadTimeDays || 0} days out</span>
+                  </div>
+                  <p className="next-action">{candidate.fitReason || candidate.next}</p>
+                  <div className="button-row">
+                    <button onClick={() => addSourcedCandidate(candidate)}>Add to CRM</button>
+                    {candidate.sourceUrl && (
+                      <button className="secondary" onClick={() => openExternalUrl(candidate.sourceUrl)}>Source</button>
+                    )}
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        )}
+      </Panel>
 
       <Panel title="Create Event Prospect" action="CRM Intake">
         <form className="crm-form" onSubmit={submitProspect}>
@@ -2897,11 +3107,17 @@ function CrmPage({ leads, runLeadOutreach, convertLeadToEvent, createEventProspe
                 <span>Estimated Value</span>
                 <strong>{currency(lead.value || 0)}</strong>
               </div>
+              <div>
+                <span>Planning Fit</span>
+                <strong>{lead.planningStage || planningStageForDate(lead.eventDate)}</strong>
+              </div>
             </div>
 
             <div className="lead-meta">
               <span>{lead.stage}</span>
               <span>{lead.contact}</span>
+              {lead.leadTimeDays > 0 && <span>{lead.leadTimeDays} days out</span>}
+              {lead.sourceName && <span>{lead.sourceName}</span>}
               {lead.email && <span>{lead.email}</span>}
               {lead.phone && <span>{lead.phone}</span>}
             </div>
@@ -2922,6 +3138,7 @@ function CrmPage({ leads, runLeadOutreach, convertLeadToEvent, createEventProspe
             <div className="button-row">
               <button onClick={() => runLeadOutreach(lead.id)}>One-click Outreach</button>
               <button className="secondary" onClick={() => convertLeadToEvent(lead.id)}>Create Event</button>
+              {lead.sourceUrl && <button className="secondary" onClick={() => openExternalUrl(lead.sourceUrl)}>Source</button>}
             </div>
           </article>
         ))}

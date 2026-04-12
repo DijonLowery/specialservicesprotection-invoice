@@ -1,14 +1,15 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { paychexRouteHandlers } from "./server/paychexRoutes.js";
+import { crmSourcingRouteHandlers } from "./server/crmSourcingRoutes.js";
 
 function sspApiPlugin() {
   return {
-    name: "ssp-paychex-api",
+    name: "ssp-api",
     configureServer(server) {
       server.middlewares.use(async (req, res, next) => {
         const pathname = new URL(req.url || "/", "http://127.0.0.1").pathname;
-        const handler = paychexRouteHandlers.get(pathname);
+        const handler = paychexRouteHandlers.get(pathname) || crmSourcingRouteHandlers.get(pathname);
 
         if (!handler) {
           next();

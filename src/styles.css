@@ -1510,6 +1510,56 @@ h3,
   gap: 1rem;
 }
 
+.sourcing-run {
+  display: grid;
+  gap: 0.9rem;
+  margin-top: 1rem;
+  border-top: 1px solid var(--line);
+  padding-top: 1rem;
+}
+
+.sourcing-run-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.sourcing-run-head h3 {
+  color: var(--text);
+  font-size: 1.05rem;
+}
+
+.query-grid,
+.sourced-candidate-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 0.65rem;
+}
+
+.query-grid a {
+  display: block;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fcfbf8;
+  color: var(--muted);
+  padding: 0.7rem 0.8rem;
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.sourced-candidate {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 0.9rem;
+}
+
+.sourced-candidate h3 {
+  color: var(--text);
+  font-size: 1rem;
+}
+
 .event-profile-card {
   display: grid;
   gap: 1rem;
