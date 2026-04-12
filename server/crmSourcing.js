@@ -247,6 +247,7 @@ export async function sourcePlanningEvents(criteriaInput = {}) {
         {
           type: "web_search",
           user_location: {
+            type: "approximate",
             country: "US",
             city: criteria.region.toLowerCase().includes("united states") || criteria.region.toLowerCase().includes("nationwide") ? undefined : "Atlanta",
             region: criteria.region.toLowerCase().includes("united states") || criteria.region.toLowerCase().includes("nationwide") ? undefined : "Georgia",
