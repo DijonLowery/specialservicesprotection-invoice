@@ -1088,13 +1088,13 @@ h3,
 
 .hero-card {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 1rem;
-  align-items: end;
+  grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.72fr);
+  gap: 1.4rem;
+  align-items: center;
   overflow: hidden;
   position: relative;
-  min-height: 260px;
-  padding: 1.6rem;
+  min-height: 232px;
+  padding: 1.5rem;
   background:
     linear-gradient(135deg, rgba(139, 109, 60, 0.08), rgba(255, 255, 255, 0) 44%),
     #ffffff;
@@ -1105,7 +1105,7 @@ h3,
   position: absolute;
   inset: 0;
   background: url("/IMG_1141.jpg") right center / cover no-repeat;
-  opacity: 0.08;
+  opacity: 0.045;
   filter: grayscale(100%);
 }
 
@@ -1123,18 +1123,70 @@ h3,
 }
 
 .hero-card h2 {
-  max-width: 980px;
-  margin-top: 0.45rem;
+  max-width: 640px;
+  margin-top: 0.35rem;
   color: var(--text);
-  font-size: clamp(1.35rem, 2.3vw, 2.4rem);
-  line-height: 1.1;
+  font-size: clamp(1.2rem, 1.8vw, 1.95rem);
+  line-height: 1.08;
 }
 
 .hero-card p {
-  max-width: 780px;
-  margin-top: 0.7rem;
+  max-width: 700px;
+  margin-top: 0.65rem;
   color: var(--muted);
   line-height: 1.55;
+}
+
+.hero-copy,
+.hero-side {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.hero-brief {
+  max-width: 680px;
+  font-size: 0.98rem;
+}
+
+.hero-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+  max-width: 720px;
+}
+
+.hero-summary-card {
+  display: grid;
+  gap: 0.2rem;
+  border: 1px solid rgba(29, 29, 29, 0.08);
+  border-radius: 8px;
+  background: rgba(252, 251, 248, 0.8);
+  padding: 0.82rem 0.9rem;
+}
+
+.hero-summary-card span {
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.hero-summary-card strong {
+  color: var(--text);
+  font-size: 0.96rem;
+  line-height: 1.35;
+}
+
+.hero-side {
+  justify-items: stretch;
+  align-content: end;
+}
+
+.hero-note {
+  color: var(--muted);
+  font-size: 0.86rem;
+  line-height: 1.5;
 }
 
 .hero-actions,
@@ -1150,6 +1202,10 @@ h3,
 .button-column {
   align-items: stretch;
   flex-direction: column;
+}
+
+.hero-actions {
+  justify-content: flex-end;
 }
 
 .top-gap {
@@ -1589,6 +1645,19 @@ h3,
 }
 
 @media (max-width: 1180px) {
+  .hero-card {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-summary-grid {
+    grid-template-columns: 1fr 1fr;
+    max-width: none;
+  }
+
+  .hero-side {
+    justify-items: start;
+  }
+
   .login-shell {
     grid-template-columns: 1fr;
   }
@@ -1684,6 +1753,10 @@ h3,
   .auth-hero {
     grid-template-columns: 1fr;
     align-items: stretch;
+  }
+
+  .hero-summary-grid {
+    grid-template-columns: 1fr;
   }
 
   .topbar {

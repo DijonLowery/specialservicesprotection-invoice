@@ -916,8 +916,14 @@ function buildExecutiveBrief({ recommendations, invoices, leads, payroll, associ
   const hotLead = leads.find((lead) => lead.priority >= 90);
   const blockedAssociates = associates.filter((associate) => associate.status !== "Ready").length;
   const payrollIssues = payroll.exceptions.length;
+  const summary = [
+    `${openPosts} open post${openPosts === 1 ? "" : "s"}`,
+    `${overdue} overdue invoice${overdue === 1 ? "" : "s"}`,
+    `${blockedAssociates} associate record${blockedAssociates === 1 ? "" : "s"} to review`,
+    `${payrollIssues} Paychex exception${payrollIssues === 1 ? "" : "s"}`,
+  ].join(", ");
 
-  return `Operations first: ${openPosts} open post${openPosts === 1 ? "" : "s"}, ${overdue} overdue invoice${overdue === 1 ? "" : "s"}, ${blockedAssociates} associate record${blockedAssociates === 1 ? "" : "s"} needing attention, and ${payrollIssues} Paychex exception${payrollIssues === 1 ? "" : "s"}. ${hotLead ? `Top growth target is ${hotLead.company}.` : ""}`;
+  return hotLead ? `${summary}. Growth focus: ${hotLead.company}.` : `${summary}.`;
 }
 
 async function requestJson(url, options = {}) {
@@ -2499,19 +2505,46 @@ function CommandPage({ stats, events, associates, invoices, leads, content, payr
   const sortedEvents = sortByDateAsc(events, eventStartValue);
   const atRiskEvents = sortedEvents.filter((event) => scoreEventRisk(event) !== "Covered");
   const overdueInvoice = invoices.find((invoice) => invoice.status === "Overdue");
+  const briefingItems = [
+    {
+      label: "Coverage",
+      value: stats.openShifts ? `${stats.openShifts} open posts` : "Fully staffed",
+    },
+    {
+      label: "Collections",
+      value: stats.overdue ? `${stats.overdue} overdue invoice${stats.overdue === 1 ? "" : "s"}` : "No overdue invoices",
+    },
+    {
+      label: "Workforce",
+      value: stats.pendingAssociates ? `${stats.pendingAssociates} record${stats.pendingAssociates === 1 ? "" : "s"} need review` : "Associates clear",
+    },
+    {
+      label: "Growth",
+      value: stats.hotLeads ? `${stats.hotLeads} hot opportunit${stats.hotLeads === 1 ? "y" : "ies"}` : "No hot opportunities",
+    },
+  ];
 
   return (
     <section className="page-grid command-layout">
       <div className="hero-card">
-        <div>
-          <p className="eyebrow">Executive Briefing Agent</p>
-          <h2>{brief}</h2>
-          <p>
-            Today’s operating order is coverage first, collections second, and growth actions after
-            staffing confidence is restored.
-          </p>
+        <div className="hero-copy">
+          <p className="eyebrow">Executive Briefing</p>
+          <h2>Today at a glance</h2>
+          <p className="hero-brief">{brief}</p>
+          <div className="hero-summary-grid">
+            {briefingItems.map((item) => (
+              <div className="hero-summary-card" key={item.label}>
+                <span>{item.label}</span>
+                <strong>{item.value}</strong>
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="hero-actions">
+        <div className="hero-side">
+          <p className="hero-note">
+            Use the actions on the right to move payroll, collections, and intake without leaving the command view.
+          </p>
+          <div className="hero-actions button-column">
           <button onClick={syncPaychex}>Sync Paychex</button>
           {overdueInvoice && (
             <button className="secondary" onClick={() => sendInvoiceReminder(overdueInvoice.id)}>
@@ -2519,6 +2552,7 @@ function CommandPage({ stats, events, associates, invoices, leads, content, payr
             </button>
           )}
           <button className="secondary" onClick={createAssociateLink}>Create Intake Link</button>
+          </div>
         </div>
       </div>
 
