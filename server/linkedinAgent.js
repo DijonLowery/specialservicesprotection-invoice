@@ -159,6 +159,11 @@ function buildLinkedInPrompt({ goal, context = {} }) {
   const content = briefList(context.content, (item) =>
     `- Existing draft: ${item.title}; status ${item.status}; source ${item.source}`
   );
+  const stats = context.stats
+    ? `Operational stats: open shifts ${context.stats.openShifts || 0}, hot leads ${context.stats.hotLeads || 0}, overdue invoices ${context.stats.overdue || 0}, content ready ${context.stats.contentReady || 0}.`
+    : "";
+  const brief = cleanText(context.brief);
+  const notes = cleanText(context.notes);
 
   return [
     "You are the LinkedIn Brand Agent for Special Services Protection, an Atlanta-based professional security company with national event capability.",
@@ -167,9 +172,12 @@ function buildLinkedInPrompt({ goal, context = {} }) {
     "Every post must be approval-ready and should support security buyers, large-scale events, festivals, sports events, corporate campuses, venues, and executive protection decision makers.",
     "",
     `Operator goal: ${cleanText(goal, "Build an SSP LinkedIn content plan from current operations and CRM opportunities.")}`,
+    stats,
+    brief ? `Executive brief: ${brief}` : "",
     events ? `Current events:\n${events}` : "Current events: none entered yet.",
     leads ? `CRM prospects:\n${leads}` : "CRM prospects: none entered yet.",
     content ? `Existing content queue:\n${content}` : "Existing content queue: empty.",
+    notes ? `Operator notes: ${notes}` : "",
     "",
     "Return 3 to 5 posts. Include one strategic summary, one approval checklist, and post copy under 1,300 characters each. Do not invent completed client work; use neutral language when details are not confirmed.",
   ].join("\n");
@@ -188,6 +196,7 @@ export function getLinkedInStatus() {
     accountMode: process.env.LINKEDIN_PERSON_ID && !process.env.LINKEDIN_ORGANIZATION_ID
       ? "Personal admin account"
       : "SSP business page through personal admin",
+    requiredPageRoles: ["ADMINISTRATOR", "DIRECT_SPONSORED_CONTENT_POSTER", "CONTENT_ADMIN"],
     authorUrn: authorUrn ? authorUrn.replace(/(.{14}).+/, "$1...") : "",
     requiredScopes: ["w_organization_social", "r_organization_social"],
     optionalScopes: ["w_member_social"],

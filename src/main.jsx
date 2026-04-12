@@ -554,6 +554,38 @@ function linkedinPostText(item) {
   return [base, hashtags].filter(Boolean).join("\n\n").trim();
 }
 
+function nextWeekdaySlot(targetDay, hour) {
+  const now = new Date();
+  const slot = new Date(now);
+  slot.setHours(hour, 0, 0, 0);
+  const delta = (targetDay - slot.getDay() + 7) % 7;
+  slot.setDate(slot.getDate() + delta);
+  if (delta === 0 && slot <= now) {
+    slot.setDate(slot.getDate() + 7);
+  }
+  return slot;
+}
+
+function buildLinkedInCadence(content = []) {
+  const templates = [
+    { label: "Thought leadership", day: 2, hour: 9 },
+    { label: "Operational insight", day: 4, hour: 11 },
+    { label: "Event recap", day: 2, hour: 14 },
+    { label: "Associate spotlight", day: 4, hour: 9 },
+  ];
+
+  const queue = sortByDateAsc(
+    content.filter((item) => item.channel === "LinkedIn"),
+    (item) => new Date(item.publishedAt || item.createdAt || Date.now())
+  );
+
+  return templates.map((slot, index) => ({
+    ...slot,
+    when: nextWeekdaySlot(slot.day, slot.hour),
+    assignment: queue[index] || null,
+  }));
+}
+
 function App() {
   const initialRoute = parseLocationPath();
   const [routeMode, setRouteMode] = useState(initialRoute.mode);
@@ -1696,6 +1728,8 @@ function App() {
             events,
             leads,
             content,
+            stats,
+            brief,
             notes: focusNotes,
           },
         }),
@@ -3380,6 +3414,7 @@ function LinkedInPage({
   const [focusNotes, setFocusNotes] = useState("Prioritize elite event security, large-scale planning, staffing confidence, and SSP's Atlanta roots with national capability.");
   const latestRun = linkedinRuns[0] || null;
   const linkedInContent = content.filter((item) => item.channel === "LinkedIn");
+  const cadence = useMemo(() => buildLinkedInCadence(linkedInContent), [linkedInContent]);
 
   return (
     <section className="page-grid">
@@ -3408,6 +3443,7 @@ function LinkedInPage({
             <span>{linkedinConnection.accountMode || "SSP business page through personal admin"}</span>
             <span>OAuth via personal page admin</span>
             {(linkedinConnection.requiredScopes || []).map((scope) => <span key={scope}>{scope}</span>)}
+            {(linkedinConnection.requiredPageRoles || []).map((role) => <span key={role}>{role}</span>)}
           </div>
           {linkedinConnection.missing?.length > 0 && (
             <p className="meta-copy">Missing Vercel env: {linkedinConnection.missing.join(", ")}.</p>
@@ -3520,22 +3556,37 @@ function LinkedInPage({
           </div>
         </Panel>
 
-        <Panel title="Generate From Operations" action="Job Recaps">
-          <div className="list-stack">
-            {events.length === 0 && <p className="empty">Add completed jobs or events to generate recap drafts.</p>}
-            {events.map((event) => (
-              <ActionRow
-                key={event.id}
-                title={event.name}
-                meta={`${event.type} - ${event.client}`}
-                value={event.status}
-                button="Create Recap"
-                onClick={() => generateRecapFromEvent(event.id)}
-              />
+        <Panel title="Publishing Cadence" action="Next Slots">
+          <div className="cadence-grid">
+            {cadence.map((slot) => (
+              <div className="mini-card" key={`${slot.label}-${slot.when.toISOString()}`}>
+                <strong>{slot.label}</strong>
+                <p>{formatDateTimeLabel(slot.when.toISOString())}</p>
+                <p>{slot.assignment ? slot.assignment.title : "Open slot"}</p>
+                <span className={`pill ${slot.assignment ? statusTone(slot.assignment.status) : "warn"}`}>
+                  {slot.assignment ? slot.assignment.status : "Needs draft"}
+                </span>
+              </div>
             ))}
           </div>
         </Panel>
       </div>
+
+      <Panel title="Generate From Operations" action="Job Recaps">
+        <div className="list-stack">
+          {events.length === 0 && <p className="empty">Add completed jobs or events to generate recap drafts.</p>}
+          {events.map((event) => (
+            <ActionRow
+              key={event.id}
+              title={event.name}
+              meta={`${event.type} - ${event.client}`}
+              value={event.status}
+              button="Create Recap"
+              onClick={() => generateRecapFromEvent(event.id)}
+            />
+          ))}
+        </div>
+      </Panel>
     </section>
   );
 }
