@@ -1537,6 +1537,45 @@ h3,
   gap: 0.65rem;
 }
 
+.linkedin-plan {
+  display: grid;
+  gap: 1rem;
+}
+
+.linkedin-post-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 0.8rem;
+}
+
+.linkedin-post-card,
+.linkedin-queue-item {
+  display: grid;
+  gap: 0.72rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 0.95rem;
+}
+
+.linkedin-post-card h3,
+.linkedin-queue-item h3 {
+  margin-top: 0.5rem;
+  color: var(--text);
+  font-size: 1.02rem;
+}
+
+.linkedin-copy {
+  white-space: pre-wrap;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fcfbf8;
+  color: var(--text);
+  padding: 0.85rem;
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
 .query-grid a {
   display: block;
   border: 1px solid var(--line);

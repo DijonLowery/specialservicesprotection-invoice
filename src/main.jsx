@@ -99,6 +99,14 @@ const LEADS_SEED = [];
 
 const CONTENT_SEED = [];
 
+const LINKEDIN_GOALS = [
+  "Build a weekly SSP business page content plan",
+  "Create posts from completed jobs and operational wins",
+  "Create event security thought leadership",
+  "Create CRM support posts for large-scale event buyers",
+  "Create associate spotlight and recruiting content",
+];
+
 const PAYROLL_SEED = {
   period: "Apr 1 - Apr 15",
   periodStart: "2026-04-01T00:00:00-05:00",
@@ -531,10 +539,19 @@ async function requestJson(url, options = {}) {
 
   const payload = await response.json().catch(() => ({}));
   if (!response.ok) {
-    throw new Error(payload.error || "Request failed.");
+    const error = new Error(payload.error || payload.summary || "Request failed.");
+    error.payload = payload;
+    error.status = response.status;
+    throw error;
   }
 
   return payload;
+}
+
+function linkedinPostText(item) {
+  const base = item?.copy || item?.body || item?.text || "";
+  const hashtags = Array.isArray(item?.hashtags) ? item.hashtags.join(" ") : "";
+  return [base, hashtags].filter(Boolean).join("\n\n").trim();
 }
 
 function App() {
@@ -561,6 +578,7 @@ function App() {
   const [intakeLinks, setIntakeLinks] = useStoredState("ssp.intakeLinks.v3", INTAKE_LINKS_SEED);
   const [audit, setAudit] = useStoredState("ssp.audit.v3", AUDIT_SEED);
   const [sourcingRuns, setSourcingRuns] = useStoredState("ssp.crmSourcing.v1", []);
+  const [linkedinRuns, setLinkedinRuns] = useStoredState("ssp.linkedinRuns.v1", []);
   const [paychexConnection, setPaychexConnection] = useState({
     configured: false,
     readyForSync: false,
@@ -573,6 +591,16 @@ function App() {
   const [paychexNotice, setPaychexNotice] = useState(null);
   const [crmSourcingBusy, setCrmSourcingBusy] = useState(false);
   const [crmSourcingNotice, setCrmSourcingNotice] = useState(null);
+  const [linkedinConnection, setLinkedinConnection] = useState({
+    configured: false,
+    publishingReady: false,
+    missing: [],
+    requiredScopes: ["w_organization_social", "r_organization_social"],
+    summary: "LinkedIn connection has not been checked yet.",
+  });
+  const [linkedinBusy, setLinkedinBusy] = useState(false);
+  const [linkedinNotice, setLinkedinNotice] = useState(null);
+  const [linkedinPublishBusy, setLinkedinPublishBusy] = useState(null);
 
   useEffect(() => {
     const nextUsers = users.map((user) => {
@@ -630,6 +658,7 @@ function App() {
     [intakeLinks, inviteToken]
   );
   const canManagePaychex = currentUser ? ["owner", "admin"].includes(currentUser.role) : false;
+  const canManageLinkedIn = currentUser ? ["owner", "admin", "manager"].includes(currentUser.role) : false;
 
   const recommendations = useMemo(() => buildRecommendations(events, associates), [events, associates]);
 
@@ -694,6 +723,42 @@ function App() {
       cancelled = true;
     };
   }, [canManagePaychex, refreshPaychexStatus]);
+
+  const refreshLinkedInStatus = useCallback(async () => {
+    if (!canManageLinkedIn) return null;
+
+    try {
+      const payload = await requestJson("/api/linkedin/status");
+      setLinkedinConnection(payload);
+      return payload;
+    } catch (error) {
+      const fallback = {
+        configured: false,
+        publishingReady: false,
+        missing: [],
+        requiredScopes: ["w_organization_social", "r_organization_social"],
+        summary: error.message,
+        error: error.message,
+      };
+      setLinkedinConnection(fallback);
+      return fallback;
+    }
+  }, [canManageLinkedIn]);
+
+  useEffect(() => {
+    if (!canManageLinkedIn) return undefined;
+
+    let cancelled = false;
+    refreshLinkedInStatus().then((payload) => {
+      if (!cancelled && payload) {
+        setLinkedinConnection(payload);
+      }
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [canManageLinkedIn, refreshLinkedInStatus]);
 
   useEffect(() => {
     const handlePopstate = () => {
@@ -1598,6 +1663,139 @@ function App() {
     logAction("Content Agent", `${contentId} queued for LinkedIn approval.`);
   };
 
+  const addLinkedInDraft = (post, source = "LinkedIn Agent") => {
+    const contentItem = {
+      id: createId("POST"),
+      title: post.title || "SSP LinkedIn Draft",
+      status: "Ready",
+      source: post.source || source,
+      channel: "LinkedIn",
+      angle: post.angle || "Brand authority",
+      audience: post.audience || "Security buyers",
+      recommendedTiming: post.recommendedTiming || "Next available posting window",
+      copy: post.body || post.copy || post.text || "",
+      hashtags: Array.isArray(post.hashtags) ? post.hashtags : [],
+      approvalNotes: post.approvalNotes || "Review before publishing.",
+      createdAt: new Date().toISOString(),
+    };
+
+    setContent((items) => [contentItem, ...items]);
+    logAction("LinkedIn Agent", `${contentItem.title} added to the approval queue.`);
+  };
+
+  const runLinkedInAgent = async (goal, focusNotes = "") => {
+    setLinkedinBusy(true);
+    setLinkedinNotice(null);
+
+    try {
+      const payload = await requestJson("/api/linkedin/agent", {
+        method: "POST",
+        body: JSON.stringify({
+          goal,
+          context: {
+            events,
+            leads,
+            content,
+            notes: focusNotes,
+          },
+        }),
+      });
+      const run = {
+        id: createId("LIN"),
+        ...payload,
+        goal,
+        focusNotes,
+        posts: Array.isArray(payload.posts) ? payload.posts : [],
+        generatedAt: payload.generatedAt || new Date().toISOString(),
+      };
+
+      setLinkedinRuns((items) => [run, ...items].slice(0, 8));
+      setLinkedinNotice({
+        tone: payload.issue ? "warn" : payload.configured ? "good" : "warn",
+        title: payload.title || (payload.configured ? "LinkedIn Agent generated a plan." : "LinkedIn Agent needs setup."),
+        text: payload.summary || "LinkedIn Agent run completed.",
+      });
+      logAction("LinkedIn Agent", payload.issue
+        ? `LinkedIn agent needs attention: ${payload.issue}.`
+        : `${run.posts.length} LinkedIn draft candidate(s) generated.`);
+      return run;
+    } catch (error) {
+      setLinkedinNotice({
+        tone: "bad",
+        title: "LinkedIn Agent failed.",
+        text: error.message,
+      });
+      logAction("LinkedIn Agent", `Agent failed: ${error.message}`);
+      return null;
+    } finally {
+      setLinkedinBusy(false);
+    }
+  };
+
+  const publishLinkedInContent = async (contentId) => {
+    const item = content.find((entry) => entry.id === contentId);
+    if (!item) return null;
+
+    const text = linkedinPostText(item);
+    if (!text) {
+      setLinkedinNotice({
+        tone: "warn",
+        title: "Draft needs copy before publishing.",
+        text: "Generate or add post copy, then publish to the SSP business page.",
+      });
+      return null;
+    }
+
+    setLinkedinPublishBusy(contentId);
+    setLinkedinNotice(null);
+
+    try {
+      const payload = await requestJson("/api/linkedin/publish", {
+        method: "POST",
+        body: JSON.stringify({
+          title: item.title,
+          text,
+          visibility: "PUBLIC",
+        }),
+      });
+
+      if (payload.published) {
+        setContent((items) =>
+          items.map((entry) =>
+            entry.id === contentId
+              ? { ...entry, status: "Published", linkedInPostId: payload.postId, publishedAt: payload.publishedAt }
+              : entry
+          )
+        );
+        setLinkedinNotice({
+          tone: "good",
+          title: "Published to LinkedIn.",
+          text: payload.summary || "The SSP business page post is live.",
+        });
+        logAction("LinkedIn Agent", `${item.title} published to LinkedIn.`);
+      } else {
+        setLinkedinNotice({
+          tone: "warn",
+          title: "LinkedIn publishing needs setup.",
+          text: payload.summary || "Add LinkedIn credentials before publishing.",
+        });
+        logAction("LinkedIn Agent", "Publishing paused until LinkedIn credentials are configured.");
+      }
+
+      return payload;
+    } catch (error) {
+      setLinkedinNotice({
+        tone: "bad",
+        title: "LinkedIn publish failed.",
+        text: error.message,
+      });
+      logAction("LinkedIn Agent", `Publish failed: ${error.message}`);
+      return null;
+    } finally {
+      setLinkedinPublishBusy(null);
+    }
+  };
+
   const generateRecapFromEvent = (eventId) => {
     const event = events.find((item) => item.id === eventId);
     if (!event) return;
@@ -1609,6 +1807,13 @@ function App() {
         status: "Draft",
         source: event.name,
         channel: "LinkedIn",
+        angle: "Operational recap",
+        audience: "Event operators and security buyers",
+        recommendedTiming: "After completion and client approval",
+        copy: `Special Services Protection supported ${event.name} with disciplined planning, reliable coverage, and a professional security presence for ${event.type.toLowerCase()} operations in ${event.city}.`,
+        hashtags: ["#EventSecurity", "#SecurityOperations", "#SpecialServicesProtection"],
+        approvalNotes: "Confirm client permission and remove any confidential details before publishing.",
+        createdAt: new Date().toISOString(),
       },
       ...items,
     ]);
@@ -1623,6 +1828,7 @@ function App() {
     invoices,
     leads,
     sourcingRuns,
+    linkedinRuns,
     users,
     content,
     payroll: payrollState,
@@ -1652,6 +1858,14 @@ function App() {
     crmSourcingBusy,
     crmSourcingNotice,
     queueContent,
+    addLinkedInDraft,
+    runLinkedInAgent,
+    publishLinkedInContent,
+    refreshLinkedInStatus,
+    linkedinConnection,
+    linkedinBusy,
+    linkedinNotice,
+    linkedinPublishBusy,
     generateRecapFromEvent,
     logAction,
   };
@@ -3147,42 +3361,181 @@ function CrmPage({
   );
 }
 
-function LinkedInPage({ content, events, queueContent, generateRecapFromEvent }) {
+function LinkedInPage({
+  content,
+  events,
+  linkedinRuns,
+  linkedinConnection,
+  linkedinBusy,
+  linkedinNotice,
+  linkedinPublishBusy,
+  queueContent,
+  addLinkedInDraft,
+  runLinkedInAgent,
+  publishLinkedInContent,
+  refreshLinkedInStatus,
+  generateRecapFromEvent,
+}) {
+  const [goal, setGoal] = useState(LINKEDIN_GOALS[0]);
+  const [focusNotes, setFocusNotes] = useState("Prioritize elite event security, large-scale planning, staffing confidence, and SSP's Atlanta roots with national capability.");
+  const latestRun = linkedinRuns[0] || null;
+  const linkedInContent = content.filter((item) => item.channel === "LinkedIn");
+
   return (
-    <section className="page-grid two-col">
+    <section className="page-grid">
       <PageIntro
-        title="LinkedIn Brand Studio"
-        text="Turn completed jobs and associate spotlights into content in SSP voice, then queue for LinkedIn publishing."
+        title="LinkedIn Agent"
+        text="Plan, draft, approve, and publish SSP business page content from operations, CRM opportunities, completed jobs, and brand priorities."
+        action={
+          <div className="button-row">
+            <button onClick={refreshLinkedInStatus}>Check Connection</button>
+            <button className="secondary" onClick={() => runLinkedInAgent(goal, focusNotes)} disabled={linkedinBusy}>
+              {linkedinBusy ? "Generating..." : "Run Brand Agent"}
+            </button>
+          </div>
+        }
       />
-      <Panel title="Content Queue" action="Publishing">
-        {content.length === 0 && <p className="empty">No LinkedIn drafts yet.</p>}
-        {content.map((item) => (
-          <ActionRow
-            key={item.id}
-            title={item.title}
-            meta={`${item.source} - ${item.channel}`}
-            value={item.status}
-            button="Queue"
-            onClick={() => queueContent(item.id)}
-            disabled={item.status === "Queued"}
-          />
-        ))}
-      </Panel>
-      <Panel title="Generate From Operations" action="AI Draft">
-        <div className="list-stack">
-          {events.length === 0 && <p className="empty">Add completed jobs or events to generate recap drafts.</p>}
-          {events.map((event) => (
-            <ActionRow
-              key={event.id}
-              title={event.name}
-              meta={`${event.type} - ${event.client}`}
-              value={event.status}
-              button="Create Recap"
-              onClick={() => generateRecapFromEvent(event.id)}
-            />
-          ))}
+      <div className="two-col">
+        <Panel
+          title="Business Page Connection"
+          action={linkedinConnection.configured ? "Ready" : "Setup"}
+        >
+          <div className={`callout ${linkedinConnection.configured ? "good" : "warn"}`}>
+            <strong>{linkedinConnection.configured ? "SSP business page publishing is connected." : "Publishing is approval-ready, but credentials are still needed."}</strong>
+            <p>{linkedinConnection.summary}</p>
+          </div>
+          <div className="tag-wrap">
+            <span>{linkedinConnection.accountMode || "SSP business page through personal admin"}</span>
+            <span>OAuth via personal page admin</span>
+            {(linkedinConnection.requiredScopes || []).map((scope) => <span key={scope}>{scope}</span>)}
+          </div>
+          {linkedinConnection.missing?.length > 0 && (
+            <p className="meta-copy">Missing Vercel env: {linkedinConnection.missing.join(", ")}.</p>
+          )}
+        </Panel>
+
+        <Panel title="Agent Command" action="Strategy">
+          <div className="form-grid compact">
+            <label className="field full">
+              <span>Content Goal</span>
+              <select value={goal} onChange={(event) => setGoal(event.target.value)}>
+                {LINKEDIN_GOALS.map((item) => <option key={item} value={item}>{item}</option>)}
+              </select>
+            </label>
+            <label className="field full">
+              <span>Agent Notes</span>
+              <textarea
+                value={focusNotes}
+                onChange={(event) => setFocusNotes(event.target.value)}
+                rows={5}
+                placeholder="Tell the LinkedIn Agent what to focus on..."
+              />
+            </label>
+          </div>
+        </Panel>
+      </div>
+
+      {linkedinNotice && (
+        <div className={`callout ${linkedinNotice.tone}`}>
+          <strong>{linkedinNotice.title}</strong>
+          <p>{linkedinNotice.text}</p>
         </div>
+      )}
+
+      <Panel title="Agent Content Plan" action={latestRun ? "Latest Run" : "Ready"}>
+        {!latestRun && (
+          <div className="empty-state">
+            <h3>No LinkedIn agent runs yet.</h3>
+            <p>Run the brand agent to create SSP business page content from current operations, CRM targets, and event security priorities.</p>
+          </div>
+        )}
+        {latestRun && (
+          <div className="linkedin-plan">
+            <div className={`callout ${latestRun.issue ? "warn" : "good"}`}>
+              <strong>{latestRun.title || "LinkedIn content plan"}</strong>
+              <p>{latestRun.summary}</p>
+              {latestRun.contentStrategy && <p>{latestRun.contentStrategy}</p>}
+            </div>
+            {latestRun.approvalChecklist?.length > 0 && (
+              <div className="tag-wrap">
+                {latestRun.approvalChecklist.map((item) => <span key={item}>{item}</span>)}
+              </div>
+            )}
+            <div className="linkedin-post-grid">
+              {latestRun.posts.map((post, index) => (
+                <article className="linkedin-post-card" key={`${post.title}-${index}`}>
+                  <div className="sourcing-run-head">
+                    <div>
+                      <span className="pill warn">{post.recommendedTiming}</span>
+                      <h3>{post.title}</h3>
+                    </div>
+                    <span className="pill">{post.angle}</span>
+                  </div>
+                  <p className="meta-copy">{post.audience}</p>
+                  <div className="linkedin-copy">{linkedinPostText(post)}</div>
+                  <p className="meta-copy">{post.approvalNotes}</p>
+                  <div className="button-row">
+                    <button onClick={() => addLinkedInDraft(post, "LinkedIn Agent")}>Add to Queue</button>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        )}
       </Panel>
+
+      <div className="two-col">
+        <Panel title="Approval Queue" action={`${linkedInContent.length} drafts`}>
+          {linkedInContent.length === 0 && <p className="empty">No LinkedIn drafts yet.</p>}
+          <div className="list-stack">
+            {linkedInContent.map((item) => (
+              <article className="linkedin-queue-item" key={item.id}>
+                <div className="sourcing-run-head">
+                  <div>
+                    <span className={`pill ${statusTone(item.status)}`}>{item.status}</span>
+                    <h3>{item.title}</h3>
+                  </div>
+                  <span className="pill">{item.source}</span>
+                </div>
+                <p className="meta-copy">{item.angle || "LinkedIn content"} - {item.recommendedTiming || "Timing TBD"}</p>
+                {linkedinPostText(item) && <div className="linkedin-copy">{linkedinPostText(item)}</div>}
+                {item.approvalNotes && <p className="meta-copy">{item.approvalNotes}</p>}
+                <div className="button-row">
+                  <button
+                    className="secondary"
+                    onClick={() => queueContent(item.id)}
+                    disabled={["Queued", "Published"].includes(item.status)}
+                  >
+                    Queue
+                  </button>
+                  <button
+                    onClick={() => publishLinkedInContent(item.id)}
+                    disabled={item.status === "Published" || linkedinPublishBusy === item.id}
+                  >
+                    {linkedinPublishBusy === item.id ? "Publishing..." : "Publish to LinkedIn"}
+                  </button>
+                </div>
+              </article>
+            ))}
+          </div>
+        </Panel>
+
+        <Panel title="Generate From Operations" action="Job Recaps">
+          <div className="list-stack">
+            {events.length === 0 && <p className="empty">Add completed jobs or events to generate recap drafts.</p>}
+            {events.map((event) => (
+              <ActionRow
+                key={event.id}
+                title={event.name}
+                meta={`${event.type} - ${event.client}`}
+                value={event.status}
+                button="Create Recap"
+                onClick={() => generateRecapFromEvent(event.id)}
+              />
+            ))}
+          </div>
+        </Panel>
+      </div>
     </section>
   );
 }
