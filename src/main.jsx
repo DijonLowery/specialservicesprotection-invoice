@@ -83,339 +83,21 @@ const USERS_SEED = [
     role: "owner",
     status: "Active",
     scope: "All SSP",
-    lastLogin: "Today 08:12",
-  },
-  {
-    id: "U-014",
-    name: "Operations Admin",
-    email: "admin@specialservicesprotection.com",
-    role: "admin",
-    status: "Active",
-    scope: "All Operations",
-    lastLogin: "Today 07:42",
-  },
-  {
-    id: "U-022",
-    name: "North Atlanta Manager",
-    email: "manager@specialservicesprotection.com",
-    role: "manager",
-    status: "Active",
-    scope: "Atlanta Events",
-    lastLogin: "Yesterday 18:44",
-  },
-  {
-    id: "U-041",
-    name: "Marcus Reid",
-    email: "marcus@example.com",
-    role: "associate",
-    status: "Active",
-    scope: "Self",
-    associateId: "A-104",
-    lastLogin: "Apr 9",
-  },
-  {
-    id: "U-044",
-    name: "Tasha Williams",
-    email: "tasha@example.com",
-    role: "associate",
-    status: "Invited",
-    scope: "Self",
-    associateId: "A-117",
-    lastLogin: "Pending",
+    lastLogin: "Owner account ready",
   },
 ];
 
-const ASSOCIATES_SEED = [
-  {
-    id: "A-104",
-    userId: "U-041",
-    name: "Marcus Reid",
-    role: "Senior Officer",
-    city: "Atlanta",
-    phone: "(404) 555-0101",
-    email: "marcus@example.com",
-    status: "Ready",
-    armed: true,
-    availability: ["Mon 06:00-14:00", "Wed 18:00-02:00", "Sat 12:00-22:00"],
-    certs: ["Armed", "Executive Protection", "Crowd Control"],
-    preferredRoles: ["Executive Protection", "Lead Officer"],
-    radius: 30,
-    hours: 32,
-    score: 96,
-    notes: "Prefers executive detail and premium event posts.",
-  },
-  {
-    id: "A-117",
-    userId: "U-044",
-    name: "Tasha Williams",
-    role: "Officer",
-    city: "Atlanta",
-    phone: "(404) 555-0102",
-    email: "tasha@example.com",
-    status: "Ready",
-    armed: false,
-    availability: ["Tue 08:00-16:00", "Thu 08:00-16:00", "Fri 16:00-00:00"],
-    certs: ["Unarmed", "Event Security", "Patrol"],
-    preferredRoles: ["Crowd Control", "Event Security"],
-    radius: 18,
-    hours: 24,
-    score: 88,
-    notes: "Strong on guest-facing event coverage.",
-  },
-  {
-    id: "A-122",
-    userId: null,
-    name: "Devon Clark",
-    role: "Officer",
-    city: "Marietta",
-    phone: "(404) 555-0103",
-    email: "devon@example.com",
-    status: "Needs Cert",
-    armed: true,
-    availability: ["Fri 18:00-02:00", "Sat 18:00-02:00", "Sun 10:00-18:00"],
-    certs: ["Armed"],
-    preferredRoles: ["Patrol", "Overnight"],
-    radius: 22,
-    hours: 18,
-    score: 78,
-    notes: "Crowd-control renewal pending.",
-  },
-  {
-    id: "A-130",
-    userId: null,
-    name: "Janet Moore",
-    role: "Supervisor",
-    city: "Atlanta",
-    phone: "(404) 555-0104",
-    email: "janet@example.com",
-    status: "Ready",
-    armed: true,
-    availability: ["Mon 14:00-22:00", "Wed 14:00-22:00", "Sat 08:00-18:00"],
-    certs: ["Armed", "Supervisor", "Crowd Control"],
-    preferredRoles: ["Supervisor", "Crowd Control"],
-    radius: 35,
-    hours: 36,
-    score: 94,
-    notes: "Best fit for high-traffic operations oversight.",
-  },
-  {
-    id: "A-141",
-    userId: null,
-    name: "Ray Thompson",
-    role: "Officer",
-    city: "Decatur",
-    phone: "(404) 555-0105",
-    email: "ray@example.com",
-    status: "Profile Pending",
-    armed: false,
-    availability: ["Sun 12:00-20:00"],
-    certs: ["Unarmed"],
-    preferredRoles: ["Patrol"],
-    radius: 15,
-    hours: 8,
-    score: 63,
-    notes: "Needs full onboarding and weekday availability.",
-  },
-];
+const ASSOCIATES_SEED = [];
 
-const EVENTS_SEED = [
-  {
-    id: "EV-2101",
-    name: "Atlanta United Home Match",
-    type: "Sports Event",
-    client: "Mercedes-Benz Event Ops",
-    city: "Atlanta",
-    date: "Apr 13",
-    time: "15:00",
-    startsAt: "2026-04-13T15:00:00-05:00",
-    endsAt: "2026-04-13T23:00:00-05:00",
-    required: 12,
-    assigned: 9,
-    status: "At Risk",
-    roles: ["Supervisor", "Crowd Control", "Armed"],
-  },
-  {
-    id: "EV-2099",
-    name: "Lenox Square Executive Detail",
-    type: "Executive Protection",
-    client: "Lenox Square",
-    city: "Atlanta",
-    date: "Apr 11",
-    time: "18:00",
-    startsAt: "2026-04-11T18:00:00-05:00",
-    endsAt: "2026-04-11T23:00:00-05:00",
-    required: 2,
-    assigned: 2,
-    status: "Covered",
-    roles: ["Executive Protection", "Supervisor"],
-  },
-  {
-    id: "EV-2104",
-    name: "Ponce City Market Weekend Detail",
-    type: "Recurring Site",
-    client: "Ponce City Market",
-    city: "Atlanta",
-    date: "Apr 14",
-    time: "10:00",
-    startsAt: "2026-04-14T10:00:00-05:00",
-    endsAt: "2026-04-14T18:00:00-05:00",
-    required: 6,
-    assigned: 6,
-    status: "Covered",
-    roles: ["Unarmed", "Patrol"],
-  },
-  {
-    id: "EV-2110",
-    name: "Midtown Music Festival Vendor Walk",
-    type: "Festival",
-    client: "Prospect",
-    city: "Atlanta",
-    date: "Apr 16",
-    time: "09:00",
-    startsAt: "2026-04-16T09:00:00-05:00",
-    endsAt: "2026-04-16T17:00:00-05:00",
-    required: 10,
-    assigned: 4,
-    status: "Planning",
-    roles: ["Crowd Control", "Supervisor"],
-  },
-  {
-    id: "EV-2112",
-    name: "Buckhead Executive Protection",
-    type: "Executive Protection",
-    client: "Buckhead Properties LLC",
-    city: "Buckhead",
-    date: "Apr 17",
-    time: "18:00",
-    startsAt: "2026-04-17T18:00:00-05:00",
-    endsAt: "2026-04-17T23:00:00-05:00",
-    required: 4,
-    assigned: 4,
-    status: "Covered",
-    roles: ["Armed", "Executive Protection"],
-  },
-];
+const EVENTS_SEED = [];
 
-const ASSIGNMENT_BOOK_SEED = {
-  "EV-2099": ["A-104", "A-130"],
-  "EV-2104": ["A-117", "A-130"],
-  "EV-2112": ["A-104", "A-130"],
-};
+const ASSIGNMENT_BOOK_SEED = {};
 
-const INVOICES_SEED = [
-  {
-    id: "INV-001",
-    client: "Hartsfield-Jackson Airport",
-    amount: 12500,
-    status: "Sent",
-    due: "Apr 15",
-    dueDate: "2026-04-15T17:00:00-05:00",
-    lastContact: "Apr 7",
-    reminders: 1,
-    thread: "Gmail linked",
-  },
-  {
-    id: "INV-002",
-    client: "Buckhead Properties LLC",
-    amount: 8750,
-    status: "Viewed",
-    due: "Apr 20",
-    dueDate: "2026-04-20T17:00:00-05:00",
-    lastContact: "Apr 8",
-    reminders: 0,
-    thread: "Gmail linked",
-  },
-  {
-    id: "INV-003",
-    client: "Midtown Mall Management",
-    amount: 6200,
-    status: "Overdue",
-    due: "Mar 30",
-    dueDate: "2026-03-30T17:00:00-05:00",
-    lastContact: "Apr 3",
-    reminders: 2,
-    thread: "Reminder due",
-  },
-  {
-    id: "INV-004",
-    client: "Atlanta Tech Campus",
-    amount: 9400,
-    status: "Draft",
-    due: "Apr 30",
-    dueDate: "2026-04-30T17:00:00-05:00",
-    lastContact: "None",
-    reminders: 0,
-    thread: "No Gmail thread",
-  },
-];
+const INVOICES_SEED = [];
 
-const LEADS_SEED = [
-  {
-    id: "L-301",
-    company: "Atlanta Jazz Festival",
-    contact: "Event Operations",
-    type: "Festival",
-    city: "Atlanta",
-    value: 42000,
-    stage: "Targeted",
-    priority: 96,
-    scheduledFor: "2026-04-12T10:00:00-05:00",
-    next: "Send tailored security coverage pitch",
-  },
-  {
-    id: "L-318",
-    company: "State Farm Arena Concert Ops",
-    contact: "Venue Security",
-    type: "Concert",
-    city: "Atlanta",
-    value: 58000,
-    stage: "New",
-    priority: 92,
-    scheduledFor: "2026-04-14T13:00:00-05:00",
-    next: "Identify decision maker",
-  },
-  {
-    id: "L-327",
-    company: "Peachtree Road Race Vendor Village",
-    contact: "Race Logistics",
-    type: "Large Scale Event",
-    city: "Atlanta",
-    value: 36000,
-    stage: "Outreach Sent",
-    priority: 89,
-    scheduledFor: "2026-04-18T09:00:00-05:00",
-    next: "Follow up Friday",
-  },
-  {
-    id: "L-334",
-    company: "Emory Campus Events",
-    contact: "Campus Safety",
-    type: "Campus",
-    city: "Atlanta",
-    value: 25000,
-    stage: "Discovery",
-    priority: 84,
-    scheduledFor: "2026-04-21T11:00:00-05:00",
-    next: "Schedule scope call",
-  },
-];
+const LEADS_SEED = [];
 
-const CONTENT_SEED = [
-  {
-    id: "POST-09",
-    title: "Weekend Detail Recap",
-    status: "Draft",
-    source: "Ponce City Market Weekend Detail",
-    channel: "LinkedIn",
-  },
-  {
-    id: "POST-12",
-    title: "Officer Spotlight: Janet Moore",
-    status: "Ready",
-    source: "Roster",
-    channel: "LinkedIn",
-  },
-];
+const CONTENT_SEED = [];
 
 const PAYROLL_SEED = {
   period: "Apr 1 - Apr 15",
@@ -424,143 +106,17 @@ const PAYROLL_SEED = {
   reviewCloseAt: "2026-04-15T17:00:00-05:00",
   syncStatus: "Awaiting Sync",
   lastSync: "Never",
-  entries: [
-    { id: "P-104", associateId: "A-104", name: "Marcus Reid", hours: 78, rate: 22, status: "Pending Review", issue: "2 hours missing from executive detail" },
-    { id: "P-117", associateId: "A-117", name: "Tasha Williams", hours: 72, rate: 18, status: "Ready", issue: "None" },
-    { id: "P-130", associateId: "A-130", name: "Janet Moore", hours: 80, rate: 26, status: "Ready", issue: "None" },
-    { id: "P-141", associateId: "A-141", name: "Ray Thompson", hours: 12, rate: 18, status: "Blocked", issue: "Onboarding incomplete in Paychex" },
-  ],
-  exceptions: [
-    "Marcus Reid has a two-hour discrepancy between assigned coverage and payroll import.",
-    "Ray Thompson cannot sync until onboarding is completed in Paychex.",
-  ],
-  history: [
-    { id: "CHK-104-1", associateId: "A-104", name: "Marcus Reid", period: "Mar 16 - Mar 31", paidOn: "Apr 4", paidOnAt: "2026-04-04T09:00:00-05:00", gross: 1584, net: 1288, status: "Paychex Deposited" },
-    { id: "CHK-104-0", associateId: "A-104", name: "Marcus Reid", period: "Mar 1 - Mar 15", paidOn: "Mar 20", paidOnAt: "2026-03-20T09:00:00-05:00", gross: 1496, net: 1218, status: "Paychex Deposited" },
-    { id: "CHK-117-1", associateId: "A-117", name: "Tasha Williams", period: "Mar 16 - Mar 31", paidOn: "Apr 4", paidOnAt: "2026-04-04T09:00:00-05:00", gross: 1296, net: 1097, status: "Paychex Deposited" },
-  ],
+  entries: [],
+  exceptions: [],
+  history: [],
 };
 
-const TIMECARDS_SEED = [
-  {
-    id: "TC-104-APR11",
-    associateId: "A-104",
-    eventId: "EV-2099",
-    title: "Lenox Square Executive Detail",
-    city: "Atlanta",
-    scheduledStart: "2026-04-11T18:00:00-05:00",
-    scheduledEnd: "2026-04-11T23:00:00-05:00",
-    clockIn: null,
-    clockOut: null,
-    hours: 0,
-    status: "Scheduled",
-    paychexStatus: "Not Synced",
-  },
-  {
-    id: "TC-104-APR17",
-    associateId: "A-104",
-    eventId: "EV-2112",
-    title: "Buckhead Executive Protection",
-    city: "Buckhead",
-    scheduledStart: "2026-04-17T18:00:00-05:00",
-    scheduledEnd: "2026-04-17T23:00:00-05:00",
-    clockIn: null,
-    clockOut: null,
-    hours: 0,
-    status: "Scheduled",
-    paychexStatus: "Not Synced",
-  },
-  {
-    id: "TC-104-APR05",
-    associateId: "A-104",
-    eventId: "HIST-APR05",
-    title: "State Farm Arena Concert Escort",
-    city: "Atlanta",
-    scheduledStart: "2026-04-05T17:00:00-05:00",
-    scheduledEnd: "2026-04-05T23:00:00-05:00",
-    clockIn: "2026-04-05T16:52:00-05:00",
-    clockOut: "2026-04-05T23:11:00-05:00",
-    hours: 6.3,
-    status: "Completed",
-    paychexStatus: "Synced",
-  },
-  {
-    id: "TC-104-MAR29",
-    associateId: "A-104",
-    eventId: "HIST-MAR29",
-    title: "Buckhead Executive Escort",
-    city: "Buckhead",
-    scheduledStart: "2026-03-29T18:00:00-05:00",
-    scheduledEnd: "2026-03-29T23:00:00-05:00",
-    clockIn: "2026-03-29T17:57:00-05:00",
-    clockOut: "2026-03-29T23:02:00-05:00",
-    hours: 5.1,
-    status: "Completed",
-    paychexStatus: "Synced",
-  },
-  {
-    id: "TC-117-APR14",
-    associateId: "A-117",
-    eventId: "EV-2104",
-    title: "Ponce City Market Weekend Detail",
-    city: "Atlanta",
-    scheduledStart: "2026-04-14T10:00:00-05:00",
-    scheduledEnd: "2026-04-14T18:00:00-05:00",
-    clockIn: null,
-    clockOut: null,
-    hours: 0,
-    status: "Scheduled",
-    paychexStatus: "Not Synced",
-  },
-  {
-    id: "TC-130-APR11",
-    associateId: "A-130",
-    eventId: "EV-2099",
-    title: "Lenox Square Executive Detail",
-    city: "Atlanta",
-    scheduledStart: "2026-04-11T18:00:00-05:00",
-    scheduledEnd: "2026-04-11T23:00:00-05:00",
-    clockIn: null,
-    clockOut: null,
-    hours: 0,
-    status: "Scheduled",
-    paychexStatus: "Not Synced",
-  },
-  {
-    id: "TC-130-APR17",
-    associateId: "A-130",
-    eventId: "EV-2112",
-    title: "Buckhead Executive Protection",
-    city: "Buckhead",
-    scheduledStart: "2026-04-17T18:00:00-05:00",
-    scheduledEnd: "2026-04-17T23:00:00-05:00",
-    clockIn: null,
-    clockOut: null,
-    hours: 0,
-    status: "Scheduled",
-    paychexStatus: "Not Synced",
-  },
-];
+const TIMECARDS_SEED = [];
 
-const INTAKE_LINKS_SEED = [
-  {
-    id: "LINK-001",
-    label: "Marcus Reid Intake Link",
-    associateId: "A-104",
-    userId: "U-041",
-    associateName: "Marcus Reid",
-    email: "marcus@example.com",
-    url: "/login?invite=LINK-001",
-    status: "Completed",
-    delivery: "Email sent",
-    created: "Today",
-  },
-];
+const INTAKE_LINKS_SEED = [];
 
 const AUDIT_SEED = [
-  { id: "AUD-001", actor: "System", text: "SSP Command initialized with operations-first workflow.", time: "08:00" },
-  { id: "AUD-002", actor: "Integrations", text: "Gmail, Paychex, and LinkedIn placeholders are staged for one-click actions.", time: "08:04" },
-  { id: "AUD-003", actor: "Scheduling Agent", text: "Initial staffing recommendations generated from current associate readiness.", time: "08:06" },
+  { id: "AUD-001", actor: "System", text: "SSP Command Center is ready for live operational data.", time: "Ready" },
 ];
 
 function readStoredState(key, initialValue) {
@@ -651,8 +207,29 @@ function formatDateTimeLabel(value) {
   });
 }
 
+function formatCrmDate(value) {
+  if (!value) return "Date TBD";
+  return new Date(`${value}T12:00:00`).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
 function formatShiftWindow(start, end) {
   return `${formatDateLabel(start)} | ${formatTimeLabel(start)} - ${formatTimeLabel(end)}`;
+}
+
+function dateInputToTimestamp(date, time = "09:00") {
+  if (!date) return null;
+  return `${date}T${time || "09:00"}:00-05:00`;
+}
+
+function commaList(value) {
+  return String(value || "")
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean);
 }
 
 function timecardHours(start, end, fallback = 0) {
@@ -712,7 +289,7 @@ function scoreEventRisk(event) {
 
 function isMetroMatch(eventCity, associateCity) {
   if (eventCity === associateCity) return true;
-  const metroCities = new Set(["Atlanta", "Buckhead", "Marietta", "Decatur"]);
+  const metroCities = new Set(["Atlanta", "Metro Atlanta"]);
   return metroCities.has(eventCity) && metroCities.has(associateCity);
 }
 
@@ -956,17 +533,17 @@ function App() {
   const [associatePage, setAssociatePage] = useState(
     initialRoute.mode === "associate" ? initialRoute.page : "assignments"
   );
-  const [users, setUsers] = useStoredState("ssp.users.v2", USERS_SEED);
-  const [associates, setAssociates] = useStoredState("ssp.associates.v2", ASSOCIATES_SEED);
-  const [events, setEvents] = useStoredState("ssp.events.v2", EVENTS_SEED);
-  const [assignmentBook, setAssignmentBook] = useStoredState("ssp.assignments.v2", ASSIGNMENT_BOOK_SEED);
-  const [invoices, setInvoices] = useStoredState("ssp.invoices.v2", INVOICES_SEED);
-  const [leads, setLeads] = useStoredState("ssp.leads.v2", LEADS_SEED);
-  const [content, setContent] = useStoredState("ssp.content.v2", CONTENT_SEED);
-  const [payroll, setPayroll] = useStoredState("ssp.payroll.v2", PAYROLL_SEED);
-  const [timecards, setTimecards] = useStoredState("ssp.timecards.v1", TIMECARDS_SEED);
-  const [intakeLinks, setIntakeLinks] = useStoredState("ssp.intakeLinks.v2", INTAKE_LINKS_SEED);
-  const [audit, setAudit] = useStoredState("ssp.audit.v2", AUDIT_SEED);
+  const [users, setUsers] = useStoredState("ssp.users.v3", USERS_SEED);
+  const [associates, setAssociates] = useStoredState("ssp.associates.v3", ASSOCIATES_SEED);
+  const [events, setEvents] = useStoredState("ssp.events.v3", EVENTS_SEED);
+  const [assignmentBook, setAssignmentBook] = useStoredState("ssp.assignments.v3", ASSIGNMENT_BOOK_SEED);
+  const [invoices, setInvoices] = useStoredState("ssp.invoices.v3", INVOICES_SEED);
+  const [leads, setLeads] = useStoredState("ssp.leads.v3", LEADS_SEED);
+  const [content, setContent] = useStoredState("ssp.content.v3", CONTENT_SEED);
+  const [payroll, setPayroll] = useStoredState("ssp.payroll.v3", PAYROLL_SEED);
+  const [timecards, setTimecards] = useStoredState("ssp.timecards.v3", TIMECARDS_SEED);
+  const [intakeLinks, setIntakeLinks] = useStoredState("ssp.intakeLinks.v3", INTAKE_LINKS_SEED);
+  const [audit, setAudit] = useStoredState("ssp.audit.v3", AUDIT_SEED);
   const [paychexConnection, setPaychexConnection] = useState({
     configured: false,
     readyForSync: false,
@@ -1848,6 +1425,45 @@ function App() {
     logAction("Payroll", `Payroll entry approved: ${entryId}.`);
   };
 
+  const createEventProspect = (payload) => {
+    const id = createId("L");
+    const eventDate = payload.eventDate || "";
+    const startTime = payload.startTime || "09:00";
+    const endTime = payload.endTime || "17:00";
+    const expectedCapacity = Number(payload.expectedCapacity || 0);
+    const staffingNeeds = Number(payload.staffingNeeds || 0);
+    const priority = Math.max(0, Math.min(100, Number(payload.priority || 75)));
+
+    const prospect = {
+      id,
+      company: payload.company || "New Event Prospect",
+      eventName: payload.eventName || payload.company || "Security Opportunity",
+      contact: payload.contact || "Decision maker TBD",
+      email: payload.email || "",
+      phone: payload.phone || "",
+      type: payload.type || "Large Scale Event",
+      city: payload.city || "City TBD",
+      venue: payload.venue || "Venue TBD",
+      eventDate,
+      startTime,
+      endTime,
+      expectedCapacity,
+      staffingNeeds,
+      requiredRoles: commaList(payload.requiredRoles),
+      securityNeeds: payload.securityNeeds || "Scope pending discovery.",
+      profile: payload.profile || "Full event profile pending discovery.",
+      value: Number(payload.value || 0),
+      stage: payload.stage || "New",
+      priority,
+      scheduledFor: dateInputToTimestamp(eventDate, startTime) || new Date().toISOString(),
+      next: payload.next || "Prepare outreach and confirm decision maker.",
+      createdAt: new Date().toISOString(),
+    };
+
+    setLeads((items) => [prospect, ...items]);
+    logAction("CRM", `${prospect.eventName} added to the event prospect pipeline.`);
+  };
+
   const runLeadOutreach = (leadId) => {
     setLeads((items) =>
       items.map((lead) =>
@@ -1864,21 +1480,26 @@ function App() {
     if (!lead) return;
 
     const eventId = createId("EV");
+    const requiredRoles = lead.requiredRoles?.length ? lead.requiredRoles : ["Supervisor", "Crowd Control"];
+    const startsAt = dateInputToTimestamp(lead.eventDate, lead.startTime) || "2026-05-02T09:00:00-05:00";
+    const endsAt = dateInputToTimestamp(lead.eventDate, lead.endTime || "17:00") || "2026-05-02T17:00:00-05:00";
+
     setEvents((items) => [
       {
         id: eventId,
-        name: `${lead.company} Security Planning`,
+        name: lead.eventName || `${lead.company} Security Planning`,
         type: lead.type,
         client: lead.company,
         city: lead.city,
-        date: "May 02",
-        time: "09:00",
-        startsAt: "2026-05-02T09:00:00-05:00",
-        endsAt: "2026-05-02T15:00:00-05:00",
-        required: 6,
+        date: lead.eventDate ? formatDateLabel(`${lead.eventDate}T12:00:00`) : "TBD",
+        time: lead.startTime || "09:00",
+        startsAt,
+        endsAt,
+        expectedCapacity: Number(lead.expectedCapacity || 0),
+        required: Number(lead.staffingNeeds || 0),
         assigned: 0,
         status: "Planning",
-        roles: ["Supervisor", "Crowd Control"],
+        roles: requiredRoles,
       },
       ...items,
     ]);
@@ -1948,6 +1569,7 @@ function App() {
     clockAssociateOut,
     runLeadOutreach,
     convertLeadToEvent,
+    createEventProspect,
     queueContent,
     generateRecapFromEvent,
     logAction,
@@ -2570,6 +2192,7 @@ function CommandPage({ stats, events, associates, invoices, leads, content, payr
       />
 
       <Panel title="Operations Calendar" action="Next 7 days">
+        {sortedEvents.length === 0 && <p className="empty">No company events have been added yet.</p>}
         {sortedEvents.map((event) => (
           <Row
             key={event.id}
@@ -2590,11 +2213,13 @@ function CommandPage({ stats, events, associates, invoices, leads, content, payr
               <p>{Math.max(event.required - event.assigned, 0)} posts open for {event.roles.join(", ")}</p>
             </div>
           ))}
-          {atRiskEvents.length === 0 && <p className="empty">All current events are covered.</p>}
+          {sortedEvents.length === 0 && <p className="empty">Create an event or convert a CRM prospect to start staffing coverage.</p>}
+          {sortedEvents.length > 0 && atRiskEvents.length === 0 && <p className="empty">All current events are covered.</p>}
         </div>
       </Panel>
 
       <Panel title="Associate Readiness" action={`${stats.pendingAssociates} needs attention`}>
+        {associates.length === 0 && <p className="empty">No associate profiles yet. Send an intake invite to build the roster.</p>}
         {associates.map((associate) => (
           <Row
             key={associate.id}
@@ -2607,6 +2232,7 @@ function CommandPage({ stats, events, associates, invoices, leads, content, payr
       </Panel>
 
       <Panel title="Gmail Action Center" action={`${stats.overdue} overdue`}>
+        {invoices.length === 0 && <p className="empty">No invoices are loaded yet. Connect Gmail or add invoices when billing begins.</p>}
         {invoices.map((invoice) => (
           <ActionRow
             key={invoice.id}
@@ -2621,16 +2247,18 @@ function CommandPage({ stats, events, associates, invoices, leads, content, payr
 
       <Panel title="Paychex Exception Board" action={payroll.syncStatus}>
         <div className="insight-list">
+          {payroll.exceptions.length === 0 && <p>No Paychex exceptions are open.</p>}
           {payroll.exceptions.map((item) => <p key={item}>{item}</p>)}
         </div>
       </Panel>
 
       <Panel title="CRM Hot Queue" action={`${stats.hotLeads} hot leads`}>
+        {leads.length === 0 && <p className="empty">No CRM prospects yet. Add potential events from the CRM page.</p>}
         {leads.slice(0, 3).map((lead) => (
           <ActionRow
             key={lead.id}
-            title={lead.company}
-            meta={`${lead.type} - ${lead.stage} - ${lead.next}`}
+            title={lead.eventName || lead.company}
+            meta={`${lead.type} - ${lead.stage} - ${lead.expectedCapacity || 0} expected / ${lead.staffingNeeds || 0} posts`}
             value={lead.priority}
             button="Outreach"
             onClick={() => runLeadOutreach(lead.id)}
@@ -2639,6 +2267,7 @@ function CommandPage({ stats, events, associates, invoices, leads, content, payr
       </Panel>
 
       <Panel title="Brand Queue" action={`${stats.contentReady} ready`}>
+        {content.length === 0 && <p className="empty">No LinkedIn drafts yet. Generate recaps after real jobs are added.</p>}
         {content.map((item) => (
           <Row
             key={item.id}
@@ -2679,12 +2308,12 @@ function CalendarPage({ events, invoices, leads, payroll }) {
     })),
     ...leads.slice(0, 3).map((lead) => ({
       id: lead.id,
-      title: `${lead.company} outreach`,
+      title: `${lead.eventName || lead.company} outreach`,
       kind: "CRM",
-      when: lead.scheduledFor ? formatDateTimeLabel(lead.scheduledFor) : "This week",
-      detail: lead.next,
+      when: lead.eventDate ? formatCrmDate(lead.eventDate) : lead.scheduledFor ? formatDateTimeLabel(lead.scheduledFor) : "Date TBD",
+      detail: `${lead.expectedCapacity ? `${Number(lead.expectedCapacity).toLocaleString()} expected` : "Capacity TBD"} - ${lead.staffingNeeds || 0} potential posts`,
       tone: "neutral",
-      sortAt: lead.scheduledFor ? new Date(lead.scheduledFor) : new Date(),
+      sortAt: lead.eventDate ? new Date(`${lead.eventDate}T12:00:00`) : lead.scheduledFor ? new Date(lead.scheduledFor) : new Date(),
     })),
     {
       id: "PAYROLL-DATE",
@@ -2716,7 +2345,7 @@ function CalendarPage({ events, invoices, leads, payroll }) {
       </Panel>
       <Panel title="Calendar Intelligence" action="AI Review">
         <div className="insight-list">
-          <p>Atlanta United remains the highest staffing risk before the next event window.</p>
+          <p>New events will appear here in chronological order as they are added or converted from CRM.</p>
           <p>Payroll close and overdue collections should stay visible on the same operating calendar.</p>
           <p>CRM planning items convert cleanly into events once a prospect moves into discovery.</p>
         </div>
@@ -2733,6 +2362,12 @@ function SchedulingPage({ recommendations, applyRecommendation, assignmentBook }
         text="Recommendations are generated from city, availability, certifications, armed status, travel radius, and current load. Apply a team to move it into the assignment plan."
       />
       <div className="schedule-grid">
+        {recommendations.length === 0 && (
+          <div className="empty-state">
+            <h3>No schedule recommendations yet</h3>
+            <p>Add company events and associate profiles, then the scheduling engine will recommend coverage teams.</p>
+          </div>
+        )}
         {recommendations.map((recommendation) => (
           <Panel key={recommendation.eventId} title={recommendation.event} action={recommendation.risk}>
             <div className="schedule-meta">
@@ -2785,6 +2420,7 @@ function AssociatesPage({ associates, intakeLinks, createAssociateLink, sendAsso
       <div className="two-col">
         <Panel title="Intake Links" action={`${intakeLinks.length} active`}>
           <div className="list-stack">
+            {intakeLinks.length === 0 && <p className="empty">No intake links yet.</p>}
             {intakeLinks.map((link) => (
               <div className="data-row action-row" key={link.id}>
                 <div>
@@ -2864,6 +2500,12 @@ function AssociatesPage({ associates, intakeLinks, createAssociateLink, sendAsso
         </div>
       </Panel>
       <div className="cards-grid">
+        {associates.length === 0 && (
+          <div className="empty-state">
+            <h3>No associates yet</h3>
+            <p>Create an intake link or send a profile invite to begin building the roster.</p>
+          </div>
+        )}
         {associates.map((associate) => (
           <article className="profile-card" key={associate.id}>
             <div className="profile-head">
@@ -2958,11 +2600,13 @@ function PayrollPage({
       <div className="two-col">
         <Panel title="Paychex Exception Board" action={`${payroll.exceptions.length} open`}>
           <div className="insight-list">
+            {payroll.exceptions.length === 0 && <p>No Paychex exceptions are open.</p>}
             {payroll.exceptions.map((item) => <p key={item}>{item}</p>)}
           </div>
         </Panel>
         <Panel title="Time Clock Feed" action={`${pendingClockSync} pending sync`}>
           <div className="list-stack">
+            {timeClockFeed.length === 0 && <p className="empty">No time clock records yet.</p>}
             {timeClockFeed.slice(0, 5).map((timecard) => {
               const actionLabel =
                 timecard.status === "Scheduled"
@@ -2995,6 +2639,7 @@ function PayrollPage({
         </Panel>
       </div>
       <Panel title="Payroll Entries" action={payroll.syncStatus}>
+        {payroll.entries.length === 0 && <p className="empty">No payroll entries yet. Completed timecards will appear here for review.</p>}
         {payroll.entries.map((entry) => (
           <ActionRow
             key={entry.id}
@@ -3020,6 +2665,7 @@ function InvoicesPage({ invoices, sendInvoiceReminder }) {
       />
       <div className="two-col">
         <Panel title="Receivables" action="Collections">
+          {invoices.length === 0 && <p className="empty">No invoices are loaded yet.</p>}
           {invoices.map((invoice) => (
             <ActionRow
               key={invoice.id}
@@ -3033,6 +2679,7 @@ function InvoicesPage({ invoices, sendInvoiceReminder }) {
         </Panel>
         <Panel title="Gmail Thread Health" action="One-click">
           <div className="insight-list">
+            {invoices.length === 0 && <p>Gmail invoice threads will appear here after invoices are imported or created.</p>}
             {invoices.map((invoice) => (
               <p key={invoice.id}>
                 {invoice.client}: {invoice.thread}. {invoice.reminders} reminder{invoice.reminders === 1 ? "" : "s"} logged.
@@ -3045,23 +2692,231 @@ function InvoicesPage({ invoices, sendInvoiceReminder }) {
   );
 }
 
-function CrmPage({ leads, runLeadOutreach, convertLeadToEvent }) {
+function CrmPage({ leads, runLeadOutreach, convertLeadToEvent, createEventProspect }) {
+  const [form, setForm] = useState({
+    company: "",
+    eventName: "",
+    contact: "",
+    email: "",
+    phone: "",
+    type: "Large Scale Event",
+    city: "",
+    venue: "",
+    eventDate: "",
+    startTime: "09:00",
+    endTime: "17:00",
+    expectedCapacity: "",
+    staffingNeeds: "",
+    requiredRoles: "Supervisor, Crowd Control",
+    securityNeeds: "",
+    profile: "",
+    value: "",
+    priority: 75,
+    stage: "New",
+    next: "",
+  });
+
+  const updateForm = (key, value) => setForm((current) => ({ ...current, [key]: value }));
+
+  const submitProspect = (event) => {
+    event.preventDefault();
+    if (!form.company.trim() && !form.eventName.trim()) return;
+
+    createEventProspect(form);
+    setForm({
+      company: "",
+      eventName: "",
+      contact: "",
+      email: "",
+      phone: "",
+      type: "Large Scale Event",
+      city: "",
+      venue: "",
+      eventDate: "",
+      startTime: "09:00",
+      endTime: "17:00",
+      expectedCapacity: "",
+      staffingNeeds: "",
+      requiredRoles: "Supervisor, Crowd Control",
+      securityNeeds: "",
+      profile: "",
+      value: "",
+      priority: 75,
+      stage: "New",
+      next: "",
+    });
+  };
+
+  const sortedLeads = sortByDateAsc(leads, (lead) =>
+    lead.eventDate ? new Date(`${lead.eventDate}T12:00:00`) : new Date(lead.scheduledFor || Date.now())
+  );
+
   return (
     <section className="page-grid">
       <PageIntro
         title="SSP CRM Engine"
-        text="Track opportunities for festivals, sports, concerts, venues, campuses, hospitals, executive protection, and recurring security contracts."
+        text="Build complete profiles for potential events, then turn qualified opportunities into outreach and staffing plans."
       />
-      <div className="cards-grid">
-        {leads.map((lead) => (
-          <article className="lead-card" key={lead.id}>
-            <span className="lead-score">{lead.priority}</span>
-            <p className="eyebrow">{lead.type}</p>
-            <h3>{lead.company}</h3>
-            <p>{lead.contact} - {lead.city}</p>
+
+      <Panel title="Create Event Prospect" action="CRM Intake">
+        <form className="crm-form" onSubmit={submitProspect}>
+          <label className="field">
+            <span>Organizer / Prospect</span>
+            <input value={form.company} onChange={(event) => updateForm("company", event.target.value)} placeholder="Organization name" />
+          </label>
+          <label className="field">
+            <span>Event Name</span>
+            <input value={form.eventName} onChange={(event) => updateForm("eventName", event.target.value)} placeholder="Event or activation name" />
+          </label>
+          <label className="field">
+            <span>Event Type</span>
+            <select value={form.type} onChange={(event) => updateForm("type", event.target.value)}>
+              <option>Large Scale Event</option>
+              <option>Festival</option>
+              <option>Sports Event</option>
+              <option>Concert</option>
+              <option>Venue Security</option>
+              <option>Executive Protection</option>
+              <option>Campus</option>
+              <option>Hospital</option>
+            </select>
+          </label>
+          <label className="field">
+            <span>Stage</span>
+            <select value={form.stage} onChange={(event) => updateForm("stage", event.target.value)}>
+              <option>New</option>
+              <option>Targeted</option>
+              <option>Outreach Sent</option>
+              <option>Discovery</option>
+              <option>Proposal</option>
+              <option>Won</option>
+            </select>
+          </label>
+          <label className="field">
+            <span>Event Date</span>
+            <input type="date" value={form.eventDate} onChange={(event) => updateForm("eventDate", event.target.value)} />
+          </label>
+          <label className="field">
+            <span>Start Time</span>
+            <input type="time" value={form.startTime} onChange={(event) => updateForm("startTime", event.target.value)} />
+          </label>
+          <label className="field">
+            <span>End Time</span>
+            <input type="time" value={form.endTime} onChange={(event) => updateForm("endTime", event.target.value)} />
+          </label>
+          <label className="field">
+            <span>City</span>
+            <input value={form.city} onChange={(event) => updateForm("city", event.target.value)} placeholder="City" />
+          </label>
+          <label className="field">
+            <span>Venue / Location</span>
+            <input value={form.venue} onChange={(event) => updateForm("venue", event.target.value)} placeholder="Venue, campus, route, or district" />
+          </label>
+          <label className="field">
+            <span>Expected Capacity</span>
+            <input type="number" min="0" value={form.expectedCapacity} onChange={(event) => updateForm("expectedCapacity", event.target.value)} placeholder="Estimated attendance" />
+          </label>
+          <label className="field">
+            <span>Potential Staffing Needs</span>
+            <input type="number" min="0" value={form.staffingNeeds} onChange={(event) => updateForm("staffingNeeds", event.target.value)} placeholder="Estimated posts" />
+          </label>
+          <label className="field">
+            <span>Estimated Value</span>
+            <input type="number" min="0" value={form.value} onChange={(event) => updateForm("value", event.target.value)} placeholder="Projected contract value" />
+          </label>
+          <label className="field">
+            <span>Priority</span>
+            <input type="number" min="0" max="100" value={form.priority} onChange={(event) => updateForm("priority", event.target.value)} />
+          </label>
+          <label className="field">
+            <span>Primary Contact</span>
+            <input value={form.contact} onChange={(event) => updateForm("contact", event.target.value)} placeholder="Name or department" />
+          </label>
+          <label className="field">
+            <span>Email</span>
+            <input type="email" value={form.email} onChange={(event) => updateForm("email", event.target.value)} placeholder="contact@email.com" />
+          </label>
+          <label className="field">
+            <span>Phone</span>
+            <input value={form.phone} onChange={(event) => updateForm("phone", event.target.value)} placeholder="Phone" />
+          </label>
+          <label className="field full">
+            <span>Role Mix</span>
+            <input value={form.requiredRoles} onChange={(event) => updateForm("requiredRoles", event.target.value)} placeholder="Supervisor, Armed, Crowd Control, Gate Screening" />
+          </label>
+          <label className="field full">
+            <span>Security Needs</span>
+            <textarea rows={3} value={form.securityNeeds} onChange={(event) => updateForm("securityNeeds", event.target.value)} placeholder="Access control, crowd flow, VIP escort, perimeter patrol, overnight asset protection..." />
+          </label>
+          <label className="field full">
+            <span>Full Event Profile</span>
+            <textarea rows={4} value={form.profile} onChange={(event) => updateForm("profile", event.target.value)} placeholder="Decision makers, site risks, entry points, timeline, vendor footprint, prior incidents, and follow-up notes." />
+          </label>
+          <label className="field full">
+            <span>Next Action</span>
+            <input value={form.next} onChange={(event) => updateForm("next", event.target.value)} placeholder="Prepare outreach, confirm decision maker, request site map..." />
+          </label>
+          <div className="button-row full">
+            <button type="submit">Add Event Prospect</button>
+          </div>
+        </form>
+      </Panel>
+
+      <div className="crm-profile-stack">
+        {sortedLeads.length === 0 && (
+          <div className="empty-state">
+            <h3>No event prospects yet</h3>
+            <p>Add a festival, sports event, venue opportunity, or executive protection target to build the CRM pipeline.</p>
+          </div>
+        )}
+        {sortedLeads.map((lead) => (
+          <article className="lead-card event-profile-card" key={lead.id}>
+            <div className="event-profile-head">
+              <div>
+                <p className="eyebrow">{lead.type}</p>
+                <h3>{lead.eventName || lead.company}</h3>
+                <p>{lead.company} - {lead.venue || "Venue TBD"} - {lead.city || "City TBD"}</p>
+              </div>
+              <span className="lead-score">{lead.priority}</span>
+            </div>
+
+            <div className="event-profile-metrics">
+              <div>
+                <span>Date</span>
+                <strong>{formatCrmDate(lead.eventDate)}</strong>
+              </div>
+              <div>
+                <span>Expected Capacity</span>
+                <strong>{lead.expectedCapacity ? Number(lead.expectedCapacity).toLocaleString() : "TBD"}</strong>
+              </div>
+              <div>
+                <span>Potential Staffing</span>
+                <strong>{lead.staffingNeeds || 0} posts</strong>
+              </div>
+              <div>
+                <span>Estimated Value</span>
+                <strong>{currency(lead.value || 0)}</strong>
+              </div>
+            </div>
+
             <div className="lead-meta">
-              <span>{currency(lead.value)}</span>
               <span>{lead.stage}</span>
+              <span>{lead.contact}</span>
+              {lead.email && <span>{lead.email}</span>}
+              {lead.phone && <span>{lead.phone}</span>}
+            </div>
+
+            <div className="event-profile-section">
+              <span>Role Mix</span>
+              <p>{lead.requiredRoles?.length ? lead.requiredRoles.join(", ") : "Role mix pending"}</p>
+            </div>
+            <div className="event-profile-section">
+              <span>Security Needs</span>
+              <p>{lead.securityNeeds || "Scope pending discovery."}</p>
+            </div>
+            <div className="event-profile-section">
+              <span>Full Profile</span>
+              <p>{lead.profile || "Decision maker, site risk, access points, and operating timeline still need to be captured."}</p>
             </div>
             <p className="next-action">{lead.next}</p>
             <div className="button-row">
@@ -3083,6 +2938,7 @@ function LinkedInPage({ content, events, queueContent, generateRecapFromEvent })
         text="Turn completed jobs and associate spotlights into content in SSP voice, then queue for LinkedIn publishing."
       />
       <Panel title="Content Queue" action="Publishing">
+        {content.length === 0 && <p className="empty">No LinkedIn drafts yet.</p>}
         {content.map((item) => (
           <ActionRow
             key={item.id}
@@ -3097,6 +2953,7 @@ function LinkedInPage({ content, events, queueContent, generateRecapFromEvent })
       </Panel>
       <Panel title="Generate From Operations" action="AI Draft">
         <div className="list-stack">
+          {events.length === 0 && <p className="empty">Add completed jobs or events to generate recap drafts.</p>}
           {events.map((event) => (
             <ActionRow
               key={event.id}
@@ -3181,7 +3038,9 @@ function CopilotPage({ stats, recommendations, invoices, leads, payroll, runLead
         ? `Collections priority: ${overdue}. Draft reminders today and keep them visible on the command dashboard.`
         : "No overdue invoices are active right now.";
     } else if (query.includes("lead") || query.includes("outreach")) {
-      text = `Best outreach targets today: ${leads.slice(0, 3).map((lead) => lead.company).join(", ")}.`;
+      text = leads.length
+        ? `Best outreach targets today: ${leads.slice(0, 3).map((lead) => lead.eventName || lead.company).join(", ")}.`
+        : "No CRM prospects are active yet. Add an event profile in the CRM engine first.";
     } else if (query.includes("payroll") || query.includes("paychex")) {
       text = `Paychex status is ${payroll.syncStatus}. ${payroll.exceptions.length} exception${payroll.exceptions.length === 1 ? "" : "s"} still need attention.`;
     }
@@ -3214,7 +3073,7 @@ function CopilotPage({ stats, recommendations, invoices, leads, payroll, runLead
       <Panel title="Approved AI Actions" action="One-click">
         <div className="button-column">
           <button onClick={syncPaychex}>Sync Paychex</button>
-          <button className="secondary" onClick={() => runLeadOutreach(leads[0].id)}>Draft outreach for top lead</button>
+          <button className="secondary" disabled={!leads.length} onClick={() => leads[0] && runLeadOutreach(leads[0].id)}>Draft outreach for top lead</button>
         </div>
         <div className="insight-list">
           <p>Auto-run stays off for external actions until you explicitly approve recurring automations.</p>
