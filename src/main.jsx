@@ -621,6 +621,8 @@ function App() {
   });
   const [paychexSyncBusy, setPaychexSyncBusy] = useState(false);
   const [paychexNotice, setPaychexNotice] = useState(null);
+  const [paychexAccessBusy, setPaychexAccessBusy] = useState(false);
+  const [paychexApprovalLink, setPaychexApprovalLink] = useState("");
   const [crmSourcingBusy, setCrmSourcingBusy] = useState(false);
   const [crmSourcingNotice, setCrmSourcingNotice] = useState(null);
   const [linkedinConnection, setLinkedinConnection] = useState({
@@ -1527,6 +1529,49 @@ function App() {
     }
   };
 
+  const requestPaychexAccess = async (displayId) => {
+    if (!canManagePaychex) {
+      setPaychexNotice({
+        tone: "bad",
+        title: "Paychex access required",
+        text: "Only owner and admin accounts can request Paychex client access.",
+      });
+      return null;
+    }
+
+    if (paychexAccessBusy) return null;
+
+    setPaychexAccessBusy(true);
+    setPaychexApprovalLink("");
+
+    try {
+      const payload = await requestJson("/api/paychex/client-access", {
+        method: "POST",
+        body: JSON.stringify({ displayId }),
+      });
+      setPaychexApprovalLink(payload.approvalLink || "");
+      setPaychexNotice({
+        tone: "good",
+        title: "Paychex client access requested",
+        text: payload.approvalLink
+          ? "Open the approval link in Paychex Flex and approve the SSP integration."
+          : `Client access request sent for display ID ${payload.displayId}.`,
+      });
+      logAction("Paychex", `Client access requested for Paychex display ID ${payload.displayId}.`);
+      return payload;
+    } catch (error) {
+      setPaychexNotice({
+        tone: "bad",
+        title: "Paychex client access failed",
+        text: error.message,
+      });
+      logAction("Paychex", `Client access request failed: ${error.message}`);
+      return null;
+    } finally {
+      setPaychexAccessBusy(false);
+    }
+  };
+
   const approvePayrollEntry = (entryId) => {
     setPayroll((current) => {
       const normalized = normalizePayrollState(current);
@@ -1878,8 +1923,11 @@ function App() {
     applyRecommendation,
     sendInvoiceReminder,
     syncPaychex,
+    requestPaychexAccess,
     paychexConnection,
     paychexSyncBusy,
+    paychexAccessBusy,
+    paychexApprovalLink,
     paychexNotice,
     approvePayrollEntry,
     clockAssociateIn,
@@ -2862,13 +2910,17 @@ function PayrollPage({
   payroll,
   timecards,
   syncPaychex,
+  requestPaychexAccess,
   approvePayrollEntry,
   clockAssociateIn,
   clockAssociateOut,
   paychexConnection,
   paychexSyncBusy,
+  paychexAccessBusy,
+  paychexApprovalLink,
   paychexNotice,
 }) {
+  const [displayId, setDisplayId] = useState("");
   const outstanding = payroll.entries.filter((entry) => entry.status !== "Approved").length;
   const timeClockFeed = sortByDateAsc(
     timecards.filter((timecard) => ["Scheduled", "On Duty", "Completed"].includes(timecard.status)),
@@ -2914,6 +2966,52 @@ function PayrollPage({
             {Array.isArray(paychexConnection?.missing) && paychexConnection.missing.length > 0 && (
               <p>Missing config: {paychexConnection.missing.join(", ")}</p>
             )}
+          </div>
+        </Panel>
+        <Panel
+          title="Paychex Setup"
+          action="Activation"
+        >
+          <div className="insight-list">
+            <p>Your Paychex Flex login approves the integration, but API sync uses a Paychex app key and secret behind the scenes.</p>
+            <p>To finish activation, create or retrieve the Connected Application in Paychex Flex, then add the API key, secret, and company mapping in Vercel.</p>
+          </div>
+          <div className="form-grid compact top-gap">
+            <label className="field full">
+              <span>Client Display ID</span>
+              <input
+                type="text"
+                inputMode="numeric"
+                placeholder="8-digit Paychex display ID"
+                value={displayId}
+                onChange={(event) => setDisplayId(event.target.value.replace(/\D/g, "").slice(0, 8))}
+              />
+            </label>
+          </div>
+          <div className="button-row top-gap">
+            <button
+              className="secondary"
+              onClick={() => requestPaychexAccess(displayId)}
+              disabled={paychexAccessBusy || displayId.length !== 8}
+            >
+              {paychexAccessBusy ? "Requesting..." : "Request Client Access"}
+            </button>
+            <a
+              className={`inline-link ${paychexApprovalLink ? "" : "disabled"}`}
+              href={paychexApprovalLink || "#"}
+              target="_blank"
+              rel="noreferrer"
+              onClick={(event) => {
+                if (!paychexApprovalLink) event.preventDefault();
+              }}
+            >
+              Open Approval Link
+            </a>
+          </div>
+          <div className="tag-wrap top-gap">
+            <span>Needs API key + secret</span>
+            <span>Needs company mapping</span>
+            <span>Supports worker check sync</span>
           </div>
         </Panel>
         <Panel
