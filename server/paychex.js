@@ -507,7 +507,7 @@ export async function getPaychexStatus() {
       companyId: company.companyId,
       displayId: company.displayId,
       componentName: component.name,
-      summary: "Paychex is connected and ready to receive SSP clocked hours.",
+      summary: "Paychex is connected and ready to create SSP worker checks for payroll review.",
     });
   } catch (error) {
     return summarizeConnection(config, {
@@ -689,7 +689,7 @@ export async function syncTimecardsToPaychex({ associates = [], payrollEntries =
       summary:
         summary.failed > 0
           ? "Paychex sync completed with follow-up needed."
-          : "Paychex sync completed successfully.",
+          : "Paychex checks were updated successfully and are ready for final payroll review in Flex.",
     }),
     payPeriod: {
       payPeriodId: payPeriod.payPeriodId,

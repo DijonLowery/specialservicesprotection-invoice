@@ -107,6 +107,8 @@ const LINKEDIN_GOALS = [
   "Create associate spotlight and recruiting content",
 ];
 
+const PAYCHEX_FLEX_URL = "https://myapps.paychex.com/landing_remote/login.do?lang=en";
+
 const PAYROLL_SEED = {
   period: "Apr 1 - Apr 15",
   periodStart: "2026-04-01T00:00:00-05:00",
@@ -114,6 +116,8 @@ const PAYROLL_SEED = {
   reviewCloseAt: "2026-04-15T17:00:00-05:00",
   syncStatus: "Awaiting Sync",
   lastSync: "Never",
+  paychexPayPeriodId: "",
+  paychexCheckDate: "",
   entries: [],
   exceptions: [],
   history: [],
@@ -1481,8 +1485,10 @@ function App() {
         const normalized = normalizePayrollState(current);
         return {
           ...normalized,
-          syncStatus: result.summary.failed > 0 ? "Attention Required" : "Synced",
+          syncStatus: result.summary.failed > 0 ? "Attention Required" : "Ready for Final Review",
           lastSync: `Today ${stamp}`,
+          paychexPayPeriodId: result.payPeriod?.payPeriodId || normalized.paychexPayPeriodId || "",
+          paychexCheckDate: result.payPeriod?.checkDate || normalized.paychexCheckDate || "",
           entries: normalized.entries.map((entry) =>
             syncedAssociateIds.has(entry.associateId) && entry.status !== "Blocked"
               ? { ...entry, status: "Approved", issue: "None" }
@@ -1504,13 +1510,13 @@ function App() {
         text:
           result.summary.failed > 0
             ? `${result.summary.synced} synced, ${result.summary.failed} need attention.`
-            : `${result.summary.synced} completed timecard${result.summary.synced === 1 ? "" : "s"} synced into Paychex.`,
+            : `${result.summary.synced} completed timecard${result.summary.synced === 1 ? "" : "s"} synced into Paychex. Final payroll review is ready in Flex.`,
       });
       logAction(
         "Paychex",
         result.summary.failed > 0
           ? `Paychex sync finished. ${result.summary.synced} synced, ${result.summary.failed} need review.`
-          : `Paychex sync completed. ${result.summary.synced} completed timecard${result.summary.synced === 1 ? "" : "s"} posted.`
+          : `Paychex sync completed. ${result.summary.synced} completed timecard${result.summary.synced === 1 ? "" : "s"} posted and staged for payroll review in Flex.`
       );
     } catch (error) {
       setPayroll((current) => ({
@@ -1570,6 +1576,13 @@ function App() {
     } finally {
       setPaychexAccessBusy(false);
     }
+  };
+
+  const openPaychexFlex = () => {
+    if (typeof window !== "undefined") {
+      window.open(PAYCHEX_FLEX_URL, "_blank", "noopener,noreferrer");
+    }
+    logAction("Paychex", "Opened Paychex Flex for payroll review.");
   };
 
   const approvePayrollEntry = (entryId) => {
@@ -1923,6 +1936,7 @@ function App() {
     applyRecommendation,
     sendInvoiceReminder,
     syncPaychex,
+    openPaychexFlex,
     requestPaychexAccess,
     paychexConnection,
     paychexSyncBusy,
@@ -2910,6 +2924,7 @@ function PayrollPage({
   payroll,
   timecards,
   syncPaychex,
+  openPaychexFlex,
   requestPaychexAccess,
   approvePayrollEntry,
   clockAssociateIn,
@@ -2922,29 +2937,41 @@ function PayrollPage({
 }) {
   const [displayId, setDisplayId] = useState("");
   const outstanding = payroll.entries.filter((entry) => entry.status !== "Approved").length;
+  const approvedEntries = payroll.entries.filter((entry) => entry.status === "Approved").length;
   const timeClockFeed = sortByDateAsc(
     timecards.filter((timecard) => ["Scheduled", "On Duty", "Completed"].includes(timecard.status)),
     (timecard) => new Date(timecard.scheduledStart)
   );
   const pendingClockSync = timeClockFeed.filter((timecard) => timecard.paychexStatus === "Pending Sync").length;
+  const syncedChecks = timecards.filter((timecard) => timecard.paychexStatus === "Synced").length;
+  const readyForFinalReview =
+    paychexConnection?.readyForSync && syncedChecks > 0 && payroll.exceptions.length === 0;
+  const checkDateLabel = payroll.paychexCheckDate
+    ? formatDateLabel(payroll.paychexCheckDate)
+    : "Not posted yet";
 
   return (
     <section className="page-grid">
       <PageIntro
         title="Payroll + Paychex"
-        text="SSP Command tracks payroll readiness, exceptions, and completed timecards while Paychex remains the payroll system of record."
+        text="SSP Command approves time, creates worker checks in Paychex, and stages payroll for final review in Flex."
         action={
-          <button onClick={syncPaychex} disabled={paychexSyncBusy}>
-            {paychexSyncBusy ? "Syncing..." : "Sync Paychex"}
-          </button>
+          <div className="button-row">
+            <button onClick={syncPaychex} disabled={paychexSyncBusy}>
+              {paychexSyncBusy ? "Syncing..." : "Sync Checks"}
+            </button>
+            <button className="secondary" onClick={openPaychexFlex}>
+              Open Paychex
+            </button>
+          </div>
         }
       />
       <KpiStrip
         items={[
           ["Pay Period", payroll.period],
           ["Sync Status", payroll.syncStatus],
-          ["Last Sync", payroll.lastSync],
-          ["Pending Entries", outstanding],
+          ["Synced Checks", syncedChecks],
+          ["Check Date", checkDateLabel],
         ]}
       />
       <div className="two-col">
@@ -2969,12 +2996,26 @@ function PayrollPage({
           </div>
         </Panel>
         <Panel
+          title="Payroll Processing"
+          action={readyForFinalReview ? "Ready" : "In Progress"}
+        >
+          <div className="insight-list">
+            <p>Approved payroll entries: {approvedEntries} of {payroll.entries.length || 0}.</p>
+            <p>Checks synced into Paychex: {syncedChecks}.</p>
+            <p>Pending SSP review items: {outstanding} and {payroll.exceptions.length} open exception{payroll.exceptions.length === 1 ? "" : "s"}.</p>
+            <p>Final payroll submission still happens inside Paychex Flex after review.</p>
+          </div>
+          <div className="button-row top-gap">
+            <button className="secondary" onClick={openPaychexFlex}>Review in Paychex</button>
+          </div>
+        </Panel>
+        <Panel
           title="Paychex Setup"
           action="Activation"
         >
           <div className="insight-list">
-            <p>Your Paychex Flex login approves the integration, but API sync uses a Paychex app key and secret behind the scenes.</p>
-            <p>To finish activation, create or retrieve the Connected Application in Paychex Flex, then add the API key, secret, and company mapping in Vercel.</p>
+            <p>Your Paychex Flex login approves the integration, while the SSP dashboard uses the connected app key, secret, and company mapping behind the scenes.</p>
+            <p>The public Paychex payroll API supports creating and updating unprocessed worker checks so operations can push hours before final payroll review in Flex.</p>
           </div>
           <div className="form-grid compact top-gap">
             <label className="field full">
@@ -3012,6 +3053,7 @@ function PayrollPage({
             <span>Needs API key + secret</span>
             <span>Needs company mapping</span>
             <span>Supports worker check sync</span>
+            <span>Final review in Flex</span>
           </div>
         </Panel>
         <Panel
