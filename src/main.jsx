@@ -2944,8 +2944,9 @@ function PayrollPage({
   );
   const pendingClockSync = timeClockFeed.filter((timecard) => timecard.paychexStatus === "Pending Sync").length;
   const syncedChecks = timecards.filter((timecard) => timecard.paychexStatus === "Synced").length;
+  const paychexReady = Boolean(paychexConnection?.readyForSync);
   const readyForFinalReview =
-    paychexConnection?.readyForSync && syncedChecks > 0 && payroll.exceptions.length === 0;
+    paychexReady && syncedChecks > 0 && payroll.exceptions.length === 0;
   const checkDateLabel = payroll.paychexCheckDate
     ? formatDateLabel(payroll.paychexCheckDate)
     : "Not posted yet";
@@ -3010,51 +3011,68 @@ function PayrollPage({
           </div>
         </Panel>
         <Panel
-          title="Paychex Setup"
-          action="Activation"
+          title="Paychex Integration"
+          action={paychexReady ? "Connected" : "Activation"}
         >
-          <div className="insight-list">
-            <p>Your Paychex Flex login approves the integration, while the SSP dashboard uses the connected app key, secret, and company mapping behind the scenes.</p>
-            <p>The public Paychex payroll API supports creating and updating unprocessed worker checks so operations can push hours before final payroll review in Flex.</p>
-          </div>
-          <div className="form-grid compact top-gap">
-            <label className="field full">
-              <span>Client Display ID</span>
-              <input
-                type="text"
-                inputMode="numeric"
-                placeholder="8-digit Paychex display ID"
-                value={displayId}
-                onChange={(event) => setDisplayId(event.target.value.replace(/\D/g, "").slice(0, 8))}
-              />
-            </label>
-          </div>
-          <div className="button-row top-gap">
-            <button
-              className="secondary"
-              onClick={() => requestPaychexAccess(displayId)}
-              disabled={paychexAccessBusy || displayId.length !== 8}
-            >
-              {paychexAccessBusy ? "Requesting..." : "Request Client Access"}
-            </button>
-            <a
-              className={`inline-link ${paychexApprovalLink ? "" : "disabled"}`}
-              href={paychexApprovalLink || "#"}
-              target="_blank"
-              rel="noreferrer"
-              onClick={(event) => {
-                if (!paychexApprovalLink) event.preventDefault();
-              }}
-            >
-              Open Approval Link
-            </a>
-          </div>
-          <div className="tag-wrap top-gap">
-            <span>Needs API key + secret</span>
-            <span>Needs company mapping</span>
-            <span>Supports worker check sync</span>
-            <span>Final review in Flex</span>
-          </div>
+          {paychexReady ? (
+            <>
+              <div className="insight-list">
+                <p>Nothing else is needed here. SSP is already connected to Paychex.</p>
+                <p>Use Sync Checks when completed timecards are ready, then review and submit payroll in Paychex Flex.</p>
+              </div>
+              <div className="tag-wrap top-gap">
+                <span>API key active</span>
+                <span>Company mapped</span>
+                <span>Worker checks enabled</span>
+                <span>Final review in Flex</span>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="insight-list">
+                <p>Your Paychex Flex login approves the integration, while the SSP dashboard uses the connected app key, secret, and company mapping behind the scenes.</p>
+                <p>The public Paychex payroll API supports creating and updating unprocessed worker checks so operations can push hours before final payroll review in Flex.</p>
+              </div>
+              <div className="form-grid compact top-gap">
+                <label className="field full">
+                  <span>Client Display ID</span>
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    placeholder="8-digit Paychex display ID"
+                    value={displayId}
+                    onChange={(event) => setDisplayId(event.target.value.replace(/\D/g, "").slice(0, 8))}
+                  />
+                </label>
+              </div>
+              <div className="button-row top-gap">
+                <button
+                  className="secondary"
+                  onClick={() => requestPaychexAccess(displayId)}
+                  disabled={paychexAccessBusy || displayId.length !== 8}
+                >
+                  {paychexAccessBusy ? "Requesting..." : "Request Client Access"}
+                </button>
+                <a
+                  className={`inline-link ${paychexApprovalLink ? "" : "disabled"}`}
+                  href={paychexApprovalLink || "#"}
+                  target="_blank"
+                  rel="noreferrer"
+                  onClick={(event) => {
+                    if (!paychexApprovalLink) event.preventDefault();
+                  }}
+                >
+                  Open Approval Link
+                </a>
+              </div>
+              <div className="tag-wrap top-gap">
+                <span>Needs API key + secret</span>
+                <span>Needs company mapping</span>
+                <span>Supports worker check sync</span>
+                <span>Final review in Flex</span>
+              </div>
+            </>
+          )}
         </Panel>
         <Panel
           title={paychexNotice?.title || "Sync Activity"}
