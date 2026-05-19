@@ -481,12 +481,12 @@ function buildRecommendations(events, associates) {
         const cityScore = isMetroMatch(event.city, associate.city) ? 24 : 10;
         const credentialScore = roleMatches * 18;
         const loadScore = Math.max(0, 24 - Math.round(associate.hours / 2));
-        const armedScore = event.roles.includes("Armed") ? (associate.armed ? 16 : -18) : 6;
+        const specialtyScore = event.roles.includes("Specialized") ? (associate.specialtyReady ? 16 : -18) : 6;
         const readinessScore = Math.round(associate.score / 5);
 
         return {
           ...associate,
-          matchScore: cityScore + credentialScore + loadScore + armedScore + readinessScore,
+          matchScore: cityScore + credentialScore + loadScore + specialtyScore + readinessScore,
         };
       })
       .sort((left, right) => right.matchScore - left.matchScore);
@@ -1031,7 +1031,7 @@ function App() {
         phone: "",
         email,
         status: "Profile Pending",
-        armed: false,
+        specialtyReady: false,
         availability: [],
         certs: [],
         preferredRoles: [],
@@ -1085,7 +1085,7 @@ function App() {
         phone: payload.phone || "",
         email: fallbackEmail,
         status: "Ready",
-        armed: Boolean(payload.armed),
+        specialtyReady: Boolean(payload.specialtyReady),
         availability: payload.availability || [],
         certs: payload.certs || [],
         preferredRoles: payload.preferredRoles || [],
@@ -2255,7 +2255,7 @@ function AssociateInviteScreen({ invite, associate, onComplete }) {
     city: associate?.city === "Pending" ? "" : associate?.city || "",
     phone: associate?.phone || "",
     role: associate?.role || "Officer",
-    armed: associate?.armed || false,
+    specialtyReady: associate?.specialtyReady || false,
     radius: associate?.radius || 20,
     certs: associate?.certs?.join(", ") || "",
     preferredRoles: associate?.preferredRoles?.join(", ") || "",
@@ -2309,7 +2309,7 @@ function AssociateInviteScreen({ invite, associate, onComplete }) {
           </label>
           <label className="field full">
             <span>Certifications</span>
-            <input value={form.certs} onChange={(event) => setForm({ ...form, certs: event.target.value })} placeholder="Armed, Crowd Control, Executive Protection" />
+            <input value={form.certs} onChange={(event) => setForm({ ...form, certs: event.target.value })} placeholder="Crowd Control, Executive Protection, Access Control" />
           </label>
           <label className="field full">
             <span>Preferred Roles</span>
@@ -2324,8 +2324,8 @@ function AssociateInviteScreen({ invite, associate, onComplete }) {
             <textarea value={form.notes} onChange={(event) => setForm({ ...form, notes: event.target.value })} rows={4} />
           </label>
           <label className="checkbox-row full">
-            <input type="checkbox" checked={form.armed} onChange={(event) => setForm({ ...form, armed: event.target.checked })} />
-            <span>Armed status is current and accurate</span>
+            <input type="checkbox" checked={form.specialtyReady} onChange={(event) => setForm({ ...form, specialtyReady: event.target.checked })} />
+            <span>Specialty assignment status is current and accurate</span>
           </label>
         </div>
         <div className="button-row top-gap">
@@ -2337,7 +2337,7 @@ function AssociateInviteScreen({ invite, associate, onComplete }) {
                 city: form.city,
                 phone: form.phone,
                 role: form.role,
-                armed: form.armed,
+                specialtyReady: form.specialtyReady,
                 radius: form.radius,
                 certs: form.certs.split(",").map((item) => item.trim()).filter(Boolean),
                 preferredRoles: form.preferredRoles.split(",").map((item) => item.trim()).filter(Boolean),
@@ -2750,7 +2750,7 @@ function SchedulingPage({ recommendations, applyRecommendation, assignmentBook }
     <section className="page-grid">
       <PageIntro
         title="Scheduling Engine"
-        text="Recommendations are generated from city, availability, certifications, armed status, travel radius, and current load. Apply a team to move it into the assignment plan."
+        text="Recommendations are generated from city, availability, certifications, specialty assignment status, travel radius, and current load. Apply a team to move it into the assignment plan."
       />
       <div className="schedule-grid">
         {recommendations.length === 0 && (
@@ -3197,7 +3197,7 @@ function CrmPage({
     minimumLeadDays: 120,
     horizonMonths: 18,
     decisionSignals: "RFP, vendor application, sponsorship packet, event permit, planning committee",
-    notes: "Prioritize events where SSP can provide crowd control, armed posts, VIP escort, access control, overnight asset protection, or full venue security.",
+    notes: "Prioritize events where SSP can provide crowd control, VIP escort, access control, overnight asset protection, or full venue security.",
   });
   const [form, setForm] = useState({
     company: "",
@@ -3458,7 +3458,7 @@ function CrmPage({
           </label>
           <label className="field full">
             <span>Role Mix</span>
-            <input value={form.requiredRoles} onChange={(event) => updateForm("requiredRoles", event.target.value)} placeholder="Supervisor, Armed, Crowd Control, Gate Screening" />
+            <input value={form.requiredRoles} onChange={(event) => updateForm("requiredRoles", event.target.value)} placeholder="Supervisor, Crowd Control, Gate Screening" />
           </label>
           <label className="field full">
             <span>Security Needs</span>
@@ -4033,8 +4033,8 @@ function AssociateProfilePage({ associate, onSave }) {
           <textarea value={draft.notes} onChange={(event) => setDraft({ ...draft, notes: event.target.value })} rows={5} />
         </label>
         <label className="checkbox-row full">
-          <input type="checkbox" checked={draft.armed} onChange={(event) => setDraft({ ...draft, armed: event.target.checked })} />
-          <span>Armed status is current and accurate</span>
+          <input type="checkbox" checked={draft.specialtyReady} onChange={(event) => setDraft({ ...draft, specialtyReady: event.target.checked })} />
+          <span>Specialty assignment status is current and accurate</span>
         </label>
       </div>
     </section>
