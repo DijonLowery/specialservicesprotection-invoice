@@ -201,7 +201,7 @@ export const SSP_WEBSITE_HTML = String.raw`
 </section>
 <div class="tbar">
   <div class="ti"><div class="tid"></div>Licensed &amp; Bonded in Georgia</div>
-  <div class="ti"><div class="tid"></div>Armed &amp; Unarmed Officers</div>
+  <div class="ti"><div class="tid"></div>Professional Security Officers</div>
   <div class="ti"><div class="tid"></div>24/7 Availability</div>
   <div class="ti"><div class="tid"></div>Nationwide &amp; International Deployment</div>
   <div class="ti"><div class="tid"></div>Background-Checked Personnel</div>
@@ -236,8 +236,8 @@ export const SSP_WEBSITE_HTML = String.raw`
     </div>
     <div class="sgrid">
       <div class="svc"><div class="svci">&#128737;</div><div class="svcn">Event Security</div><p class="svcd">Professional security for corporate events, concerts, galas, sporting events, and private functions &mdash; any scale, any location.</p><a class="svcl" href="#contact">Inquire &rarr;</a></div>
-      <div class="svc"><div class="svci">&#9889;</div><div class="svcn">Armed Guards</div><p class="svcd">Licensed armed security officers providing the highest level of deterrence for locations requiring elevated threat response.</p><a class="svcl" href="#contact">Inquire &rarr;</a></div>
-      <div class="svc"><div class="svci">&#128309;</div><div class="svcn">Unarmed Guards</div><p class="svcd">Professional unarmed officers for access control, customer service environments, and locations requiring a visible security presence.</p><a class="svcl" href="#contact">Inquire &rarr;</a></div>
+      <div class="svc"><div class="svci">&#9889;</div><div class="svcn">Security Officers</div><p class="svcd">Licensed security professionals providing a visible deterrent and dependable site support for locations requiring elevated attention.</p><a class="svcl" href="#contact">Inquire &rarr;</a></div>
+      <div class="svc"><div class="svci">&#128309;</div><div class="svcn">Access Control</div><p class="svcd">Professional officers for entry management, customer service environments, and locations requiring a steady security presence.</p><a class="svcl" href="#contact">Inquire &rarr;</a></div>
       <div class="svc"><div class="svci">&#127970;</div><div class="svcn">Corporate Security</div><p class="svcd">Comprehensive security programs for office buildings, campuses, and commercial properties &mdash; protecting people, assets, and information.</p><a class="svcl" href="#contact">Inquire &rarr;</a></div>
       <div class="svc"><div class="svci">&#127968;</div><div class="svcn">Residential Security</div><p class="svcd">Protecting homes, gated communities, and private estates with dedicated officers and patrol services.</p><a class="svcl" href="#contact">Inquire &rarr;</a></div>
       <div class="svc"><div class="svci">&#128660;</div><div class="svcn">Mobile Patrol</div><p class="svcd">Regular patrol routes covering multiple locations, providing cost-effective security visibility and rapid incident response.</p><a class="svcl" href="#contact">Inquire &rarr;</a></div>
@@ -328,7 +328,7 @@ export const SSP_WEBSITE_HTML = String.raw`
       <div class="fr"><div class="ff"><label class="fl">First Name</label><input class="fi" type="text" placeholder="First" required></div><div class="ff"><label class="fl">Last Name</label><input class="fi" type="text" placeholder="Last" required></div></div>
       <div class="ff"><label class="fl">Email</label><input class="fi" type="email" placeholder="your@email.com" required></div>
       <div class="ff"><label class="fl">Phone</label><input class="fi" type="tel" placeholder="(000) 000-0000"></div>
-      <div class="ff"><label class="fl">Service Needed</label><select class="fi"><option value="">Select a service...</option><option>Personal Security Detail (PSD)</option><option>Crowd Management</option><option>Risk Assessment &amp; Planning</option><option>Event Security</option><option>Armed Guards</option><option>Unarmed Guards</option><option>Corporate Security</option><option>Residential Security</option><option>Mobile Patrol</option><option>Other</option></select></div>
+      <div class="ff"><label class="fl">Service Needed</label><select class="fi"><option value="">Select a service...</option><option>Personal Security Detail (PSD)</option><option>Crowd Management</option><option>Risk Assessment &amp; Planning</option><option>Event Security</option><option>Security Officers</option><option>Access Control</option><option>Corporate Security</option><option>Residential Security</option><option>Mobile Patrol</option><option>Other</option></select></div>
       <div class="ff"><label class="fl">Message</label><textarea class="fi" placeholder="Tell us about your security needs..."></textarea></div>
       <button type="submit" class="bs" style="width:100%;">Send Message &rarr;</button>
       <div class="smsg" id="fSuccess">Message sent. We will be in touch within 2 hours.</div>
@@ -338,7 +338,7 @@ export const SSP_WEBSITE_HTML = String.raw`
 <footer>
   <div class="ftop">
     <div><img src="/image.png" alt="SSP" style="width:52px;height:52px;border-radius:50%;object-fit:cover;margin-bottom:16px;display:block;opacity:0.9;"><div class="fbn">Special Services Protection</div><div class="fbs">Atlanta, Georgia &mdash; Est. 2018</div><p class="fbd">A premier provider of professional security solutions. Founded in Atlanta. Deployed nationwide and internationally. Licensed, bonded, and committed to excellence.</p></div>
-    <div><div class="fct">Services</div><div class="fcl"><a href="#services">Personal Security Details</a><a href="#services">Crowd Management</a><a href="#services">Risk Assessment</a><a href="#services">Event Security</a><a href="#services">Armed &amp; Unarmed Guards</a><a href="#services">Mobile Patrol</a></div></div>
+    <div><div class="fct">Services</div><div class="fcl"><a href="#services">Personal Security Details</a><a href="#services">Crowd Management</a><a href="#services">Risk Assessment</a><a href="#services">Event Security</a><a href="#services">Security Officer Services</a><a href="#services">Mobile Patrol</a></div></div>
     <div><div class="fct">Company</div><div class="fcl"><a href="#about">Our Story</a><a href="#founder">The Founder</a><a href="#contact">Contact</a><a href="#" onclick="openQuote();return false;">Request Quote</a></div></div>
     <div><div class="fct">Deployment</div><div class="fcl"><a href="#">Atlanta, GA</a><a href="#">Greater Georgia</a><a href="#">Nationwide</a><a href="#">International</a></div></div>
   </div>
@@ -353,7 +353,7 @@ export const SSP_WEBSITE_HTML = String.raw`
       <div class="fr"><div class="ff"><label class="fl">First Name</label><input class="fi" type="text" placeholder="First" required></div><div class="ff"><label class="fl">Last Name</label><input class="fi" type="text" placeholder="Last" required></div></div>
       <div class="ff"><label class="fl">Company / Organization</label><input class="fi" type="text" placeholder="Optional"></div>
       <div class="fr"><div class="ff"><label class="fl">Email</label><input class="fi" type="email" placeholder="your@email.com" required></div><div class="ff"><label class="fl">Phone</label><input class="fi" type="tel" placeholder="(000) 000-0000"></div></div>
-      <div class="fr"><div class="ff"><label class="fl">Service Required</label><select class="fi"><option value="">Select...</option><option>Personal Security Detail</option><option>Crowd Management</option><option>Risk Assessment</option><option>Event Security</option><option>Armed Guards</option><option>Unarmed Guards</option><option>Corporate Security</option><option>Residential Security</option><option>Mobile Patrol</option><option>Multiple Services</option></select></div><div class="ff"><label class="fl">Event / Start Date</label><input class="fi" type="date"></div></div>
+      <div class="fr"><div class="ff"><label class="fl">Service Required</label><select class="fi"><option value="">Select...</option><option>Personal Security Detail</option><option>Crowd Management</option><option>Risk Assessment</option><option>Event Security</option><option>Security Officers</option><option>Access Control</option><option>Corporate Security</option><option>Residential Security</option><option>Mobile Patrol</option><option>Multiple Services</option></select></div><div class="ff"><label class="fl">Event / Start Date</label><input class="fi" type="date"></div></div>
       <div class="ff"><label class="fl">Additional Details</label><textarea class="fi" placeholder="Describe your security needs..."></textarea></div>
       <button type="submit" class="bs" style="width:100%;">Submit Quote Request &rarr;</button>
       <div class="smsg" id="qSuccess">Quote request received. We will contact you within 24 hours.</div>
