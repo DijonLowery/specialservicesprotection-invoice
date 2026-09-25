@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { createRoot } from "react-dom/client";
+import ApplicationPage from "./ApplicationPage";
 import { SSP_WEBSITE_CSS, SSP_WEBSITE_HTML } from "./sspWebsiteTemplate";
 import "./styles.css";
 
@@ -379,6 +380,10 @@ function parseLocationPath() {
 
   if (segments.length === 0) {
     return { mode: "marketing", page: null };
+  }
+
+  if (segments[0] === "apply" || segments[0] === "careers") {
+    return { mode: "application", page: null };
   }
 
   if (segments[0] === "login") {
@@ -833,6 +838,11 @@ function App() {
 
     if (routeMode === "marketing") {
       document.title = "Special Services Protection | The Standard";
+      return;
+    }
+
+    if (routeMode === "application") {
+      document.title = "Join the SSP Team | Special Services Protection";
       return;
     }
 
@@ -1978,6 +1988,10 @@ function App() {
 
   if (routeMode === "marketing") {
     return <WebsiteHome onLogin={goToLogin} />;
+  }
+
+  if (routeMode === "application") {
+    return <ApplicationPage onBack={goToWebsite} />;
   }
 
   if (!currentUser) {
