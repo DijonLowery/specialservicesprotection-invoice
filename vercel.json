@@ -1,0 +1,20 @@
+{
+  "rewrites": [
+    {
+      "source": "/apply",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/apply/",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/careers",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/careers/",
+      "destination": "/index.html"
+    }
+  ]
+}
