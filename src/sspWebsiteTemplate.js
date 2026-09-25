@@ -145,7 +145,7 @@ footer{background:var(--b);border-top:1px solid rgba(255,255,255,.04);padding:72
 .mt{font-family:"Playfair Display",serif;font-size:26px;color:var(--sb);margin-bottom:7px;}
 .ms{font-size:12px;color:var(--tm);margin-bottom:32px;font-weight:300;}
 .smsg{display:none;margin-top:14px;padding:14px;border:1px solid rgba(200,200,200,.12);font-size:12px;color:var(--s);}
-@media(max-width:1100px){.agrid,.fgrid{grid-template-columns:1fr;}.aimg,.fimg{height:460px;}.atxt,.ftxt{padding:60px 40px;}.wgrid,.cgrid{grid-template-columns:1fr;}.ftop{grid-template-columns:1fr 1fr;}.slist{grid-template-columns:1fr 1fr;}.sgrid{grid-template-columns:1fr 1fr;}}
+@media(max-width:1100px){.nlinks{gap:20px}.agrid,.fgrid{grid-template-columns:1fr;}.aimg,.fimg{height:460px;}.atxt,.ftxt{padding:60px 40px;}.wgrid,.cgrid{grid-template-columns:1fr;}.ftop{grid-template-columns:1fr 1fr;}.slist{grid-template-columns:1fr 1fr;}.sgrid{grid-template-columns:1fr 1fr;}}
 @media(max-width:768px){#nav{padding:0 24px;}.nlinks,.ncta{display:none;}.hbtn{display:flex;}.sec,.ctaw,footer,.tbar,.divl{padding-left:24px;padding-right:24px;}.hin{padding:0 24px;padding-top:70px;}.agrid,.fgrid,.wgrid,.cgrid,.fr,.ftop{grid-template-columns:1fr;}.atxt,.ftxt{padding:48px 24px;}.slist,.sgrid{grid-template-columns:1fr;}.ggrid{grid-template-columns:1fr 1fr;}.gi-w{aspect-ratio:4/3;}.gi-p{aspect-ratio:4/3;}.hstats{gap:20px;}}
 @media(max-width:560px){h1{font-size:54px;}.hstats{flex-direction:column;gap:18px;}.hstat{border-left:none;border-top:1px solid rgba(200,200,200,.1);padding-left:0;padding-top:16px;width:100%;}.ggrid{grid-template-columns:1fr;}.ctab{flex-direction:column;}.bs,.bo{width:100%;justify-content:center;}.modal{padding:40px 24px;}.fr{grid-template-columns:1fr;}.fbot{flex-direction:column;align-items:flex-start;}}
 `;
@@ -164,6 +164,7 @@ export const SSP_WEBSITE_HTML = String.raw`
     <a href="#services">Services</a>
     <a href="#why">Why SSP</a>
     <a href="#gallery">Gallery</a>
+    <a href="/apply">Careers</a>
     <a href="#contact">Contact</a>
     <a href="/login" data-login-link="true">Employees</a>
   </div>
@@ -175,6 +176,7 @@ export const SSP_WEBSITE_HTML = String.raw`
   <a href="#services" onclick="closeMenu()">Services</a>
   <a href="#why" onclick="closeMenu()">Why SSP</a>
   <a href="#gallery" onclick="closeMenu()">Gallery</a>
+  <a href="/apply" onclick="closeMenu()">Careers</a>
   <a href="#contact" onclick="closeMenu()">Contact</a>
   <a href="/login" data-login-link="true" onclick="closeMenu()">Employees</a>
 </div>
@@ -339,7 +341,7 @@ export const SSP_WEBSITE_HTML = String.raw`
   <div class="ftop">
     <div><img src="/image.png" alt="SSP" style="width:52px;height:52px;border-radius:50%;object-fit:cover;margin-bottom:16px;display:block;opacity:0.9;"><div class="fbn">Special Services Protection</div><div class="fbs">Atlanta, Georgia &mdash; Est. 2018</div><p class="fbd">A premier provider of professional security solutions. Founded in Atlanta. Deployed nationwide and internationally. Licensed, bonded, and committed to excellence.</p></div>
     <div><div class="fct">Services</div><div class="fcl"><a href="#services">Personal Security Details</a><a href="#services">Crowd Management</a><a href="#services">Risk Assessment</a><a href="#services">Event Security</a><a href="#services">Armed &amp; Unarmed Security Officers</a><a href="#services">Mobile Patrol</a></div></div>
-    <div><div class="fct">Company</div><div class="fcl"><a href="#about">Our Story</a><a href="#founder">The Founder</a><a href="#contact">Contact</a><a href="#" onclick="openQuote();return false;">Request Quote</a></div></div>
+    <div><div class="fct">Company</div><div class="fcl"><a href="#about">Our Story</a><a href="#founder">The Founder</a><a href="/apply">Join the Team</a><a href="#contact">Contact</a><a href="#" onclick="openQuote();return false;">Request Quote</a></div></div>
     <div><div class="fct">Deployment</div><div class="fcl"><a href="#">Atlanta, GA</a><a href="#">Greater Georgia</a><a href="#">Nationwide</a><a href="#">International</a></div></div>
   </div>
   <div class="fbot"><p>2025 Special Services Protection. All rights reserved.</p><div class="fbadges"><span class="fbadge">Licensed</span><span class="fbadge">Bonded</span><span class="fbadge">Insured</span></div></div>
