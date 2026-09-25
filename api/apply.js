@@ -1,3 +1,5 @@
+import { createApplicationPdf } from "../lib/applicationPdf.js";
+
 const APPLICATION_TO_EMAIL = "specialservicespro@gmail.com";
 const MAX_REQUEST_BYTES = 75_000;
 const MAX_ATTEMPTS_PER_HOUR = 6;
@@ -107,10 +109,14 @@ export default async function handler(request, response) {
   }
 
   const email = buildEmail(application);
+  try {
+  const pdf = await createApplicationPdf(application);
+  const safeName = `${application.firstName}-${application.lastName}`.replace(/[^a-zA-Z0-9-]/g, "").slice(0, 100) || "Applicant";
   const resendResponse = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ from, to: [to], reply_to: application.email, subject: `New SSP Application — ${email.applicant} — ${email.primaryRole}`, html: email.html, text: email.text }),
+    signal: AbortSignal.timeout(15000),
+    body: JSON.stringify({ from, to: [to], reply_to: application.email, subject: `New SSP Application — ${email.applicant} — ${email.primaryRole}`, html: email.html, text: email.text, attachments: [{ filename: `SSP-Application-${safeName}.pdf`, content: pdf.toString("base64"), content_type: "application/pdf" }] }),
   });
 
   if (!resendResponse.ok) {
@@ -120,4 +126,8 @@ export default async function handler(request, response) {
   }
 
   return response.status(200).json({ ok: true });
+  } catch (error) {
+    console.error("Application delivery failed:", error.name);
+    return response.status(502).json({ error: "We could not send your application. Your entries are still here; please try again." });
+  }
 }
